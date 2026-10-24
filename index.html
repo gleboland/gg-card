@@ -301,6 +301,41 @@ input[type=text]:focus,.auth input:focus,.socin input:focus,.find input:focus{bo
 .tscore{text-shadow:5px 5px 0 #000}
 .toast{border:2px solid var(--hard);box-shadow:4px 4px 0 var(--hard);border-radius:12px}
 .tip{border-radius:0 14px 14px 0}
+.showcase{margin-top:30px}
+.minis{display:flex;gap:10px;flex-wrap:wrap}
+.mini{width:64px;height:90px;border-radius:9px;border:2px solid var(--c);background:linear-gradient(160deg,var(--a),var(--b));box-shadow:3px 3px 0 var(--hard);position:relative;transition:transform .15s}
+.mini:nth-child(odd){transform:rotate(-3deg)}
+.mini:nth-child(even){transform:rotate(2deg)}
+.mini:hover{transform:translateY(-4px) rotate(0)}
+.mini span{position:absolute;left:0;right:0;bottom:-20px;text-align:center;font:600 11px 'Inter',sans-serif;color:var(--muted)}
+.minis{padding-bottom:22px}
+.livestats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+.livestats div{background:var(--panel);border:2px solid #000;border-radius:14px;box-shadow:3px 3px 0 rgba(0,0,0,.6);padding:12px 14px}
+.livestats b{display:block;font:800 26px 'Bricolage Grotesque',sans-serif}
+.livestats span{font-size:12.5px;color:var(--muted)}
+.livestats i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-right:6px;box-shadow:0 0 8px var(--ok)}
+.toplist{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.toplist .tl{background:var(--panel);border:2px solid #000;border-radius:14px;box-shadow:3px 3px 0 rgba(0,0,0,.6);padding:12px 14px}
+.toplist h4{font:800 16px 'Bricolage Grotesque',sans-serif;margin-bottom:6px;display:flex;justify-content:space-between}
+.toplist h4 a{font:500 12px 'Inter',sans-serif;cursor:pointer}
+.toplist .row1{display:flex;align-items:center;gap:8px;padding:6px 0;cursor:pointer;border-top:1px solid var(--line)}
+.toplist .row1:first-of-type{border-top:0}
+.toplist .row1 .av{width:26px;height:26px;font-size:12px}
+.toplist .row1 b{flex:1;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.toplist .row1 i{font-style:normal;font-weight:800;color:var(--text)}
+.toplist .row1 .md{width:18px;font-size:13px}
+.toplist .row1:hover b{color:var(--acc2)}
+.toplist p{color:var(--muted);font-size:13px}
+.foot{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+.foot b{color:var(--text)}
+@media (max-width:520px){.livestats{grid-template-columns:1fr 1fr 1fr}.livestats b{font-size:20px}.toplist{grid-template-columns:1fr}}
+.cedit{background:var(--panel);border:2px solid var(--acc);border-radius:16px;box-shadow:4px 4px 0 var(--hard);padding:18px;margin-bottom:18px}
+.cehead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.cehead b{font:800 22px 'Bricolage Grotesque',sans-serif}
+.cedit .designs{margin-bottom:16px}
+.cedit input[type=text]{font-size:18px;padding:11px 14px;margin-bottom:6px}
+.cedit .match{margin:10px 0 0}
+.cedit .btn{margin-top:16px}
 .signin-hint{border:2px dashed #3a342d;border-radius:16px;padding:22px;color:var(--muted);line-height:1.5}
 .signin-hint b{display:block;font:800 22px 'Bricolage Grotesque',sans-serif;color:var(--text);margin-bottom:14px}
 .lockgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -314,7 +349,8 @@ input[type=text]:focus,.auth input:focus,.socin input:focus,.find input:focus{bo
   #intro .col-l,#intro .col-r{display:contents}
   #intro h1{order:1} #intro .lead{order:2} #intro .prof{order:3}
   #intro .menu,#intro .signin-hint{order:4;margin-bottom:22px}
-  #intro .note{order:5} #intro .steps{order:6}
+  #intro .livestats{order:5;margin:0 0 14px} #intro .toplist{order:6;margin:0 0 22px}
+  #intro .note{order:7} #intro .steps{order:8} #intro .showcase{order:9}
 }
 /* ---------- wide screens: use the space instead of a phone-shaped column ---------- */
 @media (min-width: 980px){
@@ -362,6 +398,10 @@ input[type=text]:focus,.auth input:focus,.socin input:focus,.find input:focus{bo
       <div id="step2"><b>02</b> You drop into a 3D arena for quick draw, flick shots, tracking and a parkour run.</div>
       <div><b>03</b> You get a 3D card with your OVR, rarity and 6 stats. One run every 4 hours, so make it count.</div>
     </div>
+    <div class="showcase">
+      <div class="label"><span>Card designs to unlock</span><span>through Quests</span></div>
+      <div class="minis" id="showcase"></div>
+    </div>
    </div>
    <div class="col-r">
     <nav class="menu" id="menu" hidden>
@@ -381,6 +421,8 @@ input[type=text]:focus,.auth input:focus,.socin input:focus,.find input:focus{bo
         <span>◉ Minigames</span><span>✦ Quests</span><span>🎁 Free reward</span><span>● Card designs</span>
       </div>
     </div>
+    <div class="livestats" id="liveStats"></div>
+    <div class="toplist" id="topList"></div>
    </div>
   </section>
 
@@ -492,17 +534,32 @@ input[type=text]:focus,.auth input:focus,.socin input:focus,.find input:focus{bo
       <button class="btn" id="dl">Download card</button>
       <button class="btn ghost" id="shot3d">Save 3D pic</button>
       <button class="btn ghost" id="flip">Flip</button>
+      <button class="btn" id="editCard" hidden>✎ Edit card</button>
       <button class="btn ghost" id="theme" hidden>Photo colors: on</button>
       <button class="btn ghost" id="share">Share</button>
       <button class="btn ghost" id="again">← Menu</button>
     </div>
    </div>
    <div class="col-r">
+    <div class="cedit" id="cardEdit" hidden>
+      <div class="cehead"><b>Edit your card</b><button class="link" id="ceClose" type="button">close</button></div>
+      <div class="label"><span>Design</span><span>more in Quests</span></div>
+      <div class="designs" id="ceDesigns"></div>
+      <div class="label"><span>Motto · shown under your name</span><span id="ceCnt">0/20</span></div>
+      <input type="text" id="ceMotto" maxlength="20" placeholder="e.g. NO SCOPE ONLY" autocomplete="off">
+      <label class="match"><input type="checkbox" id="cePhoto"> Show my photo</label>
+      <label class="match"><input type="checkbox" id="ceMatch"> Card colors from my photo (Classic design)</label>
+      <button class="btn full" id="ceSave" type="button">Save card</button>
+    </div>
     <div class="breakdown" id="bd"></div>
     <div class="tip" id="tip"></div>
     <div class="lb" id="lb" hidden></div>
    </div>
   </section>
+  <footer class="foot">
+    <span><b>GG Card</b> · Season 1 · made by gleboland</span>
+    <span>Play fair, have fun, and send your card to the group chat.</span>
+  </footer>
 </div>
 
 <!-- GAME -->
@@ -696,7 +753,8 @@ function writePlayer(fields) {
   return Promise.resolve();
 }
 function saveProfile(p) {
-  return writePlayer({ name: p.name, photo: p.photo || null, match: p.match !== false, design: p.design || 'classic', socials: p.socials || {} })
+  return writePlayer({ name: p.name, photo: p.photo || null, match: p.match !== false, design: p.design || 'classic', socials: p.socials || {},
+    motto: p.motto || '', photoOn: p.photoOn !== false })
     .catch(e => toast('Could not save: ' + e.code));
 }
 
@@ -781,7 +839,7 @@ function ensureMe() {
   store.set('gg-current', ME.id);
   return ME;
 }
-function toMenu() { V.on = false; show('intro', 'Menu'); renderProfiles(); }
+function toMenu() { V.on = false; show('intro', 'Menu'); renderProfiles(); renderHome(); }
 document.querySelectorAll('[data-back]').forEach(b => b.onclick = toMenu);
 $('#mProfile').onclick = () => { renderDesignPicker(); renderSocialInputs(); show('profile', 'Profile'); };
 $('#mMates').onclick = () => { show('mates', 'Teammates'); loadMates(); };
@@ -1031,7 +1089,8 @@ $('#arcQuit').onclick = $('#arcBack').onclick = () => { stopGame(); $('#arcadeOv
 $('#arcAgain').onclick = () => playGame(arcGame);
 
 /* ---------- other players' cards ---------- */
-const ownerOf = p => ({ name: p.name, photo: p.photo || null, match: p.match !== false, design: p.design || 'classic', socials: p.socials || {} });
+const ownerOf = p => ({ name: p.name, photo: p.photo || null, match: p.match !== false, design: p.design || 'classic', socials: p.socials || {},
+  motto: p.motto || '', photoOn: p.photoOn !== false });
 function viewButtons(id, p) {
   return ['pc', 'mobile'].filter(k => p.cards && p.cards[k]).map(k => `<button class="vb" data-uid="${id}" data-p="${k}">${k === 'pc' ? 'PC' : 'Mobile'} ${p.cards[k].ovr}</button>`).join(' ');
 }
@@ -1127,6 +1186,7 @@ function signOut() {
   ME = null; store.set('gg-current', ''); resetForm(); renderProfiles();
 }
 initFirebase().then(() => {
+  renderHome(true);
   if (FB) { renderProfiles(); $('#photoNote').textContent = 'optional. saved to your account when you sign in.'; return; }
   const cur = store.get('gg-current'), p = cur && loadProfiles().find(x => x.id === cur);
   if (p) signIn(p); else renderProfiles();
@@ -1150,6 +1210,37 @@ $('#go').onclick = async () => {
   }
   runScan();
 };
+
+/* home screen extras: design showcase, live counts and the top 3 on each platform */
+let homeAt = 0;
+async function renderHome(force) {
+  $('#showcase').innerHTML = ['carbon', 'gold', 'galaxy', 'flame', 'ice', 'lava', 'retro', 'diamond']
+    .map(k => `<div class="mini" style="${swatch(k)}" title="${DESIGNS[k].label}"><span>${DESIGNS[k].label}</span></div>`).join('');
+  if (!FB) { $('#liveStats').innerHTML = $('#topList').innerHTML = ''; return; }
+  if (!force && Date.now() - homeAt < 60000) return; // don't re-query on every menu visit
+  homeAt = Date.now();
+  const { F, db } = FB, col = F.collection(db, 'players');
+  try {
+    const [all, pc, mob] = await Promise.all([F.getCountFromServer(col),
+      F.getCountFromServer(F.query(col, F.where('cards.pc.ovr', '>', 0))), F.getCountFromServer(F.query(col, F.where('cards.mobile.ovr', '>', 0)))]);
+    const n = (v, one, many) => `<b>${v}</b><span>${v === 1 ? one : many}</span>`;
+    const [a, p, m] = [all, pc, mob].map(x => x.data().count);
+    $('#liveStats').innerHTML = `<div>${n(a, '<i></i>player', '<i></i>players')}</div><div>${n(p, 'PC card', 'PC cards')}</div><div>${n(m, 'mobile card', 'mobile cards')}</div>`;
+  } catch (e) { $('#liveStats').innerHTML = ''; }
+  const top3 = async p => {
+    const s = await F.getDocs(F.query(col, F.orderBy(`cards.${p}.ovr`, 'desc'), F.limit(3)));
+    return s.docs.map((d, i) => {
+      const pl = d.data(); lbCache[d.id] = pl;
+      return `<div class="row1" data-uid="${d.id}" data-p="${p}"><span class="md">${['🥇', '🥈', '🥉'][i]}</span>${avatar(pl)}<b>${esc(pl.name)}</b><i>${pl.cards[p].ovr}</i></div>`;
+    }).join('') || '<p>No cards yet. Be the first!</p>';
+  };
+  try {
+    const [a, b] = await Promise.all([top3('pc'), top3('mobile')]);
+    $('#topList').innerHTML = `<div class="tl"><h4>Top on PC <a data-go>see all</a></h4>${a}</div><div class="tl"><h4>Top on mobile <a data-go>see all</a></h4>${b}</div>`;
+    $('#topList').querySelectorAll('.row1').forEach(r => r.onclick = () => openOther(r.dataset.uid, r.dataset.p));
+    $('#topList').querySelectorAll('[data-go]').forEach(x => x.onclick = () => $('#mBoard').click());
+  } catch (e) { $('#topList').innerHTML = ''; }
+}
 
 /* top 10 cards for a platform (online accounts only) */
 let lbPlat = PLAT;
@@ -2237,7 +2328,9 @@ async function drawCard(d) {
   // name + class
   c.textAlign = 'center'; c.fillStyle = R.ink;
   fit(c, d.name, 620, 92, F); c.fillText(d.name, W / 2, 622);
-  c.fillStyle = R.acc; c.font = `700 22px ${M}`; c.fillText(spaced(d.cls), W / 2, 662);
+  c.fillStyle = R.acc;
+  if (d.motto) { fit(c, d.motto.toUpperCase(), 600, 30, F); c.fillText(d.motto.toUpperCase(), W / 2, 664); } // player's own line
+  else { c.font = `700 22px ${M}`; c.fillText(spaced(d.cls), W / 2, 662); }
   c.fillStyle = hexA(R.ink, .2); c.fillRect(80, 690, W - 160, 2);
 
   // stats
@@ -2441,17 +2534,18 @@ function photoTheme(img) {
 }
 const loadImg = src => new Promise(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
 // your own card uses your live profile; someone else's uses what they saved
-const myOwner = () => ({ mine: true, name: (ME && ME.name) || S.name, img: S.photo, match: S.matchPhoto, design: (ME && ME.design) || 'classic', socials: (ME && ME.socials) || {} });
+const myOwner = () => ({ mine: true, name: (ME && ME.name) || S.name, img: S.photo, match: S.matchPhoto, design: (ME && ME.design) || 'classic', socials: (ME && ME.socials) || {},
+  motto: (ME && ME.motto) || '', photoOn: !ME || ME.photoOn !== false });
 async function renderCard() {
   const { ovr, rar, top, keys, platName, stats, rig, owner } = last;
-  const img = owner.img !== undefined ? owner.img : owner.photo ? await loadImg(owner.photo) : null;
+  const src = owner.img !== undefined ? owner.img : owner.photo ? await loadImg(owner.photo) : null;
+  const img = owner.photoOn === false ? null : src;
   // card look: special design first, then photo colors, then the rarity's colors
   const des = owner.design && owner.design !== 'classic' && DESIGNS[owner.design] ? DESIGNS[owner.design] : null;
   const pt = !des && img && owner.match ? photoTheme(img) : null;
   const theme = des ? { ...rar, ...des } : pt ? { ...rar, ...pt } : rar;
-  $('#theme').hidden = !owner.mine || !!des || !img || !photoTheme(img);
-  $('#theme').textContent = `Photo colors: ${S.matchPhoto ? 'on' : 'off'}`;
-  await drawCard({ ...rig, gpu: rig.gpu || 'Unknown GPU', name: owner.name, photo: img, stats, keys, platName, ovr, rar: theme, code: CLASS[top].code, cls: CLASS[top].name });
+  $('#theme').hidden = true; // photo colors now live in the card editor
+  await drawCard({ ...rig, gpu: rig.gpu || 'Unknown GPU', name: owner.name, photo: img, stats, keys, platName, ovr, rar: theme, motto: owner.motto, code: CLASS[top].code, cls: CLASS[top].name });
   initViewer();
   V.frontTex.needsUpdate = true;
   buildCard(theme);
@@ -2513,6 +2607,8 @@ async function showCard(card, plat, { fresh = false, prev = null, owner = null }
   ];
   $('#bd').innerHTML = rows.map(([k, v]) => `<div><span>${k}</span><b>${esc(v)}</b></div>`).join('');
   $('#tip').innerHTML = `<b>Weakness: ${low}.</b> ${TIPS[low]}`;
+  $('#editCard').hidden = !owner.mine || !ME;
+  $('#cardEdit').hidden = true;
   $('#rSocials').innerHTML = socialChips(owner.socials);
   wireCopy($('#rSocials'));
   await renderCard();
@@ -2533,6 +2629,40 @@ $('#shot3d').onclick = () => {
   saveURL(c.toDataURL('image/png'), fileName('-3d'));
 };
 $('#flip').onclick = () => { V.tgt.y += Math.PI; };
+/* ---------- card editor: change how your card looks, with a live preview ---------- */
+let ceTimer = null;
+function ceDesigns() {
+  const un = unlockedDesigns(ME), cur = last.owner.design || 'classic';
+  $('#ceDesigns').innerHTML = Object.keys(DESIGNS).map(k => `<button class="dz ${un.includes(k) ? '' : 'locked'} ${cur === k ? 'on' : ''}" data-d="${k}" style="${swatch(k)}" type="button"><i></i>${DESIGNS[k].label}${un.includes(k) ? '' : ' 🔒'}</button>`).join('');
+  $('#ceDesigns').querySelectorAll('.dz').forEach(b => b.onclick = () => {
+    if (b.classList.contains('locked')) return toast(b.dataset.d === 'diamond' ? 'Get Diamond from the Free reward' : `Unlock ${DESIGNS[b.dataset.d].label} in Quests`);
+    last.owner.design = b.dataset.d; ceDesigns(); renderCard();
+  });
+}
+$('#editCard').onclick = () => {
+  const o = last.owner;
+  $('#ceMotto').value = o.motto || ''; $('#ceCnt').textContent = `${(o.motto || '').length}/20`;
+  $('#cePhoto').checked = o.photoOn !== false; $('#ceMatch').checked = !!o.match;
+  ceDesigns();
+  $('#cardEdit').hidden = false;
+  $('#cardEdit').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+};
+$('#ceClose').onclick = () => { $('#cardEdit').hidden = true; };
+$('#ceMotto').addEventListener('input', e => {
+  const v = cleanSocial(e.target.value).slice(0, 20);
+  $('#ceCnt').textContent = `${v.length}/20`;
+  last.owner.motto = v;
+  clearTimeout(ceTimer); ceTimer = setTimeout(renderCard, 200);
+});
+$('#cePhoto').onchange = e => { last.owner.photoOn = e.target.checked; renderCard(); };
+$('#ceMatch').onchange = e => { last.owner.match = e.target.checked; renderCard(); };
+$('#ceSave').onclick = async () => {
+  const o = last.owner;
+  ME.design = o.design; ME.motto = o.motto || ''; ME.photoOn = o.photoOn !== false; ME.match = S.matchPhoto = !!o.match;
+  S.design = ME.design; $('#match').checked = S.matchPhoto;
+  await saveProfile(ME);
+  toast('Card saved'); $('#cardEdit').hidden = true;
+};
 $('#theme').onclick = () => {
   S.matchPhoto = !S.matchPhoto; $('#match').checked = S.matchPhoto;
   if (ME) { ME.match = S.matchPhoto; saveProfile(ME); }
