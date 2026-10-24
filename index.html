@@ -309,12 +309,12 @@ input[type=text]:focus,.auth input:focus,.socin input:focus,.find input:focus{bo
 .mini:hover{transform:translateY(-4px) rotate(0)}
 .mini span{position:absolute;left:0;right:0;bottom:-20px;text-align:center;font:600 11px 'Inter',sans-serif;color:var(--muted)}
 .minis{padding-bottom:22px}
-.livestats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+.livestats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
 .livestats div{background:var(--panel);border:2px solid #000;border-radius:14px;box-shadow:3px 3px 0 rgba(0,0,0,.6);padding:12px 14px}
 .livestats b{display:block;font:800 26px 'Bricolage Grotesque',sans-serif}
 .livestats span{font-size:12.5px;color:var(--muted)}
 .livestats i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-right:6px;box-shadow:0 0 8px var(--ok)}
-.toplist{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.toplist{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .toplist .tl{background:var(--panel);border:2px solid #000;border-radius:14px;box-shadow:3px 3px 0 rgba(0,0,0,.6);padding:12px 14px}
 .toplist h4{font:800 16px 'Bricolage Grotesque',sans-serif;margin-bottom:6px;display:flex;justify-content:space-between}
 .toplist h4 a{font:500 12px 'Inter',sans-serif;cursor:pointer}
@@ -328,7 +328,34 @@ input[type=text]:focus,.auth input:focus,.socin input:focus,.find input:focus{bo
 .toplist p{color:var(--muted);font-size:13px}
 .foot{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:13px}
 .foot b{color:var(--text)}
-@media (max-width:520px){.livestats{grid-template-columns:1fr 1fr 1fr}.livestats b{font-size:20px}.toplist{grid-template-columns:1fr}}
+@media (max-width:520px){.livestats{grid-template-columns:1fr 1fr}.livestats b{font-size:20px}.toplist{grid-template-columns:1fr}}
+@media (min-width:980px) and (max-width:1180px){.toplist{grid-template-columns:1fr 1fr}}
+.padbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--panel);border:2px solid #000;border-radius:14px;box-shadow:3px 3px 0 rgba(0,0,0,.6);padding:10px 14px;margin-bottom:14px;font-size:14px;color:var(--muted)}
+.padbar .dot{width:10px;height:10px;border-radius:50%;background:#3a4254;flex:none}
+.padbar.on .dot{background:var(--ok);box-shadow:0 0 10px var(--ok)}
+.padbar b{color:var(--text)}
+.padbar span{flex:1;min-width:180px}
+.padbar .btn{font-size:14px;padding:8px 14px}
+.padbar.console{border-color:var(--ok)}
+.padcursor{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border:3px solid var(--ok);border-radius:50%;z-index:4;pointer-events:none;box-shadow:0 0 0 2px #000,0 0 14px rgba(0,255,136,.6)}
+.padcursor::after{content:'';position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px;background:var(--ok);border-radius:50%}
+.padcursor.down{transform:scale(.8)}
+:focus-visible{outline:3px solid var(--acc2);outline-offset:3px}
+.plan{background:linear-gradient(135deg,rgba(124,58,237,.25),var(--panel));border:2px solid #000;border-radius:16px;box-shadow:4px 4px 0 #000;padding:16px 18px;margin-bottom:16px}
+.plan b{display:block;font:800 20px 'Bricolage Grotesque',sans-serif;margin-bottom:4px}
+.plan p{color:var(--muted)}
+.tlist{display:grid;gap:10px;margin-bottom:10px}
+.trow{display:grid;grid-template-columns:54px 1fr auto;gap:14px;align-items:center;background:var(--panel);border:2px solid #000;border-radius:14px;box-shadow:3px 3px 0 rgba(0,0,0,.6);padding:12px 14px}
+.trow .k{font:800 20px 'Bricolage Grotesque',sans-serif;color:var(--acc2)}
+.trow b{display:block;font-size:16px}
+.trow small{display:block;color:var(--muted);font-size:13px;margin:2px 0 6px;line-height:1.4}
+.trow .bars{display:flex;gap:8px;align-items:center;font:12px 'JetBrains Mono',monospace;color:var(--muted)}
+.trow .bar{flex:1;height:6px;background:#1d2538;border-radius:3px;overflow:hidden;max-width:220px}
+.trow .bar i{display:block;height:100%;background:var(--acc)}
+.trow .bar i.pr{background:var(--ok)}
+.trow .btn{font-size:14px;padding:9px 14px}
+.trow.weak{border-color:var(--acc)}
+@media (min-width:980px){.tlist{grid-template-columns:1fr 1fr}}
 .cedit{background:var(--panel);border:2px solid var(--acc);border-radius:16px;box-shadow:4px 4px 0 var(--hard);padding:18px;margin-bottom:18px}
 .cehead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
 .cehead b{font:800 22px 'Bricolage Grotesque',sans-serif}
@@ -404,12 +431,14 @@ input[type=text]:focus,.auth input:focus,.socin input:focus,.find input:focus{bo
     </div>
    </div>
    <div class="col-r">
+    <div class="padbar" id="padBar"></div>
     <nav class="menu" id="menu" hidden>
       <button class="mi play" id="go"><span class="ic">▶</span><span><b>Play</b><small id="cool">Scan + 4 tests = new card</small></span></button>
       <button class="mi" id="mCards"><span class="ic">◆</span><span><b>My cards</b><small>your PC and mobile cards</small></span></button>
       <button class="mi" id="mBoard"><span class="ic">#</span><span><b>Leaderboard</b><small>top 10 on PC and mobile</small></span></button>
       <button class="mi" id="mMates"><span class="ic">✚</span><span><b>Find teammates</b><small>Discord, Roblox, Epic and more</small></span></button>
       <button class="mi gift" id="mReward"><span class="ic">🎁</span><span><b>Free reward</b><small id="rewardSmall">watch a 15-second break, one time only</small></span></button>
+      <button class="mi" id="mTrain"><span class="ic">⚑</span><span><b>Training</b><small id="trainSmall">practice your weakest skills</small></span></button>
       <button class="mi" id="mArcade"><span class="ic">◉</span><span><b>Minigames</b><small>3 quick games, no cooldown</small></span></button>
       <button class="mi" id="mQuests"><span class="ic">✦</span><span><b>Quests</b><small id="questSmall">unlock special card designs</small></span></button>
       <button class="mi" id="mProfile"><span class="ic">●</span><span><b>Profile</b><small>gamertag, photo, card design</small></span></button>
@@ -453,6 +482,17 @@ input[type=text]:focus,.auth input:focus,.socin input:focus,.find input:focus{bo
     <h2>My cards</h2>
     <p class="lead">One card per platform. A new run replaces the old card.</p>
     <div class="clist" id="clist"></div>
+    <button class="btn ghost full back" data-back>← Menu</button>
+  </section>
+
+  <!-- TRAINING -->
+  <section class="screen" id="train">
+    <div class="kicker">Menu · Training</div>
+    <h2>Personal training</h2>
+    <p class="lead" id="trainLead"></p>
+    <div class="plan" id="trainPlan"></div>
+    <div class="tlist" id="trainList"></div>
+    <p class="note">Practice runs have no cooldown and never change your card. Your best practice score for each test is saved.</p>
     <button class="btn ghost full back" data-back>← Menu</button>
   </section>
 
@@ -572,6 +612,7 @@ input[type=text]:focus,.auth input:focus,.socin input:focus,.find input:focus{bo
   <div class="ghud br" id="gR"></div>
   <div id="gCenter"></div>
   <div class="rbox" id="rbox" hidden></div>
+  <div class="padcursor" id="padCursor" hidden></div>
   <div class="ov" id="brief">
     <div class="panel">
       <div class="kicker" id="bKick"></div>
@@ -648,11 +689,25 @@ const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { ret
 const S = { name: 'PLAYER', photo: null, stats: {}, res: {}, pc: {} };
 // phones and tablets get their own touch tests and their own MOBILE card
 const MOBILE = matchMedia('(pointer: coarse)').matches && !matchMedia('(pointer: fine)').matches;
-const PLAT = MOBILE ? 'mobile' : 'pc', PLAT_NAME = MOBILE ? 'MOBILE' : 'PC';
-const KEYS_PC = ['REA', 'AIM', 'TRK', 'MOV', 'RIG', 'FPS'], KEYS_MOBILE = ['REA', 'AIM', 'TRK', 'TAP', 'RIG', 'FPS'];
-const KEYS = MOBILE ? KEYS_MOBILE : KEYS_PC;
+const KEYS_PC = ['REA', 'AIM', 'TRK', 'MOV', 'RIG', 'FPS'], KEYS_MOBILE = ['REA', 'AIM', 'TRK', 'TAP', 'RIG', 'FPS'],
+  KEYS_CONSOLE = ['REA', 'AIM', 'TRK', 'BTN', 'RIG', 'FPS'];
+const KEYS_OF = { pc: KEYS_PC, mobile: KEYS_MOBILE, console: KEYS_CONSOLE };
+const PLAT_NAMES = { pc: 'PC', mobile: 'MOBILE', console: 'CONSOLE' };
+const PLATS = ['pc', 'mobile', 'console'];
+const platLabel = p => ({ pc: 'PC', mobile: 'Mobile', console: 'Console' })[p];
 const COOLDOWN = 4 * 3600 * 1000; // one run per platform every 4 hours
-const ACT = MOBILE ? 'tap' : 'click', ACT_UP = MOBILE ? 'Tap' : 'Click';
+// the platform you're playing on: PC or phone from the device, Console when you pick it with a controller
+let PLAT, PLAT_NAME, KEYS, ACT, ACT_UP, TESTS;
+const FLAT = () => PLAT !== 'pc'; // phone and console tests are flat screens, not the 3D arena
+function setPlatform(p) {
+  PLAT = p; PLAT_NAME = PLAT_NAMES[p]; KEYS = KEYS_OF[p];
+  ACT = p === 'mobile' ? 'tap' : p === 'console' ? 'press A' : 'click';
+  ACT_UP = p === 'mobile' ? 'Tap' : p === 'console' ? 'Press A' : 'Click';
+  TESTS = p === 'mobile' ? TESTS_MOBILE : p === 'console' ? TESTS_CONSOLE : TESTS_PC;
+}
+// starting values (the test lists are set up further down, then setPlatform runs for real)
+PLAT = MOBILE ? 'mobile' : 'pc'; PLAT_NAME = PLAT_NAMES[PLAT]; KEYS = KEYS_OF[PLAT];
+ACT = MOBILE ? 'tap' : 'click'; ACT_UP = MOBILE ? 'Tap' : 'Click';
 
 function show(id, step) {
   document.querySelectorAll('.screen').forEach(e => e.classList.toggle('on', e.id === id));
@@ -859,8 +914,8 @@ async function loadMates() {
     const snap = await F.getDocs(F.query(F.collection(db, 'players'), F.orderBy(`socials.${matePlat}`), F.limit(30)));
     const rows = snap.docs.map(d => {
       const p = d.data(); lbCache[d.id] = p;
-      const best = Math.max(0, ...['pc', 'mobile'].map(k => p.cards && p.cards[k] ? p.cards[k].ovr : 0));
-      const plat = p.cards && p.cards.pc ? 'pc' : p.cards && p.cards.mobile ? 'mobile' : '';
+      const best = Math.max(0, ...PLATS.map(k => p.cards && p.cards[k] ? p.cards[k].ovr : 0));
+      const plat = PLATS.find(k => p.cards && p.cards[k]) || '';
       return `<div ${plat ? `data-uid="${d.id}" data-p="${plat}"` : ''}>${avatar(p)}<b>${esc(p.name)}</b><span>${best ? best + ' OVR' : 'no card yet'}</span>${socialChips(p.socials, matePlat)}</div>`;
     });
     const label = SOCIALS.find(x => x.k === matePlat).label;
@@ -924,7 +979,7 @@ const DESIGNS = {
 const swatch = k => { const d = DESIGNS[k], s = d.sw || [d.bg[0], d.bg[2], d.acc]; return `--a:${s[0]};--b:${s[1]};--c:${s[2]}`; };
 
 /* ---------- quests ---------- */
-const myCards = m => ['pc', 'mobile'].filter(p => m && m.cards && m.cards[p]);
+const myCards = m => PLATS.filter(p => m && m.cards && m.cards[p]);
 const bestOvr = m => Math.max(m && m.bestOvr || 0, ...myCards(m).map(p => m.cards[p].ovr), 0);
 const miniBest = (m, k) => (m && m.mini && m.mini[k] != null) ? m.mini[k] : 0;
 const QUESTS = [
@@ -1092,7 +1147,7 @@ $('#arcAgain').onclick = () => playGame(arcGame);
 const ownerOf = p => ({ name: p.name, photo: p.photo || null, match: p.match !== false, design: p.design || 'classic', socials: p.socials || {},
   motto: p.motto || '', photoOn: p.photoOn !== false });
 function viewButtons(id, p) {
-  return ['pc', 'mobile'].filter(k => p.cards && p.cards[k]).map(k => `<button class="vb" data-uid="${id}" data-p="${k}">${k === 'pc' ? 'PC' : 'Mobile'} ${p.cards[k].ovr}</button>`).join(' ');
+  return PLATS.filter(k => p.cards && p.cards[k]).map(k => `<button class="vb" data-uid="${id}" data-p="${k}">${platLabel(k)} ${p.cards[k].ovr}</button>`).join(' ');
 }
 const lbCache = {};
 async function findPlayer() {
@@ -1130,9 +1185,10 @@ $('#pSave').onclick = async () => {
 };
 function renderCardList() {
   const cards = (ME && ME.cards) || {};
-  $('#clist').innerHTML = ['pc', 'mobile'].map(p => {
-    const c = cards[p], label = p === 'pc' ? 'PC card' : 'Mobile card';
-    if (!c) return `<div class="citem"><span class="ovr">–</span><div><small>${label}</small>No card yet${p === PLAT ? '. Hit Play to get one.' : `. Play on ${p === 'pc' ? 'a computer' : 'your phone'} to get one.`}</div></div>`;
+  $('#clist').innerHTML = PLATS.map(p => {
+    const c = cards[p], label = `${platLabel(p)} card`;
+    const how = { pc: 'Play on a computer', mobile: 'Play on your phone', console: 'Connect a controller and pick Console' }[p];
+    if (!c) return `<div class="citem"><span class="ovr">–</span><div><small>${label}</small>No card yet${p === PLAT ? '. Hit Play to get one.' : `. ${how} to get one.`}</div></div>`;
     const when = ms(c.at) ? new Date(ms(c.at)).toLocaleDateString() : '';
     return `<div class="citem"><span class="ovr">${c.ovr}</span><div><small>${label} · ${esc(c.rar)}${when ? ' · ' + when : ''}</small>${esc(CLASS[c.top] ? CLASS[c.top].name : '')}</div><button class="btn ghost" data-view="${p}">View</button></div>`;
   }).join('');
@@ -1146,7 +1202,7 @@ function renderProfiles() {
   const el = $('#prof');
   updateCooldown();
   if (ME) {
-    const cards = ['pc', 'mobile'].map(p => ME.cards && ME.cards[p] ? `${p === 'pc' ? 'PC' : 'Mobile'} <i>${ME.cards[p].ovr}</i>` : '').filter(Boolean).join(' · ');
+    const cards = PLATS.map(p => ME.cards && ME.cards[p] ? `${platLabel(p)} <i>${ME.cards[p].ovr}</i>` : '').filter(Boolean).join(' · ');
     el.innerHTML = `<div class="me">${avatar(ME)}<div><small>Signed in as</small><b>${esc(ME.name)}</b>${cards ? ` · ${cards}` : ''}</div><button class="link" id="signOut">${FB ? 'Sign out' : 'Switch player'}</button></div>`;
     $('#signOut').onclick = signOut;
     return;
@@ -1194,6 +1250,9 @@ initFirebase().then(() => {
 
 $('#go').onclick = async () => {
   if (!ensureMe()) return updateCooldown(); // online mode: must be signed in
+  // anti-cheat: refuse bots and emulators before a run (and its cooldown) is used up
+  const env = environmentProblems();
+  if (env.length) return toast(`Can’t play: ${env[0]}.`);
   S.name = ME.name = ($('#name').value.trim() || ME.name || 'PLAYER').toUpperCase();
   ME.photo = S.photoURL || null; ME.match = S.matchPhoto;
   const useSkip = cooldownLeft() > 0; // on cooldown: only possible with the free-reward skip
@@ -1221,11 +1280,11 @@ async function renderHome(force) {
   homeAt = Date.now();
   const { F, db } = FB, col = F.collection(db, 'players');
   try {
-    const [all, pc, mob] = await Promise.all([F.getCountFromServer(col),
-      F.getCountFromServer(F.query(col, F.where('cards.pc.ovr', '>', 0))), F.getCountFromServer(F.query(col, F.where('cards.mobile.ovr', '>', 0)))]);
+    const counts = await Promise.all([F.getCountFromServer(col), ...PLATS.map(p => F.getCountFromServer(F.query(col, F.where(`cards.${p}.ovr`, '>', 0))))]);
     const n = (v, one, many) => `<b>${v}</b><span>${v === 1 ? one : many}</span>`;
-    const [a, p, m] = [all, pc, mob].map(x => x.data().count);
-    $('#liveStats').innerHTML = `<div>${n(a, '<i></i>player', '<i></i>players')}</div><div>${n(p, 'PC card', 'PC cards')}</div><div>${n(m, 'mobile card', 'mobile cards')}</div>`;
+    const [a, ...per] = counts.map(x => x.data().count);
+    $('#liveStats').innerHTML = `<div>${n(a, '<i></i>player', '<i></i>players')}</div>`
+      + PLATS.map((p, i) => `<div>${n(per[i], `${platLabel(p)} card`, `${platLabel(p)} cards`)}</div>`).join('');
   } catch (e) { $('#liveStats').innerHTML = ''; }
   const top3 = async p => {
     const s = await F.getDocs(F.query(col, F.orderBy(`cards.${p}.ovr`, 'desc'), F.limit(3)));
@@ -1235,8 +1294,8 @@ async function renderHome(force) {
     }).join('') || '<p>No cards yet. Be the first!</p>';
   };
   try {
-    const [a, b] = await Promise.all([top3('pc'), top3('mobile')]);
-    $('#topList').innerHTML = `<div class="tl"><h4>Top on PC <a data-go>see all</a></h4>${a}</div><div class="tl"><h4>Top on mobile <a data-go>see all</a></h4>${b}</div>`;
+    const lists = await Promise.all(PLATS.map(top3));
+    $('#topList').innerHTML = PLATS.map((p, i) => `<div class="tl"><h4>Top on ${platLabel(p)} <a data-go>see all</a></h4>${lists[i]}</div>`).join('');
     $('#topList').querySelectorAll('.row1').forEach(r => r.onclick = () => openOther(r.dataset.uid, r.dataset.p));
     $('#topList').querySelectorAll('[data-go]').forEach(x => x.onclick = () => $('#mBoard').click());
   } catch (e) { $('#topList').innerHTML = ''; }
@@ -1246,7 +1305,7 @@ async function renderHome(force) {
 let lbPlat = PLAT;
 async function loadLeaderboard(el = $('#lb')) {
   if (!FB) { el.hidden = el.id === 'lb'; if (!el.hidden) el.innerHTML = '<p class="note">The leaderboard needs online accounts.</p>'; return; }
-  const tabs = `<div class="lbtabs">${['pc', 'mobile'].map(p => `<button class="${p === lbPlat ? 'on' : ''}" data-p="${p}">${p === 'pc' ? 'PC' : 'Mobile'}</button>`).join('')}</div>`;
+  const tabs = `<div class="lbtabs">${PLATS.map(p => `<button class="${p === lbPlat ? 'on' : ''}" data-p="${p}">${platLabel(p)}</button>`).join('')}</div>`;
   const head = `${el.id === 'lb' ? '<h3>Leaderboard</h3>' : ''}${tabs}`;
   const wire = () => el.querySelectorAll('.lbtabs button').forEach(b => b.onclick = () => { lbPlat = b.dataset.p; loadLeaderboard(el); });
   el.hidden = false; el.innerHTML = head + '<p class="note">Loading…</p>'; wire();
@@ -1575,15 +1634,16 @@ function initGame() {
   const cv = r.domElement;
   document.addEventListener('pointerlockchange', () => { G.locked = document.pointerLockElement === cv; onLockChange(); });
   document.addEventListener('mousemove', e => {
-    if (!G.locked) return;
+    if (!G.locked || !e.isTrusted) return;
+    G.moves = (G.moves || 0) + 1;
     const s = 0.0022 * G.sens;
     G.yaw -= e.movementX * s;
     G.pitch = clamp(G.pitch - e.movementY * s, -1.5, 1.5);
   });
-  document.addEventListener('mousedown', e => { if (G.locked && e.button === 0) { G.mouseDown = true; shoot(); } });
+  document.addEventListener('mousedown', e => { if (G.locked && e.isTrusted && e.button === 0) { G.mouseDown = true; shoot(); } });
   document.addEventListener('mouseup', e => { if (e.button === 0) G.mouseDown = false; });
   addEventListener('keydown', e => {
-    if (!G.locked) return;
+    if (!G.locked || !e.isTrusted) return;
     G.keys.add(e.code);
     if (['Space', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'ShiftLeft'].includes(e.code)) e.preventDefault();
   });
@@ -1813,7 +1873,8 @@ function quickDraw() {
   let round = 0, times = [], state = 'idle', t0 = 0, tm;
   A.className = 'rbox'; A.hidden = false;
   msg(`${ACT_UP} to start`, `wait for green, then ${ACT} · 3 rounds`);
-  A.onpointerdown = () => {
+  A.onpointerdown = e => {
+    if (!realInput(e)) return;
     if (state === 'idle') {
       state = 'wait'; A.className = 'rbox wait'; msg('Wait for green…');
       tm = setTimeout(() => {
@@ -1831,6 +1892,7 @@ function quickDraw() {
       else {
         state = 'done'; A.hidden = true;
         const avg = Math.round(times.reduce((a, b) => a + b) / times.length);
+        checkReaction(times);
         finishTest(lerpScore(avg, 170, 99, 450, 30), `${avg} ms average reaction`);
       }
     }
@@ -1860,14 +1922,17 @@ function tapAim() {
     el.style.left = cur.x + 'px'; el.style.top = cur.y + 'px';
   };
   A.onpointerdown = e => {
-    if (hits >= N) return;
+    if (!realInput(e) || hits >= N) return;
     if (!t0) { A.innerHTML = ''; t0 = performance.now(); spawn(); return; }
     const p = padPos(A, e);
     if (Math.hypot(p.x - cur.x, p.y - cur.y) <= R + 8) {
       hits++; info();
       if (hits === N) {
         const avg = Math.round((performance.now() - t0) / N);
-        return finishTest(clamp(lerpScore(avg, 480, 99, 1350, 30) - miss * 2, 1, 99), `${avg} ms per target · ${miss} miss${miss === 1 ? '' : 'es'}`);
+        if (avg < 200) cheat('targets hit faster than a human can');
+        // a thumbstick is slower than a finger, so console gets its own scale
+        const [best, worst] = PLAT === 'console' ? [650, 1800] : [480, 1350];
+        return finishTest(clamp(lerpScore(avg, best, 99, worst, 30) - miss * 2, 1, 99), `${avg} ms per target · ${miss} miss${miss === 1 ? '' : 'es'}`);
       }
       spawn();
     } else {
@@ -1884,10 +1949,11 @@ function fingerTrack() {
   const D = 7000, R = 40; let px = -999, py = -999, t0 = 0, last = 0, on = 0, tot = 0, el, raf;
   const A = flatPad('Touch and hold to start', 'keep your finger on the target');
   hud('ON TARGET <b>0%</b>', `TIME <b>${(D / 1000).toFixed(1)}s</b>`);
-  const pos = e => { const p = padPos(A, e); px = p.x; py = p.y; };
+  const pos = e => { if (!realInput(e)) return; const p = padPos(A, e); px = p.x; py = p.y; };
   A.onpointermove = pos;
   A.onpointerup = A.onpointercancel = () => { px = py = -999; }; // lifting your finger counts as off target
   A.onpointerdown = e => {
+    if (!realInput(e)) return;
     pos(e); if (t0) return;
     A.innerHTML = '';
     el = document.createElement('div'); el.className = 'ftarget trk';
@@ -1908,7 +1974,7 @@ function fingerTrack() {
     el.classList.toggle('lock', hit);
     hud(`ON TARGET <b>${Math.round(on / Math.max(tot, 1) * 100)}%</b>`, `TIME <b>${(Math.max(0, D - (now - t0)) / 1000).toFixed(1)}s</b>`);
     if (now - t0 < D) raf = requestAnimationFrame(frame);
-    else { const pct = on / Math.max(tot, 1); finishTest(lerpScore(pct, .82, 99, .2, 30), `${Math.round(pct * 100)}% time on target`); }
+    else { const pct = on / Math.max(tot, 1); if (pct > .97) cheat('tracking too perfect for a human hand'); finishTest(lerpScore(pct, .82, 99, .2, 30), `${Math.round(pct * 100)}% time on target`); }
   }
   const c = padCleanup(A);
   return { cleanup() { cancelAnimationFrame(raf); A.onpointerup = A.onpointercancel = null; c.cleanup(); } };
@@ -1921,10 +1987,10 @@ function tapSpeed() {
   const tick = () => {
     const left = Math.max(0, D - (performance.now() - t0));
     hud(`TAPS <b>${n}</b>`, `TIME <b>${(left / 1000).toFixed(1)}s</b>`);
-    if (left <= 0) { clearInterval(iv); live = false; const c = n / (D / 1000); finishTest(lerpScore(c, 12, 99, 4, 30), `${c.toFixed(1)} taps per second`); }
+    if (left <= 0) { clearInterval(iv); live = false; const c = n / (D / 1000); if (c > 20) cheat('more presses per second than a human can do'); finishTest(lerpScore(c, 12, 99, 4, 30), `${c.toFixed(1)} taps per second`); }
   };
-  A.onpointerdown = () => {
-    if (!live) return;
+  A.onpointerdown = e => {
+    if (!live || !realInput(e)) return;
     if (!t0) { t0 = performance.now(); iv = setInterval(tick, 50); }
     n++;
     A.innerHTML = `<div class="padmsg"><span class="big">${n}</span></div>`;
@@ -1935,7 +2001,8 @@ function tapSpeed() {
 
 function flickTest() {
   const N = 20; let hits = 0, shots = 0, t0 = 0, cur = null;
-  const spawn = () => { cur = addTarget(randomSpot(65, 6, 14, .8, 3)); };
+  let snaps = 0, movesAt = 0;
+  const spawn = () => { cur = addTarget(randomSpot(65, 6, 14, .8, 3)); movesAt = G.moves || 0; };
   const info = () => hud(`TARGETS <b>${hits}/${N}</b>`, `ACCURACY <b>${shots ? Math.round(hits / shots * 100) : 100}%</b>`);
   info();
   return {
@@ -1945,8 +2012,11 @@ function flickTest() {
       shots++;
       if (t && t === cur) {
         hits++; removeTarget(cur); cur = null;
+        // an aimbot snaps straight onto the target; a hand needs several mouse updates to get there
+        if ((G.moves || 0) - movesAt < 2 && ++snaps >= 3) cheat('aim snapped onto targets instantly');
         if (hits === N) {
           const avg = Math.round((G.time - t0) / N * 1000), acc = hits / shots;
+          if (avg < 160) cheat('targets hit faster than a human can');
           info();
           return finishTest(clamp(Math.round(lerpScore(avg, 550, 99, 1700, 30) * (.65 + .35 * acc)), 1, 99), `${avg} ms per target · ${Math.round(acc * 100)}% accuracy`);
         }
@@ -1993,7 +2063,7 @@ function trackTest() {
       tot += dt;
       mat.emissiveIntensity = skin.emissiveIntensity = onIt ? .35 : 0;
       hud(`ON TARGET <b>${Math.round(on / tot * 100)}%</b>`, `TIME <b>${Math.max(0, D - tot).toFixed(1)}s</b>`);
-      if (tot >= D) { const p = on / tot; finishTest(lerpScore(p, .75, 99, .12, 30), `${Math.round(p * 100)}% time on target`); }
+      if (tot >= D) { const p = on / tot; if (p > .97) cheat('tracking too perfect for a human hand'); finishTest(lerpScore(p, .75, 99, .12, 30), `${Math.round(p * 100)}% time on target`); }
     },
     cleanup() { G.scene.remove(bot); },
   };
@@ -2047,6 +2117,7 @@ function moveTest() {
         sfx('ding'); spark(r.position, '#f07a1a', 14); i++;
         if (i === rings.length) {
           const t = G.time - t0;
+          if (t < 11) cheat('course finished faster than the fastest possible run');
           return finishTest(lerpScore(t, PAR_99, 99, PAR_30, 30), `${t.toFixed(2)} s course time · ${falls} fall${falls === 1 ? '' : 's'}`);
         }
         mark();
@@ -2070,7 +2141,13 @@ const TESTS_MOBILE = [
   { key: 'TRK', title: 'Finger tracking', flat: true, desc: 'Keep your finger on the moving target for 7 seconds. It speeds up. Lifting your finger counts as a miss.', keys: K('Drag', 'follow'), make: fingerTrack },
   { key: 'TAP', title: 'Tap speed', flat: true, desc: 'Tap the screen as fast as you can for 5 seconds. Two thumbs allowed.', keys: K('Tap', 'spam'), make: tapSpeed },
 ];
-const TESTS = MOBILE ? TESTS_MOBILE : TESTS_PC;
+const TESTS_CONSOLE = [
+  { key: 'REA', title: 'Quick draw', flat: true, desc: 'The screen turns red. Wait for it to turn green, then press A as fast as you can. 3 rounds. Press too early and the round restarts.', keys: K('A', 'react'), make: quickDraw },
+  { key: 'AIM', title: 'Stick aim', flat: true, desc: '15 targets pop up one at a time. Move the crosshair with the left stick and press A on each one.', keys: K('Left stick', 'aim') + K('A', 'shoot'), make: tapAim },
+  { key: 'TRK', title: 'Stick tracking', flat: true, desc: 'Hold A to start, then keep the crosshair on the moving target with the left stick for 7 seconds.', keys: K('Left stick', 'follow') + K('A', 'start'), make: fingerTrack },
+  { key: 'BTN', title: 'Button mash', flat: true, desc: 'Press A as fast as you can for 5 seconds.', keys: K('A', 'mash'), make: tapSpeed },
+];
+setPlatform(MOBILE ? 'mobile' : 'pc');
 
 function clearTest() {
   if (G.test && G.test.cleanup) G.test.cleanup();
@@ -2088,7 +2165,7 @@ function openBrief(i) {
   center('');
   $('#gStep').textContent = `Test ${i + 1}/${TESTS.length}`;
   $('#gTitle').textContent = T.title;
-  $('#bKick').textContent = `Step ${i + 2} · Test ${i + 1}/${TESTS.length} · ${T.key}`;
+  $('#bKick').textContent = PRACTICE ? `Practice · ${T.key} · doesn’t change your card` : `Step ${i + 2} · Test ${i + 1}/${TESTS.length} · ${T.key}`;
   $('#bTitle').textContent = T.title;
   $('#bDesc').textContent = T.desc;
   $('#bKeys').innerHTML = T.keys + (T.flat ? '' : K('Esc', 'pause'));
@@ -2104,26 +2181,27 @@ function finishTest(score, detail) {
   $('#tKick').textContent = `${T.title} · ${T.key}`;
   $('#tScore').textContent = score;
   $('#tDetail').textContent = detail;
-  $('#tNext').textContent = G.ti < TESTS.length - 1 ? 'Next test →' : 'Reveal my card →';
+  $('#tNext').textContent = PRACTICE ? 'Back to training →' : G.ti < TESTS.length - 1 ? 'Next test →' : 'Reveal my card →';
   $('#tres').hidden = false;
   if (document.pointerLockElement) document.exitPointerLock();
 }
-function startGame() {
-  // phones only run flat touch tests, so they never load the 3D arena
-  if (!MOBILE && !initGame()) return;
+function startGame(first = 0) {
+  // phone and console tests are flat screens, so they never load the 3D arena
+  if (!FLAT() && !initGame()) return;
   $('#wrap').hidden = true; $('#game').hidden = false;
   G.fpsFrames = 0; G.fpsTime = 0;
-  if (!MOBILE) { resizeGame(); G.clock.getDelta(); }
-  openBrief(0);
+  if (!PRACTICE) cheatReset();
+  if (!FLAT()) { resizeGame(); G.clock.getDelta(); }
+  openBrief(first);
 }
 function endGame() {
   clearTest();
   G.phase = 'off';
-  // PC: frame rate measured in the arena; phone: the screen's refresh rate
-  const fps = MOBILE ? (S.pc.hz || 60) : G.fpsTime > 0 ? Math.round(G.fpsFrames / G.fpsTime) : (S.pc.hz || 60);
+  // PC: frame rate measured in the arena; phone and console: the screen's refresh rate
+  const fps = FLAT() ? (S.pc.hz || 60) : G.fpsTime > 0 ? Math.round(G.fpsFrames / G.fpsTime) : (S.pc.hz || 60);
   S.pc.fps = fps;
   S.stats.FPS = fpsScore(fps);
-  S.res.FPS = MOBILE ? `${fps} Hz screen` : `${fps} fps average in the arena`;
+  S.res.FPS = FLAT() ? `${fps} Hz screen` : `${fps} fps average in the arena`;
   $('#game').hidden = true; $('#wrap').hidden = false;
   reveal();
 }
@@ -2134,7 +2212,7 @@ $('#bGo').onclick = () => {
   $('#brief').hidden = true; G.phase = 'flat'; G.test = TESTS[G.ti].make();
 };
 $('#pGo').onclick = () => lock();
-$('#tNext').onclick = () => G.ti < TESTS.length - 1 ? openBrief(G.ti + 1) : endGame();
+$('#tNext').onclick = () => PRACTICE ? endPractice() : G.ti < TESTS.length - 1 ? openBrief(G.ti + 1) : endGame();
 
 /* =====================================================================
    THE CARD — drawn flat on a canvas, then wrapped onto a 3D model
@@ -2149,7 +2227,7 @@ const RAR = [
 const CLASS = {
   REA: { code: 'RFX', name: 'REFLEX GOD' }, AIM: { code: 'SNP', name: 'SNIPER' }, TRK: { code: 'LCK', name: 'LOCK-ON' },
   MOV: { code: 'SPD', name: 'SPEED DEMON' }, RIG: { code: 'FLX', name: MOBILE ? 'PHONE FLEXER' : 'RIG FLEXER' }, FPS: { code: 'FRM', name: 'FRAME CHASER' },
-  TAP: { code: 'TPR', name: 'TAP MACHINE' },
+  TAP: { code: 'TPR', name: 'TAP MACHINE' }, BTN: { code: 'MSH', name: 'BUTTON MASHER' },
 };
 const TIPS = {
   REA: 'Your brain is lagging behind your screen. Try reaction drills, and sleep more.',
@@ -2157,6 +2235,7 @@ const TIPS = {
   TRK: MOBILE ? 'Keep your finger moving smoothly instead of chasing in jumps.' : 'Lower your sensitivity and follow through with your arm, not your wrist.',
   MOV: 'You move like a default bot. Sprint-jump and keep your momentum.',
   TAP: 'Your thumbs are on vacation. Use two of them.',
+  BTN: 'Rest your thumb on the button instead of lifting it between presses.',
   RIG: MOBILE ? 'Your phone is the weakest link on your team. Upgrade time?' : 'Your PC is the weakest link on your team. Upgrade time?',
   FPS: MOBILE ? 'A higher refresh rate screen would make everything feel faster.' : 'Your frame rate is holding you back. Lower your settings or get a faster screen.',
 };
@@ -2562,12 +2641,21 @@ async function reveal() {
     rig: { gpu: p.gpu || null, gpuPts: p.gpuPts || null, cores: p.cores || null, cpu1: p.cpu1 || null, cpuN: p.cpuN || null, mem: p.mem || null, hz: p.hz || null, fps: p.fps || null, parts: p.parts || {} } };
   const prev = ME && ME.cards && ME.cards[PLAT];
   const before = unlockedDesigns(ME);
+  // anti-cheat: a flagged run is shown, but never saved or counted for quests
+  const flagged = G.cheat && G.cheat.size ? [...G.cheat] : null;
+  if (flagged) {
+    await showCard(card, PLAT, { fresh: true, prev });
+    $('#rKick').textContent = 'Run rejected · not saved';
+    $('#rSub').textContent = `Our anti-cheat stopped this run: ${flagged.join(', ')}. Your old card is still there. Play it straight next time!`;
+    $('#editCard').hidden = true;
+    return;
+  }
   if (ME) {
     await saveCard(card);
     // quest progress that outlives the card itself
     const extra = {};
     if (ovr > (ME.bestOvr || 0)) { ME.bestOvr = ovr; extra.bestOvr = ovr; }
-    if (!MOBILE && /· 0 falls/.test(S.res.MOV || '')) { ME.flags = { ...(ME.flags || {}), cleanRun: true }; extra.flags = { cleanRun: true }; }
+    if (PLAT === 'pc' && /· 0 falls/.test(S.res.MOV || '')) { ME.flags = { ...(ME.flags || {}), cleanRun: true }; extra.flags = { cleanRun: true }; }
     if (Object.keys(extra).length) await writePlayer(extra).catch(() => {});
   }
   await showCard(card, PLAT, { fresh: true, prev });
@@ -2579,8 +2667,8 @@ let last = null;
 async function showCard(card, plat, { fresh = false, prev = null, owner = null } = {}) {
   show('result', fresh ? 'New card' : owner ? 'Player card' : 'My cards');
   owner = owner || myOwner();
-  const keys = plat === 'pc' ? KEYS_PC : KEYS_MOBILE, platName = plat === 'pc' ? 'PC' : 'MOBILE';
-  const tests = plat === 'pc' ? TESTS_PC : TESTS_MOBILE;
+  const keys = KEYS_OF[plat], platName = PLAT_NAMES[plat];
+  const tests = plat === 'pc' ? TESTS_PC : plat === 'console' ? TESTS_CONSOLE : TESTS_MOBILE;
   const st = card.stats, rig = card.rig || {}, res = card.res || {}, parts = rig.parts || {};
   const rar = RAR.find(r => r.name === card.rar) || RAR.find(r => card.ovr >= r.min);
   const low = keys.reduce((a, k) => st[k] < st[a] ? k : a);
@@ -2597,7 +2685,7 @@ async function showCard(card, plat, { fresh = false, prev = null, owner = null }
   if (fresh && prev && card.ovr > prev.ovr) toast(`Up ${card.ovr - prev.ovr} from your last card!`);
   const rows = [
     ...tests.map(t => [t.title, `${res[t.key] || '—'} → ${st[t.key]}`]),
-    plat === 'mobile' ? ['Screen', `${rig.hz} Hz → FPS ${st.FPS}`] : ['Arena FPS', `${rig.fps} fps → FPS ${st.FPS}`],
+    plat !== 'pc' ? ['Screen', `${rig.hz} Hz → FPS ${st.FPS}`] : ['Arena FPS', `${rig.fps} fps → FPS ${st.FPS}`],
     ['GPU', `${rig.gpu || 'unknown'}${parts.gpu ? ` → ${parts.gpu}` : ''}`],
     ['GPU benchmark', rig.gpuPts ? `${rig.gpuPts} G shader ops/s` : 'did not run'],
     ['CPU single-core', rig.cpu1 ? `${rig.cpu1} pts → ${parts.cpu1}` : 'did not run'],
@@ -2682,6 +2770,199 @@ $('#share').onclick = async () => {
 $('#again').onclick = () => { S.stats = {}; S.res = {}; toMenu(); };
 
 // handy for testing from the console
+/* =====================================================================
+   ANTI-CHEAT
+   Everything runs on the player's own device, so nothing can be made
+   impossible to cheat, but these checks stop bots, emulators, auto-clickers
+   and scripted input. A run that trips one is shown but never saved.
+   ===================================================================== */
+const PAD = Symbol('gg-pad'); // marks input that came from a real controller, via our own code
+const realInput = e => !!e && (e.isTrusted || e.ggPad === PAD);
+function cheatReset() { G.cheat = new Set(); G.moves = 0; }
+function cheat(reason) { (G.cheat || (G.cheat = new Set())).add(reason); }
+// checked before a run starts: automation tools, headless browsers, emulators and virtual machines
+function environmentProblems() {
+  const out = [];
+  if (navigator.webdriver) out.push('browser automation is switched on (webdriver)');
+  if (/HeadlessChrome|PhantomJS|Puppeteer|Playwright/i.test(navigator.userAgent)) out.push('this is a headless or automated browser');
+  let g = '';
+  try { // the raw renderer string: the cleaned-up GPU name hides words like "SwiftShader"
+    const gl = document.createElement('canvas').getContext('webgl'), ext = gl && gl.getExtension('WEBGL_debug_renderer_info');
+    g = (gl ? String(gl.getParameter(ext ? ext.UNMASKED_RENDERER_WEBGL : gl.RENDERER)) : '').toLowerCase();
+  } catch (e) {}
+  if (/swiftshader|llvmpipe|softpipe|virtualbox|vmware|parallels|hyper-v|qemu|virgl|android emulator|bluestacks|nox|ldplayer|mumu|genymotion/.test(g))
+    out.push('an emulator or virtual machine was detected (turn on hardware acceleration if you’re on a normal PC)');
+  return out;
+}
+// result checks: what no human hand can do
+function checkReaction(times) {
+  const avg = times.reduce((a, b) => a + b) / times.length;
+  const sd = Math.sqrt(times.reduce((a, b) => a + (b - avg) ** 2, 0) / times.length);
+  if (avg < 120 || Math.min(...times) < 90) cheat('reaction times faster than humanly possible');
+  if (times.length >= 3 && sd < 4) cheat('reaction times too perfectly consistent');
+}
+
+/* =====================================================================
+   CONSOLE: controller detection, Console mode, and a crosshair you move
+   with the left stick. Browsers only reveal a controller after you press
+   one of its buttons.
+   ===================================================================== */
+let padIndex = null, padPrev = {}, padCur = { x: 0, y: 0, down: false }, padFrame = 0;
+const pad = () => { const ps = navigator.getGamepads ? [...navigator.getGamepads()].filter(Boolean) : []; return ps.find(p => p.index === padIndex) || ps[0] || null; };
+const padName = p => (p.id || 'Controller').replace(/\(.*?\)/g, '').replace(/STANDARD GAMEPAD/i, '').trim() || 'Controller';
+function renderPadBar() {
+  const p = pad(), el = $('#padBar');
+  el.classList.toggle('on', !!p); el.classList.toggle('console', PLAT === 'console');
+  if (!p) {
+    el.innerHTML = `<i class="dot"></i><span>🎮 No controller found. Plug one in or connect it, then <b>press any button on it</b>.</span>`
+      + (PLAT === 'console' ? `<button class="btn ghost" id="padMode">Back to ${MOBILE ? 'Mobile' : 'PC'}</button>` : '');
+  } else {
+    el.innerHTML = `<i class="dot"></i><span>🎮 <b>${esc(padName(p))}</b> connected${PLAT === 'console' ? ' · Console mode is on' : ''}</span>`
+      + `<button class="btn ${PLAT === 'console' ? 'ghost' : ''}" id="padMode">${PLAT === 'console' ? `Back to ${MOBILE ? 'Mobile' : 'PC'}` : 'Play in Console mode'}</button>`;
+  }
+  const b = $('#padMode');
+  if (b) b.onclick = () => { setPlatform(PLAT === 'console' ? (MOBILE ? 'mobile' : 'pc') : 'console'); store.set('gg-console', PLAT === 'console' ? '1' : ''); applyPlatformText(); renderPadBar(); updateCooldown(); };
+}
+function applyPlatformText() {
+  const c = PLAT === 'console';
+  $('#introNote').textContent = c ? 'Console mode: 4 controller tests and a CONSOLE card. Use the left stick to aim and A to shoot. You can also move around the menus with the D-pad and A / B.'
+    : MOBILE ? 'Mobile mode: 4 touch tests and a MOBILE card. On a PC you get the 3D FPS tests and a separate PC card.'
+    : 'Needs a mouse and keyboard. The game locks your mouse; press Esc to pause.';
+  $('#step2').innerHTML = c ? '<b>02</b> You take 4 controller tests: quick draw, stick aim, stick tracking and button mash.'
+    : MOBILE ? '<b>02</b> You take 4 touch tests: quick draw, tap targets, finger tracking and tap speed.'
+    : '<b>02</b> You drop into a 3D arena for quick draw, flick shots, tracking and a parkour run.';
+}
+addEventListener('gamepadconnected', e => { padIndex = e.gamepad.index; renderPadBar(); toast(`🎮 ${padName(e.gamepad)} connected`); });
+addEventListener('gamepaddisconnected', () => { padIndex = null; renderPadBar(); });
+// fire a pointer event that the tests accept as real (marked with our private symbol)
+function padEvent(type, x, y) {
+  const A = $('#rbox'), ev = new PointerEvent(type, { bubbles: true, clientX: x, clientY: y });
+  Object.defineProperty(ev, 'ggPad', { value: PAD });
+  A.dispatchEvent(ev);
+}
+const pressed = (p, i) => !!(p.buttons[i] && p.buttons[i].pressed);
+function padLoop(now) {
+  requestAnimationFrame(padLoop);
+  const p = pad();
+  if (!p) return;
+  const dt = Math.min(.05, (now - (padFrame || now)) / 1000); padFrame = now;
+  const edge = i => pressed(p, i) && !padPrev[i];
+  const inGame = !$('#game').hidden, flatTest = inGame && G.phase === 'flat' && PLAT === 'console';
+  const cur = $('#padCursor');
+  if (flatTest) {
+    // left stick moves the crosshair; A shoots / holds
+    const A = $('#rbox').getBoundingClientRect();
+    if (cur.hidden) { cur.hidden = false; padCur.x = A.left + A.width / 2; padCur.y = A.top + A.height / 2; }
+    let ax = p.axes[0] || 0, ay = p.axes[1] || 0;
+    const mag = Math.hypot(ax, ay), dead = .14;
+    if (mag < dead) { ax = ay = 0; } else { const k = ((mag - dead) / (1 - dead)) ** 1.6 / mag; ax *= k; ay *= k; } // smooth response curve
+    padCur.x = clamp(padCur.x + ax * 1100 * dt, A.left + 4, A.right - 4);
+    padCur.y = clamp(padCur.y + ay * 1100 * dt, A.top + 4, A.bottom - 4);
+    cur.style.left = padCur.x + 'px'; cur.style.top = padCur.y + 'px';
+    const a = pressed(p, 0);
+    if (a && !padPrev[0]) padEvent('pointerdown', padCur.x, padCur.y);
+    if (a || ax || ay) padEvent('pointermove', padCur.x, padCur.y);
+    if (!a && padPrev[0]) padEvent('pointerup', padCur.x, padCur.y);
+    cur.classList.toggle('down', a);
+  } else {
+    if (!cur.hidden) cur.hidden = true;
+    // menus: A presses, B goes back, D-pad / stick moves between buttons
+    if (edge(0)) {
+      const vis = id => !$(id).hidden;
+      if (inGame && vis('#brief')) $('#bGo').click();
+      else if (inGame && vis('#tres')) $('#tNext').click();
+      else if (document.activeElement && document.activeElement !== document.body) document.activeElement.click();
+      else padFocus(1);
+    }
+    if (edge(1)) {
+      if (!$('#arcadeOv').hidden) $('#arcQuit').click();
+      else { const back = [...document.querySelectorAll('.screen.on [data-back], .screen.on #again')].find(b => b.offsetParent); if (back) back.click(); }
+    }
+    const ay = p.axes[1] || 0, ax = p.axes[0] || 0;
+    const dir = edge(13) || edge(15) || (ay > .6 && padPrev.ay <= .6) || (ax > .6 && padPrev.ax <= .6) ? 1
+      : edge(12) || edge(14) || (ay < -.6 && padPrev.ay >= -.6) || (ax < -.6 && padPrev.ax >= -.6) ? -1 : 0;
+    if (dir && !inGame) padFocus(dir);
+    padPrev.ay = ay; padPrev.ax = ax;
+  }
+  p.buttons.forEach((b, i) => { padPrev[i] = b.pressed; });
+}
+function padFocus(dir) {
+  const items = [...document.querySelectorAll('.screen.on button, .screen.on .mi, .screen.on input, .screen.on [data-uid]')]
+    .filter(b => b.offsetParent && !b.disabled);
+  if (!items.length) return;
+  const i = items.indexOf(document.activeElement);
+  const next = items[(i + dir + items.length) % items.length] || items[0];
+  if (!next.tabIndex || next.tabIndex < 0) next.tabIndex = 0;
+  next.focus(); next.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+requestAnimationFrame(padLoop);
+if (store.get('gg-console') === '1') setPlatform('console');
+applyPlatformText();
+renderPadBar();
+
+/* =====================================================================
+   PERSONAL TRAINING: practice any test, as often as you like.
+   Practice never changes your card; your best practice score is kept.
+   ===================================================================== */
+let PRACTICE = false;
+const guest = {}; // practice bests when nobody is signed in (kept until the page closes)
+const TRAIN_TIPS = {
+  REA: 'Look at the center, stay relaxed, and react to the color change rather than guessing.',
+  AIM: 'Move your eyes to the target first, then your hand. Accuracy before speed.',
+  TRK: 'Lower your sensitivity and move smoothly. Don’t chase: predict where it’s going.',
+  MOV: 'Sprint into every jump, and let go of W in the air so you land on the pillar.',
+  TAP: 'Use two thumbs and tap with short strokes from just above the screen.',
+  BTN: 'Rest your thumb on A and use tiny presses instead of lifting it.',
+  RIG: 'Close other apps and browser tabs, and plug in your laptop before a run.',
+  FPS: 'Turn on hardware acceleration in your browser and use your monitor’s highest refresh rate.',
+};
+function renderTraining() {
+  const card = ME && ME.cards && ME.cards[PLAT], st = card ? card.stats : null;
+  const best = ((ME || guest).train || {})[PLAT] || {};
+  const order = [...KEYS].sort((a, b) => (st ? st[a] - st[b] : 0));
+  const tests = TESTS.map(t => t.key), weakest = order.find(k => tests.includes(k));
+  const wt = TESTS.find(t => t.key === weakest);
+  $('#trainLead').textContent = card ? `Based on your ${PLAT_NAME} card (${card.ovr} OVR), weakest skills first.` : `No ${PLAT_NAME} card yet, so practice anything. Make a card to get a personal plan.`;
+  $('#trainPlan').innerHTML = card && wt ? `<b>Today’s plan: 3 practice runs of ${wt.title}</b><p>Your ${weakest} is ${st[weakest]}. ${TRAIN_TIPS[weakest]}</p>`
+    : `<b>Warm up with a few practice runs</b><p>Then hit Play for your real card.</p>`;
+  $('#trainList').innerHTML = order.map(k => {
+    const t = TESTS.find(x => x.key === k), v = st ? st[k] : null, b = best[k];
+    return `<div class="trow ${k === weakest && card ? 'weak' : ''}"><span class="k">${k}</span><div><b>${t ? t.title : k === 'RIG' ? 'Your hardware' : 'Frame rate'}</b><small>${TRAIN_TIPS[k]}</small>
+      <div class="bars">card <span class="bar"><i style="width:${v != null ? v / 99 * 100 : 0}%"></i></span>${v != null ? v : '–'}
+      · practice <span class="bar"><i class="pr" style="width:${b != null ? b / 99 * 100 : 0}%"></i></span>${b != null ? b : '–'}</div></div>
+      ${t ? `<button class="btn ${k === weakest && card ? '' : 'ghost'}" data-k="${k}" type="button">Practice</button>` : '<span></span>'}</div>`;
+  }).join('');
+  $('#trainList').querySelectorAll('[data-k]').forEach(b => b.onclick = () => startPractice(b.dataset.k));
+}
+function startPractice(key) {
+  const i = TESTS.findIndex(t => t.key === key);
+  if (i < 0) return;
+  const env = environmentProblems();
+  if (env.length) return toast(`Can’t play: ${env[0]}.`);
+  PRACTICE = true; cheatReset();
+  S.stats = {}; S.res = {};
+  startGame(i);
+}
+async function endPractice() {
+  const T = TESTS[G.ti], score = S.stats[T.key];
+  clearTest(); G.phase = 'off'; PRACTICE = false;
+  $('#game').hidden = true; $('#wrap').hidden = false;
+  if (document.pointerLockElement) document.exitPointerLock();
+  const card = ME && ME.cards && ME.cards[PLAT];
+  if (G.cheat && G.cheat.size) toast(`Practice not counted: ${[...G.cheat][0]}.`);
+  else if (score != null) {
+    const who = ME || guest, prev = who.train && who.train[PLAT] && who.train[PLAT][T.key];
+    if (prev == null || score > prev) {
+      who.train = { ...(who.train || {}), [PLAT]: { ...((who.train || {})[PLAT] || {}), [T.key]: score } };
+      if (ME) await writePlayer({ train: { [PLAT]: { [T.key]: score } } }).catch(() => {});
+    }
+    const diff = card ? score - card.stats[T.key] : null;
+    toast(`${T.title}: ${score}${diff != null ? ` (${diff >= 0 ? '+' : ''}${diff} vs your card)` : ''}${prev == null || score > prev ? ' · new practice best!' : ''}`);
+  }
+  show('train', 'Training'); renderTraining();
+}
+$('#mTrain').onclick = () => { renderTraining(); show('train', 'Training'); };
+
 window.GG = { S, G, reveal, showCard, playGame, DESIGNS, QUESTS, unlockedDesigns, startGame, openBrief, finishTest, endGame, cpuBench, gpuBench, step: updatePlayer, me: () => ME, BOXES, RINGS };
 </script>
 </body>
