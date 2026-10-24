@@ -1,0 +1,1568 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GG Card — rate your skills & your rig</title>
+<meta name="description" content="A PC scan + 4 FPS challenges in a 3D arena = your personal 3D gamer card. What's your OVR?">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<style>
+:root{--bg:#07090d;--panel:#0e131b;--line:#1c2532;--text:#e9eef5;--muted:#7d8a9c;--acc:#39ff9f;--acc2:#2ad7ff;--bad:#ff4d6d}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html,body{background:var(--bg);color:var(--text);font-family:'Chakra Petch',system-ui,sans-serif}
+body{min-height:100vh;background:radial-gradient(1200px 600px at 85% -10%,rgba(42,215,255,.13),transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(57,255,159,.10),transparent 60%),var(--bg)}
+.wrap{max-width:720px;margin:0 auto;padding:24px 16px 64px}
+.top{display:flex;justify-content:space-between;font:12px 'JetBrains Mono',monospace;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:32px}
+.top b{color:var(--acc);font-weight:400}
+.screen{display:none}.screen.on{display:block;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+h1{font-size:clamp(72px,20vw,140px);line-height:.82;font-weight:700;letter-spacing:-.02em}
+h1 span{color:var(--acc);text-shadow:0 0 28px rgba(57,255,159,.45)}
+h2{font-size:clamp(34px,8vw,52px);line-height:1}
+.kicker{font:12px 'JetBrains Mono',monospace;color:var(--acc);letter-spacing:.16em;text-transform:uppercase;margin-bottom:10px}
+.lead{color:var(--muted);font-size:18px;margin:16px 0 28px;max-width:46ch}
+.label{font:11px 'JetBrains Mono',monospace;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;display:flex;justify-content:space-between}
+input[type=text]{width:100%;background:var(--panel);border:1px solid var(--line);color:var(--text);font:700 22px 'Chakra Petch',sans-serif;padding:14px 16px;border-radius:10px;outline:none;text-transform:uppercase}
+input[type=text]:focus{border-color:var(--acc)}
+.photo{display:flex;gap:14px;align-items:center;margin:16px 0 28px;cursor:pointer}
+.photo .ph{width:58px;height:58px;border-radius:12px;border:1px dashed #33414f;display:grid;place-items:center;font-size:26px;color:var(--muted);background:var(--panel) center/cover no-repeat;flex:none}
+.photo small{display:block;color:var(--muted);font-size:13px}
+.prof{margin-bottom:22px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:999px;padding:5px 14px 5px 5px;font:700 14px 'Chakra Petch',sans-serif;cursor:pointer}
+.chip:hover{border-color:var(--acc)}
+.chip i{font-style:normal;color:var(--acc);margin-left:4px}
+.av{width:30px;height:30px;border-radius:50%;background:#18212e center/cover no-repeat;display:grid;place-items:center;font-weight:700;color:var(--acc);flex:none}
+.me{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.me .av{width:42px;height:42px;font-size:18px}
+.me div{flex:1}
+.me small{display:block;font:11px 'JetBrains Mono',monospace;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
+.me i{font-style:normal;color:var(--acc)}
+.link{background:none;border:0;color:var(--muted);font:12px 'JetBrains Mono',monospace;text-decoration:underline;cursor:pointer}
+.link:hover{color:var(--text)}
+.auth input{width:100%;background:var(--panel);border:1px solid var(--line);color:var(--text);font:16px 'JetBrains Mono',monospace;padding:12px 14px;border-radius:10px;outline:none;margin-bottom:8px}
+.auth input:focus{border-color:var(--acc)}
+.auth .or{text-align:center;font:11px 'JetBrains Mono',monospace;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin:12px 0}
+.auth .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.auth .btn{font-size:15px;padding:12px 14px}
+.auth .note{margin-top:8px;min-height:1em}
+.lb{margin-top:22px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.lb h3{font-size:22px;margin-bottom:8px}
+.lb div{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:16px}
+.lb div:last-of-type{border:0}
+.lb div.you b{color:var(--acc)}
+.lb .rk{width:2ch;font:14px 'JetBrains Mono',monospace;color:var(--muted)}
+.lb b{flex:1}
+.lb div span:not(.rk):not(.av){font:12px 'JetBrains Mono',monospace;color:var(--muted)}
+.lb i{font-style:normal;font-weight:700;font-size:20px;color:var(--acc);min-width:2ch;text-align:right}
+.match{display:flex;align-items:center;gap:10px;margin:-14px 0 26px;font-size:15px;color:var(--muted);cursor:pointer}
+.match input{width:18px;height:18px;accent-color:var(--acc)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:var(--acc);color:#04120a;border:0;font:700 18px 'Chakra Petch',sans-serif;letter-spacing:.06em;padding:16px 26px;border-radius:10px;cursor:pointer;text-transform:uppercase;transition:transform .1s,box-shadow .2s}
+.btn:hover{box-shadow:0 0 0 4px rgba(57,255,159,.22)}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+.btn.ghost:hover{box-shadow:0 0 0 4px rgba(255,255,255,.06)}
+.btn.full{width:100%}
+.note{margin-top:14px;font:13px 'JetBrains Mono',monospace;color:var(--muted)}
+.note.warn{color:var(--bad)}
+.steps{margin-top:36px;display:grid;gap:10px}
+.steps div{display:flex;gap:14px;color:var(--muted);font-size:15px}
+.steps b{font-family:'JetBrains Mono',monospace;color:var(--acc);font-weight:400}
+.term{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;font:14px/2 'JetBrains Mono',monospace;margin:22px 0;min-height:250px;overflow-wrap:anywhere}
+.term .k{color:var(--muted);display:inline-block;min-width:13ch}
+.term .v{color:var(--acc)}
+.term .sum{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:18px}
+.term .sum b{color:var(--acc);font-size:26px}
+.dots::after{content:'';animation:dots 1s steps(4) infinite}
+@keyframes dots{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
+
+/* ---------- game ---------- */
+#game{position:fixed;inset:0;background:#000;z-index:10;user-select:none;-webkit-user-select:none;overflow:hidden}
+#gl,#gl canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.ch,.hm{position:absolute;left:50%;top:50%;pointer-events:none;--c:#fff}
+.rbox{position:absolute;inset:0;display:grid;place-items:center;text-align:center;background:#11161d;font:700 clamp(32px,6vw,56px) 'Chakra Petch',sans-serif;cursor:pointer;user-select:none;padding:20px}
+.rbox.wait{background:#8c1c2c}
+.rbox.go{background:#1e8a4f}
+.rbox small{display:block;font:400 14px 'JetBrains Mono',monospace;color:rgba(255,255,255,.7);margin-top:12px;letter-spacing:.06em}
+.ch{width:22px;height:22px;transform:translate(-50%,-50%);filter:drop-shadow(0 0 1px #000)}
+.ch,.hm{background:linear-gradient(var(--c),var(--c)) 50% 0/2px 7px no-repeat,linear-gradient(var(--c),var(--c)) 50% 100%/2px 7px no-repeat,linear-gradient(var(--c),var(--c)) 0 50%/7px 2px no-repeat,linear-gradient(var(--c),var(--c)) 100% 50%/7px 2px no-repeat}
+.ch::after{content:'';position:absolute;left:50%;top:50%;width:3px;height:3px;margin:-1.5px;background:var(--c);border-radius:50%}
+.hm{--c:#fff;width:28px;height:28px;opacity:0;transform:translate(-50%,-50%) rotate(45deg)}
+.hm.on{animation:hm .25s ease-out}
+@keyframes hm{0%{opacity:1;transform:translate(-50%,-50%) rotate(45deg) scale(1.35)}100%{opacity:0;transform:translate(-50%,-50%) rotate(45deg) scale(1)}}
+.ghud{position:absolute;font:13px 'JetBrains Mono',monospace;color:#c7d2e0;text-shadow:0 1px 3px #000;pointer-events:none;letter-spacing:.08em}
+.ghud.top{top:16px;left:0;right:0;display:flex;justify-content:center;gap:18px;text-transform:uppercase}
+#gTitle{color:var(--acc)}
+.ghud.bl{left:22px;bottom:20px;font-size:15px}
+.ghud.br{right:22px;bottom:20px;font-size:15px;text-align:right}
+.ghud b{color:#fff;font-size:24px}
+#gCenter{position:absolute;left:0;right:0;top:28%;text-align:center;font:700 clamp(36px,7vw,84px) 'Chakra Petch',sans-serif;pointer-events:none;text-shadow:0 0 30px rgba(0,0,0,.7)}
+.ov{position:absolute;inset:0;display:grid;place-items:center;background:rgba(4,7,12,.7);backdrop-filter:blur(6px);padding:16px}
+.panel{width:min(540px,100%);background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:28px}
+.panel p{color:var(--muted);margin:12px 0 18px;font-size:16px}
+.keys{display:flex;flex-wrap:wrap;gap:10px 16px;margin-bottom:20px}
+.keys span{font:12px 'JetBrains Mono',monospace;color:var(--muted)}
+kbd{font:700 12px 'JetBrains Mono',monospace;color:var(--text);background:#18212e;border:1px solid #2a3646;border-bottom-width:3px;border-radius:6px;padding:3px 7px;margin-right:6px}
+.sens{display:flex;align-items:center;gap:12px;font:12px 'JetBrains Mono',monospace;color:var(--muted);margin-bottom:20px;text-transform:uppercase;letter-spacing:.1em}
+.sens input{flex:1;accent-color:var(--acc)}
+.sens b{color:var(--text);min-width:3ch;text-align:right}
+.tscore{font:700 110px/1 'Chakra Petch',sans-serif;color:var(--acc);text-shadow:0 0 30px rgba(57,255,159,.4)}
+.tdetail{font:14px 'JetBrains Mono',monospace;color:var(--muted);margin:10px 0 22px}
+
+/* ---------- result ---------- */
+.res-head{text-align:center;margin-bottom:6px}
+.res-head p{color:var(--muted);margin-top:8px}
+#stage{position:relative;height:min(72vh,640px);margin:0 -16px;touch-action:none}
+#stage canvas{display:block;width:100%;height:100%}
+.hint{text-align:center;font:12px 'JetBrains Mono',monospace;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:18px}
+#card{display:none}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:26px}
+.row .btn{font-size:15px;padding:13px 18px}
+.breakdown{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:4px 18px}
+.breakdown div{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid var(--line);font:14px 'JetBrains Mono',monospace}
+.breakdown div:last-child{border:0}
+.breakdown span{color:var(--muted)}
+.breakdown b{text-align:right}
+.tip{margin-top:16px;padding:14px 18px;border-left:3px solid var(--bad);background:rgba(255,77,109,.06);border-radius:0 10px 10px 0;color:var(--text);font-size:15px}
+.tip b{color:var(--bad)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--acc);color:#04120a;font-weight:700;padding:12px 18px;border-radius:10px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.on{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap" id="wrap">
+  <div class="top"><span><b>●</b> GG CARD · S1</span><span id="step">READY</span></div>
+
+  <!-- INTRO -->
+  <section class="screen on" id="intro">
+    <h1>GG<br><span>CARD</span></h1>
+    <p class="lead">1 PC scan. 4 FPS challenges in a 3D arena. 1 holographic card. Find out your OVR before your squad does.</p>
+    <div class="prof" id="prof"></div>
+    <div class="label"><span>Gamertag</span><span id="cnt">0/14</span></div>
+    <input type="text" id="name" maxlength="14" placeholder="PLAYER" autocomplete="off">
+    <label class="photo">
+      <div class="ph" id="ph">+</div>
+      <div>Photo for your card<small id="photoNote">optional. it never leaves your device.</small></div>
+      <input type="file" id="file" accept="image/*" hidden>
+    </label>
+    <label class="match" id="matchRow" hidden><input type="checkbox" id="match" checked> Match my card's colors to my photo</label>
+    <button class="btn full" id="go">Start the scan →</button>
+    <p class="note" id="introNote">Needs a mouse + keyboard. Your mouse gets locked in the game; press Esc to pause.</p>
+    <div class="steps">
+      <div><b>01</b> We scan your PC: GPU, CPU, RAM, refresh rate.</div>
+      <div><b>02</b> You drop into the arena: quick draw, flick shots, tracking and a parkour run.</div>
+      <div><b>03</b> You get a 3D card with your OVR, rarity and 6 stats. Spin it. Flex it.</div>
+    </div>
+  </section>
+
+  <!-- PC SCAN -->
+  <section class="screen" id="scan">
+    <div class="kicker">Step 1 · Rig check</div>
+    <h2>Scanning your setup</h2>
+    <div class="term" id="term"></div>
+    <button class="btn full" id="scanNext" hidden>Enter the arena →</button>
+  </section>
+
+  <!-- RESULT -->
+  <section class="screen" id="result">
+    <div class="res-head">
+      <div class="kicker" id="rKick">Your card</div>
+      <h2 id="rTitle"></h2>
+      <p id="rSub"></p>
+    </div>
+    <div id="stage"></div>
+    <div class="hint">drag to spin · double-click to flip</div>
+    <canvas id="card" width="720" height="1040"></canvas>
+    <div class="row">
+      <button class="btn" id="dl">Download card</button>
+      <button class="btn ghost" id="shot3d">Save 3D pic</button>
+      <button class="btn ghost" id="flip">Flip</button>
+      <button class="btn ghost" id="theme" hidden>Photo colors: on</button>
+      <button class="btn ghost" id="share">Share</button>
+      <button class="btn ghost" id="again">Retake</button>
+    </div>
+    <div class="breakdown" id="bd"></div>
+    <div class="tip" id="tip"></div>
+    <div class="lb" id="lb" hidden></div>
+  </section>
+</div>
+
+<!-- GAME -->
+<div id="game" hidden>
+  <div id="gl"></div>
+  <div class="ch"></div>
+  <div class="hm" id="hm"></div>
+  <div class="ghud top"><span id="gStep"></span><span id="gTitle"></span></div>
+  <div class="ghud bl" id="gL"></div>
+  <div class="ghud br" id="gR"></div>
+  <div id="gCenter"></div>
+  <div class="rbox" id="rbox" hidden></div>
+  <div class="ov" id="brief">
+    <div class="panel">
+      <div class="kicker" id="bKick"></div>
+      <h2 id="bTitle"></h2>
+      <p id="bDesc"></p>
+      <div class="keys" id="bKeys"></div>
+      <label class="sens" id="sensRow">Sensitivity <input type="range" id="sens" min="0.2" max="3" step="0.05" value="1"> <b id="sensV">1.00</b></label>
+      <button class="btn full" id="bGo">Click to start</button>
+    </div>
+  </div>
+  <div class="ov" id="pause" hidden>
+    <div class="panel">
+      <div class="kicker">Paused</div>
+      <h2>Mouse unlocked</h2>
+      <p>The clock is stopped. Click to jump back in.</p>
+      <button class="btn full" id="pGo">Resume</button>
+    </div>
+  </div>
+  <div class="ov" id="tres" hidden>
+    <div class="panel" style="text-align:center">
+      <div class="kicker" id="tKick"></div>
+      <div class="tscore" id="tScore"></div>
+      <div class="tdetail" id="tDetail"></div>
+      <button class="btn full" id="tNext">Next test →</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { Sky } from 'three/addons/objects/Sky.js';
+
+const $ = s => document.querySelector(s);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const rand = (a, b) => a + Math.random() * (b - a);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+// map value v linearly from (v0 -> s0) to (v1 -> s1), clamped to that score range
+const lerpScore = (v, v0, s0, v1, s1) =>
+  Math.round(clamp(s0 + (v - v0) * (s1 - s0) / (v1 - v0), Math.min(s0, s1), Math.max(s0, s1)));
+const curve = (v, pts) => {
+  if (v <= pts[0][0]) return pts[0][1];
+  for (let i = 1; i < pts.length; i++) if (v <= pts[i][0]) return lerpScore(v, pts[i-1][0], pts[i-1][1], pts[i][0], pts[i][1]);
+  return pts[pts.length - 1][1];
+};
+const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+
+const S = { name: 'PLAYER', photo: null, stats: {}, res: {}, pc: {} };
+const KEYS = ['REA', 'AIM', 'TRK', 'MOV', 'RIG', 'FPS'];
+
+function show(id, step) {
+  document.querySelectorAll('.screen').forEach(e => e.classList.toggle('on', e.id === id));
+  $('#step').textContent = step || '';
+  window.scrollTo(0, 0);
+}
+function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('on'); setTimeout(() => el.classList.remove('on'), 2200); }
+
+/* ---------- INTRO ---------- */
+if (!matchMedia('(pointer: fine)').matches) {
+  $('#introNote').textContent = 'The FPS challenges need a computer with a mouse and keyboard. Open this page on your PC.';
+  $('#introNote').classList.add('warn');
+  $('#go').disabled = true;
+}
+$('#name').addEventListener('input', e => { $('#cnt').textContent = e.target.value.length + '/14'; });
+function setPhoto(url) {
+  return new Promise(res => {
+    const img = new Image();
+    img.onload = () => {
+      S.photo = img; S.photoURL = url;
+      $('#ph').style.backgroundImage = `url(${url})`; $('#ph').textContent = '';
+      $('#matchRow').hidden = false; res();
+    };
+    img.onerror = res;
+    img.src = url;
+  });
+}
+function clearPhoto() { S.photo = null; S.photoURL = null; $('#ph').style.backgroundImage = ''; $('#ph').textContent = '+'; $('#matchRow').hidden = true; }
+// keep saved photos small so profiles fit in browser storage
+function shrinkPhoto(img) {
+  const s = Math.min(1, 360 / Math.max(img.width, img.height)), c = document.createElement('canvas');
+  c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+  c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+  return c.toDataURL('image/jpeg', .85);
+}
+$('#file').addEventListener('change', e => {
+  const f = e.target.files[0]; if (!f) return;
+  const rd = new FileReader();
+  rd.onload = () => { const img = new Image(); img.onload = () => setPhoto(shrinkPhoto(img)); img.src = rd.result; };
+  rd.readAsDataURL(f);
+});
+$('#match').addEventListener('change', e => { S.matchPhoto = e.target.checked; });
+S.matchPhoto = true;
+
+/* ---------- accounts ----------
+   Paste your Firebase web app config here (Firebase console → Project settings → Your apps).
+   While apiKey is empty, players are saved only in this browser instead. */
+const FIREBASE_CONFIG = {
+  apiKey: 'AIzaSyCWh57Pf7Pi1Mw0YTlpoRAnFAs9k7Ukfmw',
+  authDomain: 'gg-card-1a961.firebaseapp.com',
+  projectId: 'gg-card-1a961',
+  appId: '1:326886617310:web:192a2329eeddd779fc924f',
+};
+let FB = null; // { A: auth module, F: firestore module, auth, db, user }
+async function initFirebase() {
+  if (!FIREBASE_CONFIG.apiKey) return;
+  try {
+    const base = 'https://www.gstatic.com/firebasejs/10.12.2/';
+    const [{ initializeApp }, A, F] = await Promise.all([import(base + 'firebase-app.js'), import(base + 'firebase-auth.js'), import(base + 'firebase-firestore.js')]);
+    const app = initializeApp(FIREBASE_CONFIG);
+    FB = { A, F, auth: A.getAuth(app), db: F.getFirestore(app), user: null };
+    A.onAuthStateChanged(FB.auth, onUser);
+  } catch (e) { FB = null; console.warn('Firebase failed to load', e); }
+}
+async function onUser(user) {
+  FB.user = user;
+  if (!user) { ME = null; resetForm(); renderProfiles(); return; }
+  const ref = FB.F.doc(FB.db, 'players', user.uid);
+  let data = null;
+  try { const snap = await FB.F.getDoc(ref); data = snap.exists() ? snap.data() : null; } catch (e) { authMsg('Could not load your profile: ' + e.code); }
+  if (!data) data = { name: (user.displayName || user.email || 'PLAYER').split(/[@\s]/)[0].toUpperCase().slice(0, 14), history: [] };
+  await signIn({ ...data, id: user.uid });
+}
+const authMsg = t => { const m = $('#authMsg'); if (m) m.textContent = t; };
+const AUTH_ERRORS = {
+  'auth/invalid-email': 'That email address doesn’t look right.',
+  'auth/missing-password': 'Type a password.',
+  'auth/weak-password': 'Password needs at least 6 characters.',
+  'auth/email-already-in-use': 'That email already has an account. Sign in instead.',
+  'auth/invalid-credential': 'Wrong email or password.',
+  'auth/too-many-requests': 'Too many tries. Wait a minute and try again.',
+  'auth/popup-closed-by-user': 'Google sign-in was closed.',
+  'auth/unauthorized-domain': 'This website isn’t on the Firebase authorized domains list yet.',
+};
+async function authDo(fn) {
+  authMsg('');
+  try { await fn(); } catch (e) { authMsg(AUTH_ERRORS[e.code] || e.message); }
+}
+
+const loadProfiles = () => { try { return JSON.parse(store.get('gg-profiles')) || []; } catch (e) { return []; } };
+function saveProfile(p) {
+  if (FB) {
+    if (!FB.user) return; // guests aren't saved
+    const { id, ...data } = p;
+    return FB.F.setDoc(FB.F.doc(FB.db, 'players', FB.user.uid), data).catch(e => toast('Could not save: ' + e.code));
+  }
+  const list = loadProfiles().filter(x => x.id !== p.id);
+  list.unshift(p);
+  store.set('gg-profiles', JSON.stringify(list.slice(0, 12)));
+}
+let ME = null;
+const avatar = p => `<span class="av" style="${p.photo ? `background-image:url(${p.photo})` : ''}">${p.photo ? '' : esc((p.name || '?')[0])}</span>`;
+function renderProfiles() {
+  const el = $('#prof');
+  if (ME) {
+    el.innerHTML = `<div class="me">${avatar(ME)}<div><small>Signed in as</small><b>${esc(ME.name)}</b>${ME.best ? ` · best <i>${ME.best.ovr} OVR ${ME.best.rar}</i>` : ''}${ME.history && ME.history.length ? ` · ${ME.history.length} card${ME.history.length > 1 ? 's' : ''}` : ''}</div><button class="link" id="signOut">${FB ? 'Sign out' : 'Switch player'}</button></div>`;
+    $('#signOut').onclick = signOut;
+    return;
+  }
+  if (FB) {
+    el.innerHTML = `<div class="auth">
+      <div class="label"><span>Sign in to save your cards</span><span>or play as a guest</span></div>
+      <button class="btn ghost full" id="gSign">Continue with Google</button>
+      <div class="or">or use email</div>
+      <input type="email" id="em" placeholder="Email" autocomplete="email">
+      <input type="password" id="pw" placeholder="Password (6+ characters)" autocomplete="current-password">
+      <div class="two"><button class="btn ghost" id="emIn">Sign in</button><button class="btn ghost" id="emUp">Create account</button></div>
+      <p class="note warn" id="authMsg"></p></div>`;
+    const { A, auth } = FB;
+    $('#gSign').onclick = () => authDo(() => A.signInWithPopup(auth, new A.GoogleAuthProvider()));
+    $('#emIn').onclick = () => authDo(() => A.signInWithEmailAndPassword(auth, $('#em').value.trim(), $('#pw').value));
+    $('#emUp').onclick = () => authDo(() => A.createUserWithEmailAndPassword(auth, $('#em').value.trim(), $('#pw').value));
+    return;
+  }
+  const list = loadProfiles();
+  if (!list.length) { el.innerHTML = ''; return; }
+  el.innerHTML = `<div class="label"><span>Sign in as</span><span>or type a new gamertag</span></div><div class="chips">${list.map(p => `<button class="chip" data-id="${p.id}">${avatar(p)}<span>${esc(p.name)}${p.best ? `<i>${p.best.ovr}</i>` : ''}</span></button>`).join('')}</div>`;
+  el.querySelectorAll('.chip').forEach(b => b.onclick = () => signIn(list.find(p => p.id === b.dataset.id)));
+}
+async function signIn(p) {
+  ME = p;
+  if (!FB) store.set('gg-current', p.id);
+  $('#name').value = p.name; $('#cnt').textContent = p.name.length + '/14';
+  S.matchPhoto = p.match !== false; $('#match').checked = S.matchPhoto;
+  if (p.photo) await setPhoto(p.photo); else clearPhoto();
+  renderProfiles();
+}
+function resetForm() { $('#name').value = ''; $('#cnt').textContent = '0/14'; clearPhoto(); }
+function signOut() {
+  if (FB) return FB.A.signOut(FB.auth); // onUser clears the form
+  ME = null; store.set('gg-current', ''); resetForm(); renderProfiles();
+}
+initFirebase().then(() => {
+  if (FB) { renderProfiles(); $('#photoNote').textContent = 'optional. saved to your account when you sign in.'; return; }
+  const cur = store.get('gg-current'), p = cur && loadProfiles().find(x => x.id === cur);
+  if (p) signIn(p); else renderProfiles();
+});
+
+$('#go').onclick = () => {
+  S.name = ($('#name').value.trim() || 'PLAYER').toUpperCase();
+  if (FB) {
+    if (ME) { ME.name = S.name; ME.photo = S.photoURL || null; ME.match = S.matchPhoto; saveProfile(ME); }
+  } else {
+    // local mode: picking a saved player signs in; a new gamertag makes a new one
+    if (!ME || ME.name !== S.name) ME = loadProfiles().find(p => p.name === S.name) || { id: Date.now().toString(36), name: S.name, history: [] };
+    ME.photo = S.photoURL || ME.photo || null; ME.match = S.matchPhoto;
+    saveProfile(ME); store.set('gg-current', ME.id);
+  }
+  runScan();
+};
+
+/* top 10 players by best OVR (online accounts only) */
+async function loadLeaderboard() {
+  const el = $('#lb');
+  if (!FB) { el.hidden = true; return; }
+  el.hidden = false; el.innerHTML = '<h3>Leaderboard</h3><p class="note">Loading…</p>';
+  try {
+    const { F, db } = FB;
+    const snap = await F.getDocs(F.query(F.collection(db, 'players'), F.orderBy('best.ovr', 'desc'), F.limit(10)));
+    const rows = snap.docs.map((d, i) => {
+      const p = d.data(), me = FB.user && d.id === FB.user.uid;
+      return `<div class="${me ? 'you' : ''}"><span class="rk">${i + 1}</span>${avatar(p)}<b>${esc(p.name)}</b><span>${esc(p.best.rar)}</span><i>${p.best.ovr}</i></div>`;
+    });
+    el.innerHTML = '<h3>Leaderboard</h3>' + (rows.join('') || '<p class="note">No cards yet. You could be first.</p>') + (FB.user ? '' : '<p class="note">Sign in to get on the board.</p>');
+  } catch (e) { el.innerHTML = `<h3>Leaderboard</h3><p class="note warn">Could not load it (${esc(e.code || e.message)}).</p>`; }
+}
+
+/* ---------- PC SCAN ---------- */
+function getGPU() {
+  try {
+    const gl = document.createElement('canvas').getContext('webgl');
+    if (!gl) return 'Unknown GPU';
+    const ext = gl.getExtension('WEBGL_debug_renderer_info');
+    let s = ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+    // "ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 (0x00002484) Direct3D11 vs_5_0 ps_5_0, D3D11)" -> "NVIDIA GeForce RTX 3070"
+    const m = s.match(/ANGLE \([^,]*,\s*([^,]+)/i);
+    if (m) s = m[1];
+    return s.replace(/\(0x[0-9a-f]+\)/ig, '').replace(/(Direct3D|OpenGL|Vulkan).*$/i, '')
+            .replace(/ANGLE Metal Renderer:\s*/i, '').replace(/\s+/g, ' ').trim() || 'Unknown GPU';
+  } catch (e) { return 'Unknown GPU'; }
+}
+// model -> tier, most specific first ("5070 ti" before "5070")
+const GPU_TIERS = [
+  ['rtx 5090', 99], ['rtx 5080', 97], ['rtx 5070 ti', 94], ['rtx 5070', 91], ['rtx 5060 ti', 86], ['rtx 5060', 83],
+  ['rtx 4090', 98], ['rtx 4080', 95], ['rtx 4070 ti', 91], ['rtx 4070', 88], ['rtx 4060 ti', 84], ['rtx 4060', 80], ['rtx 4050', 72],
+  ['rtx 3090', 92], ['rtx 3080', 90], ['rtx 3070', 86], ['rtx 3060 ti', 82], ['rtx 3060', 78], ['rtx 3050', 66],
+  ['rtx 2080', 84], ['rtx 2070', 80], ['rtx 2060', 75], ['gtx 1660', 66], ['gtx 1650', 58],
+  ['gtx 1080', 72], ['gtx 1070', 68], ['gtx 1060', 60], ['gtx 1050', 48], ['gtx 9', 40],
+  ['rx 9070', 94], ['rx 7900', 95], ['rx 7800', 90], ['rx 7700', 87], ['rx 7600', 80],
+  ['rx 69', 90], ['rx 68', 88], ['rx 67', 84], ['rx 66', 78], ['rx 65', 60], ['rx 5700', 74], ['rx 5600', 68], ['rx 5500', 58], ['rx 580', 55], ['rx 570', 52],
+  ['arc b580', 80], ['arc a770', 78], ['arc a750', 75], ['arc a', 62], ['arc', 70],
+  ['apple m4 max', 92], ['apple m3 max', 90], ['apple m2 max', 86], ['apple m1 max', 82],
+  ['apple m4', 80], ['apple m3', 77], ['apple m2', 74], ['apple m1', 70], ['apple gpu', 72],
+  ['radeon 890m', 62], ['radeon 780m', 58], ['radeon 680m', 54], ['radeon', 45],
+  ['iris xe', 42], ['iris', 38], ['uhd', 32], ['hd graphics', 28], ['adreno', 45], ['mali', 40],
+  ['swiftshader', 10], ['llvmpipe', 10], ['software', 10], ['nvidia', 65], ['geforce', 65],
+];
+function gpuScore(g) {
+  const s = g.toLowerCase().replace(/\s+/g, ' ');
+  for (const [name, tier] of GPU_TIERS) {
+    if (!tier || !s.includes(name)) continue;
+    return clamp(tier - (/laptop|mobile|max-q/.test(s) ? 8 : 0), 5, 99);
+  }
+  return 55;
+}
+
+/* real benchmarks, so the rig score isn't just a guess from the GPU's name */
+const CPU_WORKER = `onmessage=e=>{const end=performance.now()+e.data;let n=0,x=0;
+  while(performance.now()<end){for(let i=0;i<20000;i++){x+=Math.sqrt(i*1.0001+x%7)*Math.sin(i);}n++;}postMessage(n+(x>1e300?1:0));}`;
+async function cpuBench(ms = 600) {
+  try {
+    const url = URL.createObjectURL(new Blob([CPU_WORKER], { type: 'text/javascript' }));
+    const run = k => Promise.all(Array.from({ length: k }, () => new Promise((res, rej) => {
+      const w = new Worker(url);
+      w.onmessage = e => { res(e.data); w.terminate(); };
+      w.onerror = rej;
+      w.postMessage(ms);
+    })));
+    const single = (await run(1))[0];
+    const multi = (await run(navigator.hardwareConcurrency || 4)).reduce((a, b) => a + b, 0);
+    URL.revokeObjectURL(url);
+    return { single: Math.round(single / ms * 1000), multi: Math.round(multi / ms * 1000) };
+  } catch (e) { return null; }
+}
+function gpuBench(ms = 500) {
+  try {
+    const c = document.createElement('canvas'), N = 1024; c.width = c.height = N;
+    const gl = c.getContext('webgl2', { antialias: false }) || c.getContext('webgl', { antialias: false });
+    if (!gl) return null;
+    const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
+    const p = gl.createProgram();
+    gl.attachShader(p, sh(gl.VERTEX_SHADER, 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'));
+    gl.attachShader(p, sh(gl.FRAGMENT_SHADER, `precision highp float;uniform float t;
+      void main(){vec2 uv=gl_FragCoord.xy/1024.;float a=t;
+      for(int i=0;i<160;i++){a+=sin(uv.x*float(i)+a)*cos(uv.y*float(i)-a)*.5;uv+=vec2(sin(a),cos(a))*.001;}
+      gl_FragColor=vec4(fract(a),uv,1.);}`));
+    gl.linkProgram(p);
+    if (!gl.getProgramParameter(p, gl.LINK_STATUS)) return null;
+    gl.useProgram(p);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+    const tl = gl.getUniformLocation(p, 't'), px = new Uint8Array(4);
+    const frame = i => { gl.uniform1f(tl, i * .01); gl.drawArrays(gl.TRIANGLES, 0, 3); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px); };
+    frame(0); frame(1); // warm up
+    let n = 0; const t0 = performance.now();
+    while (performance.now() - t0 < ms && n < 2000) frame(n++);
+    const sec = (performance.now() - t0) / 1000;
+    gl.getExtension('WEBGL_lose_context')?.loseContext();
+    return Math.round(n * N * N * 160 / sec / 1e9 * 10) / 10; // billions of shader steps per second
+  } catch (e) { return null; }
+}
+// calibrated so a current high-end PC (RTX 5080 class GPU, 16-thread CPU) lands around 95
+const GPU_REF = 450, CPU1_REF = 2900, CPUN_REF = 29000;
+const benchScore = (v, ref) => curve(v / ref, [[.02, 10], [.08, 35], [.25, 60], [.55, 80], [1, 95], [1.4, 99]]);
+function measureHz() {
+  return new Promise(res => {
+    const d = []; let last = null, over = false;
+    // hidden/background tabs pause animation frames, so don't wait forever
+    setTimeout(() => { if (!over) { over = true; res(60); } }, 4000);
+    const f = t => {
+      if (over) return;
+      if (last !== null) d.push(t - last);
+      last = t;
+      if (d.length < 90) requestAnimationFrame(f);
+      else {
+        over = true;
+        d.sort((a, b) => a - b);
+        const hz = 1000 / d[d.length >> 1];
+        const common = [30, 50, 60, 75, 90, 100, 120, 144, 165, 170, 180, 240, 280, 360];
+        const near = common.reduce((a, b) => Math.abs(b - hz) < Math.abs(a - hz) ? b : a);
+        res(Math.abs(near - hz) / near < 0.07 ? near : Math.round(hz));
+      }
+    };
+    requestAnimationFrame(f);
+  });
+}
+const fpsScore = f => curve(f, [[20, 15], [30, 30], [60, 58], [90, 72], [120, 82], [144, 88], [165, 91], [240, 97], [360, 99]]);
+
+async function runScan() {
+  show('scan', 'Rig check');
+  const T = $('#term'); T.innerHTML = ''; $('#scanNext').hidden = true;
+  const line = async (k, fn) => {
+    const d = document.createElement('div');
+    d.innerHTML = `<span class="k">${k}</span> <span class="dots"></span>`;
+    T.appendChild(d);
+    const [v] = await Promise.all([fn(), sleep(500)]);
+    d.innerHTML = `<span class="k">${k}</span> <span class="v">${esc(v)}</span>`;
+    return v;
+  };
+  const pc = S.pc;
+  pc.gpu = await line('GPU', async () => getGPU());
+  pc.gpuPts = await line('GPU bench', async () => { await sleep(50); return gpuBench(); });
+  T.lastChild.querySelector('.v').textContent = pc.gpuPts ? `${pc.gpuPts} G shader ops/s` : 'could not run';
+  pc.cores = navigator.hardwareConcurrency || 0;
+  await line('CPU', async () => pc.cores ? `${pc.cores} threads` : 'hidden by browser');
+  const cpu = await line('CPU bench', async () => cpuBench());
+  pc.cpu1 = cpu && cpu.single; pc.cpuN = cpu && cpu.multi;
+  T.lastChild.querySelector('.v').textContent = cpu ? `single ${cpu.single} · all cores ${cpu.multi} pts` : 'could not run';
+  pc.mem = navigator.deviceMemory || 0;
+  await line('RAM', async () => pc.mem ? (pc.mem >= 8 ? '8+ GB' : pc.mem + ' GB') : 'hidden by browser');
+  const dpr = window.devicePixelRatio || 1;
+  pc.res = `${Math.round(screen.width * dpr)}×${Math.round(screen.height * dpr)}`;
+  await line('Display', async () => pc.res);
+  pc.hz = await line('Refresh rate', async () => measureHz());
+  T.lastChild.querySelector('.v').textContent = pc.hz + ' Hz';
+
+  // measured numbers count most; the GPU name and thread count fill in if a benchmark could not run
+  const model = gpuScore(pc.gpu);
+  const gpu = pc.gpuPts ? Math.round(benchScore(pc.gpuPts, GPU_REF) * .75 + model * .25) : model;
+  const core = pc.cores ? lerpScore(pc.cores, 2, 30, 16, 99) : 60;
+  const cpu1 = pc.cpu1 ? benchScore(pc.cpu1, CPU1_REF) : core;
+  const cpuN = pc.cpuN ? benchScore(pc.cpuN, CPUN_REF) : core;
+  const ram = pc.mem ? lerpScore(pc.mem, 2, 35, 8, 95) : 70;
+  pc.parts = { gpu, cpu1, cpuN, ram };
+  S.stats.RIG = clamp(Math.round(gpu * .5 + cpu1 * .2 + cpuN * .2 + ram * .1), 1, 99);
+  await sleep(300);
+  const sum = document.createElement('div'); sum.className = 'sum';
+  sum.innerHTML = `RIG <b>${S.stats.RIG}</b> &nbsp;·&nbsp; your in-game FPS gets measured next`;
+  T.appendChild(sum);
+  $('#scanNext').hidden = false;
+}
+$('#scanNext').onclick = () => startGame();
+
+/* =====================================================================
+   THE ARENA — first-person game used for the skill tests
+   ===================================================================== */
+const ARENA = 20, PR = 0.35, EYE = 1.6, GRAV = 16, JUMP = 6.2;
+const SPAWN = new THREE.Vector3(0, 0, 14);
+// crates: [x, z, width, height, depth], sitting on the floor
+const BOXES = [[-8, 4, 3, 1, 3], [-8, -1.5, 3, 2, 3], [12, -6, 3, 1, 3], [12, 0, 3, 2, 3],
+               [-16, -16, 3, 1.5, 3], [16, 16, 3, 1, 3], [-16, 16, 2, 2, 2], [16, -16, 2, 2, 2]]
+  .map(([x, z, w, h, d]) => ({ x, z, w, h, d, minX: x - w / 2, maxX: x + w / 2, minZ: z - d / 2, maxZ: z + d / 2, top: h }));
+const CENTER = new THREE.Vector2(0, 0);
+
+const G = {
+  keys: new Set(), pos: new THREE.Vector3(), vel: new THREE.Vector3(), yaw: 0, pitch: 0, onGround: true,
+  targets: [], fx: [], time: 0, cool: 0, phase: 'off', locked: false, mouseDown: false,
+  canMove: false, canShoot: false, auto: false, fpsFrames: 0, fpsTime: 0, ti: 0, test: null,
+  bob: 0, kick: 0, count: 0, centerT: 0, sens: parseFloat(store.get('gg-sens')) || 1,
+};
+
+/* procedural textures, so the arena needs no image files */
+function canvasTex(size, paint, repeat = 1) {
+  const c = document.createElement('canvas'); c.width = c.height = size;
+  paint(c.getContext('2d'), size);
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(repeat, repeat);
+  t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
+  return t;
+}
+function noise(x, n, w, h, alpha, light) {
+  for (let i = 0; i < n; i++) {
+    const v = light ? 255 : 0;
+    x.fillStyle = `rgba(${v},${v},${v},${Math.random() * alpha})`;
+    x.fillRect(Math.random() * w, Math.random() * h, rand(1, 3), rand(1, 3));
+  }
+}
+const concreteTex = (base, rep) => canvasTex(512, (x, s) => {
+  x.fillStyle = base; x.fillRect(0, 0, s, s);
+  for (let i = 0; i < 40; i++) { // soft stains
+    const g = x.createRadialGradient(rand(0, s), rand(0, s), 0, rand(0, s), rand(0, s), rand(30, 120));
+    g.addColorStop(0, `rgba(0,0,0,${rand(.02, .06)})`); g.addColorStop(1, 'rgba(0,0,0,0)');
+    x.fillStyle = g; x.fillRect(0, 0, s, s);
+  }
+  noise(x, 9000, s, s, .08, false); noise(x, 5000, s, s, .07, true);
+  x.strokeStyle = 'rgba(0,0,0,.18)'; x.lineWidth = 2; x.strokeRect(0, 0, s, s); // slab seams
+}, rep);
+const woodTex = () => canvasTex(256, (x, s) => {
+  x.fillStyle = '#8a6a45'; x.fillRect(0, 0, s, s);
+  for (let p = 0; p < 4; p++) { // planks
+    const y = p * s / 4;
+    x.fillStyle = `hsl(32,${rand(30, 40)}%,${rand(34, 42)}%)`; x.fillRect(0, y, s, s / 4);
+    x.strokeStyle = 'rgba(40,25,10,.25)'; x.lineWidth = 1;
+    for (let i = 0; i < 9; i++) { x.beginPath(); const yy = y + rand(4, s / 4 - 4); x.moveTo(0, yy); x.bezierCurveTo(s * .3, yy + rand(-3, 3), s * .7, yy + rand(-3, 3), s, yy); x.stroke(); }
+    x.fillStyle = 'rgba(30,18,8,.55)'; x.fillRect(0, y, s, 2);
+  }
+  x.strokeStyle = '#4a3420'; x.lineWidth = 14; x.strokeRect(0, 0, s, s); // frame
+  x.beginPath(); x.moveTo(0, 0); x.lineTo(s, s); x.stroke();          // brace
+  noise(x, 1500, s, s, .1, false);
+});
+const bullseyeTex = canvasTex(256, (x, s) => {
+  const cols = ['#c8102e', '#f4f1ea'];
+  for (let i = 0; i < 6; i++) { x.fillStyle = cols[i % 2]; x.beginPath(); x.arc(s / 2, s / 2, s / 2 * (1 - i / 6), 0, Math.PI * 2); x.fill(); }
+  x.fillStyle = '#c8102e'; x.beginPath(); x.arc(s / 2, s / 2, s / 14, 0, Math.PI * 2); x.fill();
+});
+
+function makeGun() {
+  const g = new THREE.Group();
+  const dark = new THREE.MeshStandardMaterial({ color: '#2b2f34', roughness: .45, metalness: .8 });
+  const grip = new THREE.MeshStandardMaterial({ color: '#3d2f22', roughness: .8 });
+  const add = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); g.add(m); return m; };
+  add(new THREE.BoxGeometry(.09, .11, .42), dark, 0, 0, -.2);
+  add(new THREE.CylinderGeometry(.022, .022, .28, 12).rotateX(Math.PI / 2), dark, 0, .02, -.52);
+  add(new THREE.BoxGeometry(.07, .16, .08), grip, 0, -.11, -.08).rotation.x = .25;
+  add(new THREE.BoxGeometry(.06, .13, .07), dark, 0, -.1, -.26).rotation.x = -.15;
+  add(new THREE.BoxGeometry(.03, .04, .06), dark, 0, .08, -.1);
+  G.muzzle = add(new THREE.SphereGeometry(.05, 8, 6), new THREE.MeshBasicMaterial({ color: '#ffd27a' }), 0, .02, -.66);
+  G.muzzle.visible = false;
+  g.scale.setScalar(.8);
+  return g;
+}
+
+function initGame() {
+  if (G.r) return true;
+  let r;
+  try { r = G.r = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' }); }
+  catch (e) { alert('Your browser could not start 3D graphics (WebGL). Try Chrome or Edge.'); return false; }
+  r.setPixelRatio(Math.min(devicePixelRatio, 2));
+  r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+  r.outputColorSpace = THREE.SRGBColorSpace; r.toneMapping = THREE.ACESFilmicToneMapping;
+  $('#gl').appendChild(r.domElement);
+
+  r.toneMappingExposure = .5;
+  const scene = G.scene = new THREE.Scene();
+  const cam = G.cam = new THREE.PerspectiveCamera(78, 1, .05, 2000);
+  cam.rotation.order = 'YXZ'; scene.add(cam);
+
+  // daylight sky; it also lights the scene through a reflection map
+  const sky = new Sky(); sky.scale.setScalar(1000);
+  const sunDir = new THREE.Vector3().setFromSphericalCoords(1, THREE.MathUtils.degToRad(55), THREE.MathUtils.degToRad(140));
+  sky.material.uniforms.turbidity.value = 5; sky.material.uniforms.rayleigh.value = 1.2;
+  sky.material.uniforms.mieCoefficient.value = .004; sky.material.uniforms.mieDirectionalG.value = .8;
+  sky.material.uniforms.sunPosition.value.copy(sunDir);
+  const skyScene = new THREE.Scene(); skyScene.add(sky);
+  scene.environment = new THREE.PMREMGenerator(r).fromScene(skyScene).texture;
+  scene.add(sky);
+  scene.fog = new THREE.Fog('#b9c7d6', 45, 160);
+
+  scene.add(new THREE.HemisphereLight(0xcfe2ff, 0x6e604f, .5));
+  const sun = new THREE.DirectionalLight(0xfff0db, 2.4);
+  sun.position.copy(sunDir).multiplyScalar(40); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+  Object.assign(sun.shadow.camera, { left: -26, right: 26, top: 26, bottom: -26, near: 1, far: 100 });
+  sun.shadow.bias = -0.0004; sun.shadow.normalBias = .03; sun.shadow.radius = 3; scene.add(sun);
+
+  // ground: concrete pad inside the walls, dirt outside
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(ARENA * 2, ARENA * 2), new THREE.MeshStandardMaterial({ map: concreteTex('#7f7a72', 8), roughness: .92 }));
+  floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+  const dirt = new THREE.Mesh(new THREE.PlaneGeometry(600, 600), new THREE.MeshStandardMaterial({ map: concreteTex('#7d7059', 60), roughness: 1 }));
+  dirt.rotation.x = -Math.PI / 2; dirt.position.y = -.02; scene.add(dirt);
+  G.world = [floor];
+
+  const wallMat = new THREE.MeshStandardMaterial({ map: concreteTex('#b3ada3', 1), roughness: .9 });
+  wallMat.map.repeat.set(8, 1);
+  const capMat = new THREE.MeshStandardMaterial({ color: '#8d877d', roughness: .85 });
+  for (const [x, z, w, d] of [[0, -ARENA, ARENA * 2, .5], [0, ARENA, ARENA * 2, .5], [-ARENA, 0, .5, ARENA * 2], [ARENA, 0, .5, ARENA * 2]]) {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w, 4, d), wallMat);
+    m.position.set(x, 2, z); m.castShadow = m.receiveShadow = true; scene.add(m); G.world.push(m);
+    const cap = new THREE.Mesh(new THREE.BoxGeometry(w + .3, .18, d + .3), capMat);
+    cap.position.set(x, 4.05, z); cap.castShadow = true; scene.add(cap);
+  }
+  const crateMat = new THREE.MeshStandardMaterial({ map: woodTex(), roughness: .8 });
+  for (const b of BOXES) {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(b.w, b.h, b.d), crateMat);
+    m.position.set(b.x, b.h / 2, b.z); m.castShadow = m.receiveShadow = true;
+    scene.add(m); G.world.push(m);
+  }
+  // props outside the play routes, for looks
+  const barrelMat = new THREE.MeshStandardMaterial({ color: '#4d5a3c', roughness: .55, metalness: .4 });
+  for (const [x, z] of [[-18.6, -10], [-18.6, -8.9], [18.6, 7], [18.6, 8.2], [-6, -18.6], [7.5, 18.6]]) {
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(.42, .42, 1.2, 20), barrelMat);
+    m.position.set(x, .6, z); m.castShadow = m.receiveShadow = true; scene.add(m);
+  }
+
+  G.gun = makeGun(); cam.add(G.gun);
+  G.flash = new THREE.PointLight('#ffd27a', 0, 8, 2); G.flash.position.set(0, .05, -.7); G.gun.add(G.flash);
+  G.ray = new THREE.Raycaster();
+
+  const cv = r.domElement;
+  document.addEventListener('pointerlockchange', () => { G.locked = document.pointerLockElement === cv; onLockChange(); });
+  document.addEventListener('mousemove', e => {
+    if (!G.locked) return;
+    const s = 0.0022 * G.sens;
+    G.yaw -= e.movementX * s;
+    G.pitch = clamp(G.pitch - e.movementY * s, -1.5, 1.5);
+  });
+  document.addEventListener('mousedown', e => { if (G.locked && e.button === 0) { G.mouseDown = true; shoot(); } });
+  document.addEventListener('mouseup', e => { if (e.button === 0) G.mouseDown = false; });
+  addEventListener('keydown', e => {
+    if (!G.locked) return;
+    G.keys.add(e.code);
+    if (['Space', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'ShiftLeft'].includes(e.code)) e.preventDefault();
+  });
+  addEventListener('keyup', e => G.keys.delete(e.code));
+  addEventListener('blur', () => { G.keys.clear(); G.mouseDown = false; });
+  addEventListener('resize', resizeGame);
+  resizeGame();
+  G.clock = new THREE.Clock();
+  r.setAnimationLoop(gameLoop);
+  return true;
+}
+function resizeGame() {
+  if (!G.r) return;
+  G.r.setSize(innerWidth, innerHeight);
+  G.cam.aspect = innerWidth / innerHeight; G.cam.updateProjectionMatrix();
+}
+function lock() {
+  const cv = G.r.domElement;
+  const plain = () => { try { const q = cv.requestPointerLock(); if (q && q.catch) q.catch(() => toast('Click again to lock your mouse')); } catch (e) {} };
+  try {
+    const p = cv.requestPointerLock({ unadjustedMovement: true });
+    if (p && p.catch) p.catch(plain);
+  } catch (e) { plain(); }
+}
+function onLockChange() {
+  if (G.locked) {
+    $('#pause').hidden = true;
+    if (G.phase === 'brief') { $('#brief').hidden = true; G.phase = 'count'; G.count = 3; G.canMove = true; }
+  } else {
+    G.keys.clear(); G.mouseDown = false;
+    if (G.phase === 'count' || G.phase === 'run') $('#pause').hidden = false;
+  }
+}
+
+/* ---------- player ---------- */
+function blocked(b) { return G.pos.y < b.top - 0.25; }
+function pushOut() {
+  for (const b of BOXES) {
+    if (!blocked(b)) continue;
+    const cx = clamp(G.pos.x, b.minX, b.maxX), cz = clamp(G.pos.z, b.minZ, b.maxZ);
+    let dx = G.pos.x - cx, dz = G.pos.z - cz, d = Math.hypot(dx, dz);
+    if (d >= PR) continue;
+    if (d < 1e-6) { // centre inside the box: leave by the nearest side
+      const opts = [[b.minX - PR - G.pos.x, 0], [b.maxX + PR - G.pos.x, 0], [0, b.minZ - PR - G.pos.z], [0, b.maxZ + PR - G.pos.z]];
+      const [mx, mz] = opts.reduce((a, o) => Math.abs(o[0] + o[1]) < Math.abs(a[0] + a[1]) ? o : a);
+      G.pos.x += mx; G.pos.z += mz; continue;
+    }
+    G.pos.x += dx / d * (PR - d); G.pos.z += dz / d * (PR - d);
+  }
+  const lim = ARENA - .25 - PR;
+  G.pos.x = clamp(G.pos.x, -lim, lim); G.pos.z = clamp(G.pos.z, -lim, lim);
+}
+function groundAt() {
+  let h = 0;
+  for (const b of BOXES) {
+    const over = G.pos.x > b.minX - PR * .7 && G.pos.x < b.maxX + PR * .7 && G.pos.z > b.minZ - PR * .7 && G.pos.z < b.maxZ + PR * .7;
+    if (over && G.pos.y >= b.top - 0.25) h = Math.max(h, b.top);
+  }
+  return h;
+}
+function updatePlayer(dt) {
+  const k = c => G.keys.has(c);
+  const f = (k('KeyW') ? 1 : 0) - (k('KeyS') ? 1 : 0), s = (k('KeyD') ? 1 : 0) - (k('KeyA') ? 1 : 0);
+  const sprint = k('ShiftLeft') || k('ShiftRight');
+  const max = G.canMove ? (sprint ? 8 : 5) : 0;
+  const sy = Math.sin(G.yaw), cy = Math.cos(G.yaw);
+  let wx = -sy * f + cy * s, wz = -cy * f - sy * s;
+  const wl = Math.hypot(wx, wz);
+  if (wl > 0) { wx = wx / wl * max; wz = wz / wl * max; }
+  const accel = G.onGround ? 60 : 16;
+  const ex = wx - G.vel.x, ez = wz - G.vel.z, el = Math.hypot(ex, ez);
+  if (el > 0) { const st = Math.min(el, accel * dt); G.vel.x += ex / el * st; G.vel.z += ez / el * st; }
+  if (k('Space') && G.onGround && G.canMove) { G.vel.y = JUMP; G.onGround = false; }
+  G.vel.y -= GRAV * dt;
+
+  G.pos.x += G.vel.x * dt; G.pos.z += G.vel.z * dt; pushOut();
+  G.pos.y += G.vel.y * dt;
+  const gnd = groundAt();
+  if (G.pos.y <= gnd) { G.pos.y = gnd; G.vel.y = Math.max(0, G.vel.y); G.onGround = true; }
+  else G.onGround = false;
+
+  if (G.onGround) G.bob += Math.hypot(G.vel.x, G.vel.z) * dt * 1.6;
+}
+function resetPlayer() { G.pos.copy(SPAWN); G.vel.set(0, 0, 0); G.yaw = 0; G.pitch = -0.03; G.onGround = true; }
+
+/* ---------- shooting + effects ---------- */
+let AC;
+function sfx(type) {
+  try {
+    const a = AC || (AC = new (window.AudioContext || window.webkitAudioContext)()), t = a.currentTime, g = a.createGain();
+    g.connect(a.destination);
+    if (type === 'shot') {
+      const len = .09, b = a.createBuffer(1, Math.floor(a.sampleRate * len), a.sampleRate), d = b.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 3);
+      const src = a.createBufferSource(), fl = a.createBiquadFilter();
+      src.buffer = b; fl.type = 'lowpass'; fl.frequency.value = 2000;
+      src.connect(fl); fl.connect(g); g.gain.value = .22; src.start(t);
+    } else {
+      const o = a.createOscillator(), hit = type === 'hit';
+      o.type = hit ? 'square' : 'sine';
+      o.frequency.setValueAtTime(hit ? 1250 : 660, t);
+      if (!hit) o.frequency.exponentialRampToValueAtTime(1320, t + .12);
+      g.gain.setValueAtTime(hit ? .05 : .15, t);
+      g.gain.exponentialRampToValueAtTime(.001, t + (hit ? .06 : .3));
+      o.connect(g); o.start(t); o.stop(t + .32);
+    }
+  } catch (e) {}
+}
+function hitMarker() { const h = $('#hm'); h.classList.remove('on'); void h.offsetWidth; h.classList.add('on'); }
+function center(text, color, ttl = 0) { const c = $('#gCenter'); c.textContent = text; c.style.color = color || '#fff'; G.centerT = ttl; }
+function hud(l, r) { $('#gL').innerHTML = l; $('#gR').innerHTML = r; }
+
+const SPARK_GEO = new THREE.BoxGeometry(.07, .07, .07), sparkMats = {};
+function spark(pos, color, n) {
+  const mat = sparkMats[color] || (sparkMats[color] = new THREE.MeshBasicMaterial({ color }));
+  for (let i = 0; i < n; i++) {
+    const m = new THREE.Mesh(SPARK_GEO, mat);
+    m.position.copy(pos); G.scene.add(m);
+    G.fx.push({ m, v: new THREE.Vector3(rand(-1, 1), rand(-.2, 1.4), rand(-1, 1)).multiplyScalar(rand(2, 6)), life: rand(.3, .6) });
+  }
+}
+function updateFx(dt) {
+  G.fx = G.fx.filter(p => {
+    p.life -= dt;
+    if (p.life <= 0) { G.scene.remove(p.m); return false; }
+    p.v.y -= 12 * dt; p.m.position.addScaledVector(p.v, dt); p.m.scale.setScalar(Math.min(1, p.life * 3));
+    return true;
+  });
+}
+
+// bullseye plate: painted faces, plain rim; turned to face the player every frame
+const T_GEO = new THREE.CylinderGeometry(.5, .5, .07, 40).rotateX(Math.PI / 2);
+const T_MATS = [new THREE.MeshStandardMaterial({ color: '#e8e4da', roughness: .7 }),
+                new THREE.MeshStandardMaterial({ map: bullseyeTex, roughness: .6 }),
+                new THREE.MeshStandardMaterial({ map: bullseyeTex, roughness: .6 })];
+function addTarget(pos) {
+  // the plate you hit is always full size; only the visible plate pops in
+  const m = new THREE.Mesh(T_GEO, new THREE.MeshBasicMaterial({ visible: false }));
+  const look = new THREE.Mesh(T_GEO, T_MATS);
+  look.castShadow = true; look.scale.setScalar(.01); m.add(look);
+  m.position.copy(pos);
+  m.userData = { target: true, born: G.time, plate: look };
+  G.scene.add(m); G.targets.push(m);
+  return m;
+}
+function removeTarget(m, burst = true) {
+  G.scene.remove(m);
+  G.targets = G.targets.filter(t => t !== m);
+  if (burst) { spark(m.position, '#c8102e', 10); spark(m.position, '#f4f1ea', 8); }
+}
+function updateTargets() {
+  for (const t of G.targets) {
+    if (!t.userData.plate) continue;
+    t.userData.plate.scale.setScalar(Math.min(1, (G.time - t.userData.born) * 7 + .01));
+    t.lookAt(G.cam.position);
+  }
+}
+// random point in front of the player that the player can actually see
+function randomSpot(maxYaw, dmin, dmax, hmin = .7, hmax = 2.8) {
+  const eye = new THREE.Vector3(G.pos.x, G.pos.y + EYE, G.pos.z);
+  let p;
+  for (let i = 0; i < 40; i++) {
+    const a = rand(-maxYaw, maxYaw) * Math.PI / 180, d = rand(dmin, dmax);
+    p = new THREE.Vector3(clamp(G.pos.x - Math.sin(a) * d, -ARENA + 1.5, ARENA - 1.5), rand(hmin, hmax), clamp(G.pos.z - Math.cos(a) * d, -ARENA + 1.5, ARENA - 1.5));
+    if (BOXES.some(b => p.x > b.minX - .6 && p.x < b.maxX + .6 && p.z > b.minZ - .6 && p.z < b.maxZ + .6 && p.y < b.top + .6)) continue;
+    const dir = p.clone().sub(eye), dist = dir.length();
+    G.ray.set(eye, dir.normalize());
+    const h = G.ray.intersectObjects(G.world, false)[0];
+    if (!h || h.distance > dist - .5) return p;
+  }
+  return p;
+}
+function shoot() {
+  if (!G.canShoot || G.cool > 0) return;
+  G.cool = G.auto ? .09 : .12; G.kick = 1; G.flash.intensity = 4; G.muzzle.visible = true;
+  sfx('shot');
+  syncCam(); // aim with the latest mouse movement, not last frame's
+  G.ray.setFromCamera(CENTER, G.cam);
+  const hit = G.ray.intersectObjects([...G.targets, ...G.world], false)[0];
+  const tgt = hit && hit.object.userData.target ? (hit.object.userData.owner || hit.object) : null;
+  if (tgt) { hitMarker(); sfx('hit'); }
+  else if (hit) spark(hit.point, '#8a8478', 5);
+  if (G.test && G.test.onShot) G.test.onShot(tgt);
+}
+function updateGun(dt) {
+  G.kick = Math.max(0, G.kick - dt * 9);
+  G.flash.intensity = Math.max(0, G.flash.intensity - dt * 60);
+  if (G.flash.intensity < 1) G.muzzle.visible = false;
+  G.gun.position.set(.22 + Math.sin(G.bob) * .012, -.2 + Math.abs(Math.cos(G.bob)) * .01 - G.kick * .015, -.35 + G.kick * .06);
+  G.gun.rotation.x = G.kick * .18;
+}
+
+function syncCam() {
+  G.cam.position.set(G.pos.x, G.pos.y + EYE, G.pos.z);
+  G.cam.rotation.set(G.pitch, G.yaw, 0);
+  G.cam.updateMatrixWorld();
+}
+function gameLoop() {
+  if (G.phase === 'off') return;
+  const raw = G.clock.getDelta(), dt = Math.min(raw, .05);
+  const active = G.locked && (G.phase === 'count' || G.phase === 'run');
+  if (active) {
+    updatePlayer(dt);
+    if (G.phase === 'count') {
+      G.count -= dt;
+      if (G.count > 0) center(String(Math.ceil(G.count)), '#fff');
+      else { G.phase = 'run'; G.canShoot = true; center('GO!', '#fff', .5); G.test.start(); }
+    } else {
+      G.time += dt; G.fpsFrames++; G.fpsTime += raw;
+      G.test.update(dt);
+      if (G.auto && G.mouseDown) shoot();
+    }
+  }
+  if (G.centerT > 0) { G.centerT -= dt; if (G.centerT <= 0) center(''); }
+  G.cool -= dt;
+  updateFx(dt); updateGun(dt);
+  syncCam();
+  updateTargets();
+  G.r.render(G.scene, G.cam);
+}
+
+/* ---------- the four challenges ---------- */
+// the original quick draw: a plain screen, wait for green, click. No 3D, no mouse lock.
+function quickDraw() {
+  const A = $('#rbox'), msg = (big, small) => { A.innerHTML = `<div>${big}${small ? `<small>${small}</small>` : ''}</div>`; };
+  let round = 0, times = [], state = 'idle', t0 = 0, tm;
+  A.className = 'rbox'; A.hidden = false;
+  msg('Click to start', 'wait for green, then click · 3 rounds');
+  A.onpointerdown = () => {
+    if (state === 'idle') {
+      state = 'wait'; A.className = 'rbox wait'; msg('Wait for green…');
+      tm = setTimeout(() => {
+        state = 'go'; A.className = 'rbox go'; msg('CLICK!');
+        t0 = performance.now();
+        requestAnimationFrame(() => { t0 = performance.now(); });
+      }, rand(1200, 3500));
+    } else if (state === 'wait') {
+      clearTimeout(tm); state = 'idle'; A.className = 'rbox';
+      msg('Too early!', 'click to retry this round');
+    } else if (state === 'go') {
+      const dt = Math.round(performance.now() - t0);
+      times.push(dt); round++; A.className = 'rbox';
+      if (round < 3) { state = 'idle'; msg(`${dt} ms`, `round ${round}/3 · click for the next one`); }
+      else {
+        state = 'done'; A.hidden = true;
+        const avg = Math.round(times.reduce((a, b) => a + b) / times.length);
+        finishTest(lerpScore(avg, 170, 99, 450, 30), `${avg} ms average reaction`);
+      }
+    }
+  };
+  return { cleanup() { clearTimeout(tm); A.hidden = true; A.onpointerdown = null; } };
+}
+
+function flickTest() {
+  const N = 20; let hits = 0, shots = 0, t0 = 0, cur = null;
+  const spawn = () => { cur = addTarget(randomSpot(75, 7, 17, .6, 3.2)); };
+  const info = () => hud(`TARGETS <b>${hits}/${N}</b>`, `ACCURACY <b>${shots ? Math.round(hits / shots * 100) : 100}%</b>`);
+  info();
+  return {
+    start() { t0 = G.time; spawn(); },
+    update() {},
+    onShot(t) {
+      shots++;
+      if (t && t === cur) {
+        hits++; removeTarget(cur); cur = null;
+        if (hits === N) {
+          const avg = Math.round((G.time - t0) / N * 1000), acc = hits / shots;
+          info();
+          return finishTest(clamp(Math.round(lerpScore(avg, 480, 99, 1500, 30) * (.55 + .45 * acc)), 1, 99), `${avg} ms per target · ${Math.round(acc * 100)}% accuracy`);
+        }
+        spawn();
+      }
+      info();
+    },
+  };
+}
+
+function trackTest() {
+  const D = 8; let on = 0, tot = 0, vx = 0, vy = 0, x = 0, y = 0, switchT = 0;
+  const bot = new THREE.Group();
+  // training dummy: grey body, hi-vis vest, tinted red while you're on it
+  const mat = new THREE.MeshStandardMaterial({ color: '#d8661f', roughness: .75, emissive: '#ff1a1a', emissiveIntensity: 0 });
+  const skin = new THREE.MeshStandardMaterial({ color: '#a3a7ab', roughness: .6, metalness: .1, emissive: '#ff1a1a', emissiveIntensity: 0 });
+  const body = new THREE.Mesh(new THREE.CapsuleGeometry(.38, .95, 6, 14), mat); body.position.y = .86;
+  const head = new THREE.Mesh(new THREE.SphereGeometry(.25, 20, 14), skin); head.position.y = 1.74;
+  const visor = new THREE.Mesh(new THREE.BoxGeometry(.32, .08, .06), new THREE.MeshStandardMaterial({ color: '#1d2228', roughness: .2, metalness: .6 })); visor.position.set(0, 1.77, .22);
+  for (const m of [body, head]) { m.userData = { target: true, owner: bot }; m.castShadow = true; }
+  bot.add(body, head, visor); bot.position.set(0, 0, 1);
+  G.scene.add(bot); G.targets.push(body, head); G.auto = true;
+  hud('ON TARGET <b>0%</b>', `TIME <b>${D.toFixed(1)}s</b>`);
+  return {
+    start() {},
+    update(dt) {
+      switchT -= dt;
+      if (switchT <= 0) {
+        vx = (Math.random() < .5 ? -1 : 1) * rand(3.5, 7); switchT = rand(.25, 1);
+        if (Math.random() < .2 && y === 0) vy = 5.5;
+      }
+      x += vx * dt;
+      if (x > 6) { x = 6; vx = -Math.abs(vx); } if (x < -6) { x = -6; vx = Math.abs(vx); }
+      vy -= GRAV * dt; y += vy * dt; if (y <= 0) { y = 0; vy = 0; }
+      bot.position.set(x, y, 1); bot.lookAt(G.pos.x, y, G.pos.z);
+      G.ray.setFromCamera(CENTER, G.cam);
+      const h = G.ray.intersectObjects([body, head, ...G.world], false)[0];
+      const onIt = !!h && h.object.userData.owner === bot;
+      if (onIt) on += dt;
+      tot += dt;
+      mat.emissiveIntensity = skin.emissiveIntensity = onIt ? .35 : 0;
+      hud(`ON TARGET <b>${Math.round(on / tot * 100)}%</b>`, `TIME <b>${Math.max(0, D - tot).toFixed(1)}s</b>`);
+      if (tot >= D) { const p = on / tot; finishTest(lerpScore(p, .85, 99, .2, 30), `${Math.round(p * 100)}% time on target`); }
+    },
+    cleanup() { G.scene.remove(bot); },
+  };
+}
+
+// checkpoint rings: [x, y, z]; the y ones above 2 sit on top of crates
+const RINGS = [[0, 1.2, 6], [-8, 2.2, 4], [-8, 3.2, -1.5], [-2, 1.2, -10], [6, 1.2, -14], [12, 2.2, -6], [12, 3.2, 0], [4, 1.2, 10]];
+function moveTest() {
+  let i = 0, t0 = 0;
+  const rings = RINGS.map(([x, y, z], k) => {
+    const m = new THREE.Mesh(new THREE.TorusGeometry(1, .09, 14, 56), new THREE.MeshStandardMaterial({ color: '#e9e6df', roughness: .45, metalness: .3 }));
+    m.position.set(x, y, z); m.castShadow = true;
+    const n = RINGS[k + 1] || RINGS[k - 1];
+    m.lookAt(n[0], y, n[2]);
+    G.scene.add(m);
+    return m;
+  });
+  // orange arrow floating over the next ring
+  const beam = new THREE.Mesh(new THREE.ConeGeometry(.3, .6, 4).rotateX(Math.PI), new THREE.MeshStandardMaterial({ color: '#f07a1a', roughness: .5 }));
+  beam.castShadow = true; G.scene.add(beam);
+  const mark = () => {
+    rings.forEach((m, k) => {
+      m.visible = k >= i;
+      m.material.color.set(k === i ? '#f07a1a' : '#e9e6df');
+    });
+    if (rings[i]) beam.position.set(rings[i].position.x, rings[i].position.y + 1.8, rings[i].position.z);
+  };
+  mark();
+  hud(`CHECKPOINT <b>1/${rings.length}</b>`, 'TIME <b>0.00s</b>');
+  return {
+    start() { t0 = G.time; },
+    update() {
+      const c = new THREE.Vector3(G.pos.x, G.pos.y + .9, G.pos.z), r = rings[i];
+      beam.rotation.y += .03; beam.position.y = r.position.y + 1.8 + Math.sin(G.time * 4) * .12;
+      if (c.distanceTo(r.position) < 1.35) {
+        sfx('ding'); spark(r.position, '#f07a1a', 14); i++;
+        if (i === rings.length) { const t = G.time - t0; return finishTest(lerpScore(t, 10, 99, 30, 30), `${t.toFixed(2)} s course time`); }
+        mark();
+      }
+      hud(`CHECKPOINT <b>${i + 1}/${rings.length}</b>`, `TIME <b>${(G.time - t0).toFixed(2)}s</b>`);
+    },
+    cleanup() { rings.forEach(m => G.scene.remove(m)); G.scene.remove(beam); },
+  };
+}
+
+const K = (k, l) => `<span><kbd>${k}</kbd>${l}</span>`;
+const TESTS = [
+  { key: 'REA', title: 'Quick draw', flat: true, desc: 'The screen turns red. Wait for it to turn green, then click as fast as you can. 3 rounds. Click too early and the round restarts.', keys: K('Click', 'react'), make: quickDraw },
+  { key: 'AIM', title: 'Flick range', desc: '20 targets appear around you, one at a time. Hit them as fast as you can. Missed shots cost you.', keys: K('Mouse', 'aim') + K('Click', 'shoot') + K('WASD', 'move'), make: flickTest },
+  { key: 'TRK', title: 'Tracking duel', desc: 'A bot strafes and jumps in front of you. Keep your crosshair on it for 8 seconds. Hold click to spray.', keys: K('Mouse', 'track') + K('Hold click', 'spray') + K('WASD', 'strafe'), make: trackTest },
+  { key: 'MOV', title: 'Parkour run', desc: 'Run through all 8 glowing rings, in order, as fast as you can. Some are on top of crates: sprint and jump.', keys: K('WASD', 'move') + K('Shift', 'sprint') + K('Space', 'jump'), make: moveTest },
+];
+
+function clearTest() {
+  if (G.test && G.test.cleanup) G.test.cleanup();
+  [...G.targets].forEach(t => removeTarget(t, false));
+  G.targets = []; G.test = null;
+}
+function openBrief(i) {
+  clearTest();
+  G.ti = i; const T = TESTS[i];
+  resetPlayer();
+  G.time = 0; G.canShoot = false; G.canMove = false; G.auto = false;
+  hud('', '');
+  G.test = T.flat ? null : T.make();
+  G.phase = 'brief';
+  center('');
+  $('#gStep').textContent = `Test ${i + 1}/${TESTS.length}`;
+  $('#gTitle').textContent = T.title;
+  $('#bKick').textContent = `Step ${i + 2} · Test ${i + 1}/${TESTS.length} · ${T.key}`;
+  $('#bTitle').textContent = T.title;
+  $('#bDesc').textContent = T.desc;
+  $('#bKeys').innerHTML = T.keys + (T.flat ? '' : K('Esc', 'pause'));
+  $('#sensRow').hidden = !!T.flat;
+  $('#bGo').textContent = T.flat ? 'Start →' : 'Click to start';
+  $('#tres').hidden = true; $('#pause').hidden = true; $('#brief').hidden = false;
+}
+function finishTest(score, detail) {
+  const T = TESTS[G.ti];
+  G.phase = 'result'; G.canShoot = false; G.canMove = false; G.mouseDown = false;
+  S.stats[T.key] = score; S.res[T.key] = detail;
+  center('');
+  $('#tKick').textContent = `${T.title} · ${T.key}`;
+  $('#tScore').textContent = score;
+  $('#tDetail').textContent = detail;
+  $('#tNext').textContent = G.ti < TESTS.length - 1 ? 'Next test →' : 'Reveal my card →';
+  $('#tres').hidden = false;
+  if (document.pointerLockElement) document.exitPointerLock();
+}
+function startGame() {
+  if (!initGame()) return;
+  $('#wrap').hidden = true; $('#game').hidden = false;
+  G.fpsFrames = 0; G.fpsTime = 0;
+  resizeGame();
+  G.clock.getDelta();
+  openBrief(0);
+}
+function endGame() {
+  clearTest();
+  G.phase = 'off';
+  const fps = G.fpsTime > 0 ? Math.round(G.fpsFrames / G.fpsTime) : (S.pc.hz || 60);
+  S.pc.fps = fps;
+  S.stats.FPS = fpsScore(fps);
+  S.res.FPS = `${fps} fps average in the arena`;
+  $('#game').hidden = true; $('#wrap').hidden = false;
+  reveal();
+}
+$('#sens').value = G.sens; $('#sensV').textContent = G.sens.toFixed(2);
+$('#sens').addEventListener('input', e => { G.sens = parseFloat(e.target.value); $('#sensV').textContent = G.sens.toFixed(2); store.set('gg-sens', G.sens); });
+$('#bGo').onclick = () => {
+  if (!TESTS[G.ti].flat) return lock();
+  $('#brief').hidden = true; G.phase = 'flat'; G.test = TESTS[G.ti].make();
+};
+$('#pGo').onclick = () => lock();
+$('#tNext').onclick = () => G.ti < TESTS.length - 1 ? openBrief(G.ti + 1) : endGame();
+
+/* =====================================================================
+   THE CARD — drawn flat on a canvas, then wrapped onto a 3D model
+   ===================================================================== */
+const RAR = [
+  { min: 92, name: 'LEGENDARY', bg: ['#03201d', '#0a3d4a', '#2a0c3d'], acc: '#7dffd6', ink: '#ffffff', holo: true, foil: .6, sub: 'Touch grass? Never.' },
+  { min: 85, name: 'ELITE', bg: ['#120a2b', '#34197a', '#6d38d6'], acc: '#d9c2ff', ink: '#ffffff', foil: .4, sub: 'Built different.' },
+  { min: 75, name: 'GOLD', bg: ['#1d1503', '#5c430a', '#b8891f'], acc: '#ffd866', ink: '#fff6dc', foil: .24, sub: 'Certified cracked.' },
+  { min: 60, name: 'SILVER', bg: ['#12161b', '#36404b', '#8d99a8'], acc: '#f1f5fa', ink: '#ffffff', foil: .14, sub: 'Mid-tier menace.' },
+  { min: 0, name: 'BRONZE', bg: ['#170d07', '#452815', '#8f5a32'], acc: '#f2b483', ink: '#fff1e6', foil: .08, sub: 'Still loading…' },
+];
+const CLASS = {
+  REA: { code: 'RFX', name: 'REFLEX GOD' }, AIM: { code: 'SNP', name: 'SNIPER' }, TRK: { code: 'LCK', name: 'LOCK-ON' },
+  MOV: { code: 'SPD', name: 'SPEED DEMON' }, RIG: { code: 'FLX', name: 'RIG FLEXER' }, FPS: { code: 'FRM', name: 'FRAME CHASER' },
+};
+const TIPS = {
+  REA: 'Your brain is lagging behind your screen. Try reaction drills, and sleep more.',
+  AIM: 'Ten minutes of aim training a day. Seriously.',
+  TRK: 'Lower your sensitivity and follow through with your arm, not your wrist.',
+  MOV: 'You move like a default bot. Sprint-jump and keep your momentum.',
+  RIG: 'Your PC is the weakest link on your team. Upgrade time?',
+  FPS: 'Your frame rate is holding you back. Lower your settings or get a faster screen.',
+};
+const LABEL = { REA: 'Quick draw', AIM: 'Flick range', TRK: 'Tracking duel', MOV: 'Parkour run' };
+
+const hexA = (h, a) => `rgba(${parseInt(h.slice(1, 3), 16)},${parseInt(h.slice(3, 5), 16)},${parseInt(h.slice(5, 7), 16)},${a})`;
+const spaced = s => s.split('').join(' ');
+const F = '"Chakra Petch", sans-serif', M = '"JetBrains Mono", monospace';
+const CS = 1.5; // card canvas resolution multiplier
+function rr(c, x, y, w, h, r) {
+  c.beginPath(); c.moveTo(x + r, y);
+  c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r);
+  c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath();
+}
+function fit(c, txt, max, size, font) {
+  do { c.font = `700 ${size}px ${font}`; size -= 2; } while (c.measureText(txt).width > max && size > 12);
+}
+function paintBg(c, R, W, H) {
+  let g = c.createLinearGradient(0, 0, W, H);
+  R.bg.forEach((col, i) => g.addColorStop(i / (R.bg.length - 1), col));
+  c.fillStyle = g; c.fillRect(0, 0, W, H);
+  if (R.holo) {
+    g = c.createLinearGradient(0, H, W, 0);
+    ['rgba(0,255,163,.22)', 'rgba(0,179,255,0)', 'rgba(255,61,242,.22)', 'rgba(0,179,255,0)', 'rgba(0,255,163,.18)'].forEach((col, i, a) => g.addColorStop(i / (a.length - 1), col));
+    c.fillStyle = g; c.fillRect(0, 0, W, H);
+  }
+  c.strokeStyle = 'rgba(255,255,255,.045)'; c.lineWidth = 2;
+  for (let i = -H; i < W; i += 26) { c.beginPath(); c.moveTo(i, 0); c.lineTo(i + H, H); c.stroke(); }
+}
+function paintBorder(c, R, W, H) {
+  if (R.holo) {
+    const g = c.createLinearGradient(0, 0, W, H);
+    g.addColorStop(0, '#00ffa3'); g.addColorStop(.5, '#00b3ff'); g.addColorStop(1, '#ff3df2');
+    c.strokeStyle = g;
+  } else c.strokeStyle = R.acc;
+  c.lineWidth = 6; rr(c, 3, 3, W - 6, H - 6, 42); c.stroke();
+  c.strokeStyle = hexA(R.acc, .35); c.lineWidth = 2; rr(c, 18, 18, W - 36, H - 36, 30); c.stroke();
+}
+
+async function drawCard(d) {
+  const cv = $('#card'), c = cv.getContext('2d'), W = 720, H = 1040, R = d.rar;
+  try { await Promise.all([document.fonts.load(`700 100px ${F}`), document.fonts.load(`500 30px ${F}`), document.fonts.load(`700 20px ${M}`), document.fonts.load(`400 20px ${M}`)]); } catch (e) {}
+  cv.width = W * CS; cv.height = H * CS;
+  c.setTransform(CS, 0, 0, CS, 0, 0);
+  c.clearRect(0, 0, W, H);
+  c.save(); rr(c, 0, 0, W, H, 44); c.clip();
+  paintBg(c, R, W, H);
+  let g = c.createRadialGradient(480, 300, 20, 480, 300, 460);
+  g.addColorStop(0, hexA(R.acc, .32)); g.addColorStop(1, hexA(R.acc, 0));
+  c.fillStyle = g; c.fillRect(0, 0, W, H);
+
+  // photo
+  const px = 280, py = 70, pw = 392, ph = 460;
+  c.save(); rr(c, px, py, pw, ph, 30); c.clip();
+  if (d.photo) {
+    const im = d.photo, s = Math.max(pw / im.width, ph / im.height), iw = im.width * s, ih = im.height * s;
+    c.drawImage(im, px + (pw - iw) / 2, py + (ph - ih) / 2, iw, ih);
+  } else {
+    c.fillStyle = 'rgba(0,0,0,.28)'; c.fillRect(px, py, pw, ph);
+    c.fillStyle = hexA(R.acc, .9); c.font = `700 300px ${F}`;
+    c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.fillText(d.name[0], px + pw / 2, py + ph / 2 + 16);
+  }
+  g = c.createLinearGradient(0, py + ph * .55, 0, py + ph);
+  g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.5)');
+  c.fillStyle = g; c.fillRect(px, py, pw, ph);
+  c.restore();
+  c.strokeStyle = hexA(R.acc, .5); c.lineWidth = 2; rr(c, px, py, pw, ph, 30); c.stroke();
+
+  // left column: OVR, class, specs
+  c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+  c.fillStyle = hexA(R.ink, .55); c.font = `700 18px ${M}`; c.fillText('GG CARD · S1', 56, 62);
+  c.fillStyle = R.ink; c.font = `700 160px ${F}`; c.fillText(d.ovr, 46, 222);
+  c.fillStyle = R.acc; c.font = `700 54px ${F}`; c.fillText(d.code, 54, 286);
+  c.fillStyle = hexA(R.ink, .25); c.fillRect(56, 314, 180, 2);
+  [[d.fps || '?', 'AVG FPS'], [d.hz, 'HZ'], [d.cores || '?', 'THREADS']].forEach(([v, l], i) => {
+    const y = 378 + i * 64;
+    c.fillStyle = R.ink; c.font = `700 40px ${F}`; c.fillText(v, 56, y);
+    c.fillStyle = hexA(R.ink, .6); c.font = `700 16px ${M}`; c.fillText(l, 56, y + 24);
+  });
+
+  // name + class
+  c.textAlign = 'center'; c.fillStyle = R.ink;
+  fit(c, d.name, 620, 92, F); c.fillText(d.name, W / 2, 622);
+  c.fillStyle = R.acc; c.font = `700 22px ${M}`; c.fillText(spaced(d.cls), W / 2, 662);
+  c.fillStyle = hexA(R.ink, .2); c.fillRect(80, 690, W - 160, 2);
+
+  // stats
+  KEYS.forEach((k, i) => {
+    const x = i % 2 ? 404 : 100, y = 758 + (i >> 1) * 70, v = d.stats[k];
+    c.textAlign = 'left';
+    c.fillStyle = R.ink; c.font = `700 54px ${F}`; c.fillText(v, x, y);
+    c.fillStyle = hexA(R.ink, .7); c.font = `500 34px ${F}`; c.fillText(k, x + 82, y);
+    c.fillStyle = hexA(R.ink, .15); c.fillRect(x, y + 13, 216, 5);
+    c.fillStyle = R.acc; c.fillRect(x, y + 13, 216 * v / 99, 5);
+  });
+
+  // footer
+  c.textAlign = 'center';
+  c.fillStyle = R.acc; c.font = `700 22px ${M}`; c.fillText(`◆  ${spaced(R.name)}  ◆`, W / 2, 970);
+  c.fillStyle = hexA(R.ink, .5); c.font = `400 17px ${M}`;
+  const gpu = d.gpu.length > 42 ? d.gpu.slice(0, 41) + '…' : d.gpu;
+  c.fillText(gpu.toUpperCase(), W / 2, 1002);
+  c.restore();
+  paintBorder(c, R, W, H);
+}
+
+function drawBack(R) {
+  const cv = V.backCv || (V.backCv = document.createElement('canvas')), W = 720, H = 1040, c = cv.getContext('2d');
+  cv.width = W * CS; cv.height = H * CS;
+  c.setTransform(CS, 0, 0, CS, 0, 0);
+  c.clearRect(0, 0, W, H);
+  c.save(); rr(c, 0, 0, W, H, 44); c.clip();
+  paintBg(c, R, W, H);
+  const g = c.createRadialGradient(W / 2, H / 2, 10, W / 2, H / 2, 420);
+  g.addColorStop(0, hexA(R.acc, .35)); g.addColorStop(1, hexA(R.acc, 0));
+  c.fillStyle = g; c.fillRect(0, 0, W, H);
+  c.strokeStyle = hexA(R.acc, .25); c.lineWidth = 2;
+  for (let i = 0; i < 6; i++) { const s = 120 + i * 46; rr(c, W / 2 - s, H / 2 - s * 1.2, s * 2, s * 2.4, 30); c.stroke(); }
+  c.textAlign = 'center'; c.textBaseline = 'alphabetic';
+  c.fillStyle = R.acc; c.font = `700 250px ${F}`; c.fillText('GG', W / 2, H / 2 + 60);
+  c.fillStyle = R.ink; c.font = `700 34px ${M}`; c.fillText(spaced('CARD'), W / 2, H / 2 + 130);
+  c.fillStyle = hexA(R.ink, .55); c.font = `400 18px ${M}`; c.fillText(spaced('SEASON 01'), W / 2, H - 70);
+  c.restore();
+  paintBorder(c, R, W, H);
+  return cv;
+}
+
+/* ---------- 3D card viewer ---------- */
+const V = { on: false };
+const CW = 2.4, CH = CW * 1040 / 720, CRAD = .16, CD = .05, CB = .014;
+function rrShape(w, h, r) {
+  const s = new THREE.Shape(), x = -w / 2, y = -h / 2;
+  s.moveTo(x + r, y); s.lineTo(x + w - r, y); s.quadraticCurveTo(x + w, y, x + w, y + r);
+  s.lineTo(x + w, y + h - r); s.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  s.lineTo(x + r, y + h); s.quadraticCurveTo(x, y + h, x, y + h - r);
+  s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y);
+  return s;
+}
+function faceGeo(shape) {
+  const g = new THREE.ShapeGeometry(shape, 24), p = g.attributes.position, uv = g.attributes.uv;
+  for (let i = 0; i < p.count; i++) uv.setXY(i, p.getX(i) / CW + .5, p.getY(i) / CH + .5);
+  return g;
+}
+const holoMat = () => new THREE.ShaderMaterial({
+  uniforms: { uT: { value: 0 }, uS: { value: .2 } },
+  transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+  vertexShader: `varying vec2 vUv; varying vec3 vN; varying vec3 vV;
+    void main(){ vUv=uv; vec4 mv=modelViewMatrix*vec4(position,1.); vN=normalize(normalMatrix*normal); vV=normalize(-mv.xyz); gl_Position=projectionMatrix*mv; }`,
+  fragmentShader: `uniform float uT; uniform float uS; varying vec2 vUv; varying vec3 vN; varying vec3 vV;
+    vec3 hue(float h){ return clamp(abs(mod(h*6.+vec3(0.,4.,2.),6.)-3.)-1.,0.,1.); }
+    void main(){
+      float f=clamp(dot(normalize(vN),normalize(vV)),0.,1.);
+      float h=fract(vUv.x*.7+vUv.y*.5+(1.-f)*2.4+uT*.03);
+      float band=pow(.5+.5*sin((vUv.x-vUv.y)*9.+(1.-f)*16.),6.);
+      float a=uS*(.25+.75*(1.-f))*(.3+.7*band);
+      gl_FragColor=vec4(hue(h),a);
+    }`,
+});
+
+function initViewer() {
+  if (V.r) return;
+  const host = $('#stage');
+  const r = V.r = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+  r.setPixelRatio(Math.min(devicePixelRatio, 2));
+  r.outputColorSpace = THREE.SRGBColorSpace; r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.25;
+  r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+  host.appendChild(r.domElement);
+  const sc = V.scene = new THREE.Scene();
+  sc.environment = new THREE.PMREMGenerator(r).fromScene(new RoomEnvironment(), .04).texture;
+  V.cam = new THREE.PerspectiveCamera(30, 1, .1, 100);
+  const key = new THREE.SpotLight(0xffffff, 2.5, 0, .5, .6, 0);
+  key.position.set(3, 6, 6); key.castShadow = true; key.shadow.mapSize.set(1024, 1024); sc.add(key);
+  const rim = new THREE.PointLight(0xffffff, 1.5, 0, 0); rim.position.set(-3, 1, -3); sc.add(rim);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.ShadowMaterial({ opacity: .35 }));
+  floor.rotation.x = -Math.PI / 2; floor.position.y = -2.4; floor.receiveShadow = true; sc.add(floor);
+  V.card = new THREE.Group(); sc.add(V.card);
+  V.frontTex = new THREE.CanvasTexture($('#card'));
+  V.frontTex.colorSpace = THREE.SRGBColorSpace; V.frontTex.anisotropy = r.capabilities.getMaxAnisotropy();
+
+  V.rot = new THREE.Vector2(); V.tgt = new THREE.Vector2(); V.hover = new THREE.Vector2(); V.spin = 0; V.scale = 1;
+  const el = r.domElement; el.style.cursor = 'grab';
+  let drag = null;
+  el.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY }; el.setPointerCapture(e.pointerId); el.style.cursor = 'grabbing'; V.spin = 0; });
+  el.addEventListener('pointermove', e => {
+    const b = el.getBoundingClientRect();
+    V.hover.set(((e.clientX - b.left) / b.width - .5) * .5, ((e.clientY - b.top) / b.height - .5) * .4);
+    if (!drag) return;
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    drag = { x: e.clientX, y: e.clientY };
+    V.tgt.y += dx * .012; V.tgt.x = clamp(V.tgt.x + dy * .008, -.7, .7); V.spin = dx * .012;
+  });
+  const up = () => { drag = null; el.style.cursor = 'grab'; };
+  el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+  el.addEventListener('pointerleave', () => V.hover.set(0, 0));
+  el.addEventListener('dblclick', () => { V.tgt.y += Math.PI; });
+  V.dragging = () => !!drag;
+
+  new ResizeObserver(resizeViewer).observe(host);
+  resizeViewer();
+  V.clock = new THREE.Clock();
+  r.setAnimationLoop(viewLoop);
+}
+function resizeViewer() {
+  const host = $('#stage'), w = host.clientWidth, h = host.clientHeight;
+  if (!w || !h) return;
+  V.r.setSize(w, h);
+  V.cam.aspect = w / h;
+  const t = Math.tan(THREE.MathUtils.degToRad(V.cam.fov / 2));
+  V.cam.position.set(0, .2, Math.max(CH * 1.3 / 2 / t, CW * 1.75 / 2 / (t * V.cam.aspect)));
+  V.cam.lookAt(0, 0, 0);
+  V.cam.updateProjectionMatrix();
+}
+function buildCard(R) {
+  for (const ch of [...V.card.children]) V.card.remove(ch);
+  if (V.spark) { V.scene.remove(V.spark); V.spark = null; }
+  const shape = rrShape(CW, CH, CRAD);
+  const bodyGeo = new THREE.ExtrudeGeometry(shape, { depth: CD, bevelEnabled: true, bevelThickness: CB, bevelSize: CB, bevelSegments: 3, curveSegments: 24 });
+  bodyGeo.translate(0, 0, -CD / 2);
+  const body = new THREE.Mesh(bodyGeo, new THREE.MeshStandardMaterial({ color: R.acc, metalness: 1, roughness: .28 }));
+  body.castShadow = true;
+  const fg = faceGeo(shape), z = CD / 2 + CB + .002;
+  const front = new THREE.Mesh(fg, new THREE.MeshPhysicalMaterial({ map: V.frontTex, roughness: .38, metalness: .1, clearcoat: 1, clearcoatRoughness: .08 }));
+  front.position.z = z;
+  if (V.backTex) V.backTex.dispose();
+  V.backTex = new THREE.CanvasTexture(drawBack(R));
+  V.backTex.colorSpace = THREE.SRGBColorSpace; V.backTex.anisotropy = V.r.capabilities.getMaxAnisotropy();
+  const back = new THREE.Mesh(fg.clone().rotateY(Math.PI), new THREE.MeshPhysicalMaterial({ map: V.backTex, roughness: .4, metalness: .15, clearcoat: 1, clearcoatRoughness: .1 }));
+  back.position.z = -z;
+  const holo = new THREE.Mesh(fg, holoMat());
+  holo.material.uniforms.uS.value = R.foil; holo.position.z = z + .002;
+  V.holo = holo;
+  V.card.add(body, front, back, holo);
+  if (R.min >= 85) {
+    const n = 180, pos = new Float32Array(n * 3);
+    for (let i = 0; i < n; i++) { const a = Math.random() * Math.PI * 2, rd = rand(1.8, 3.2); pos.set([Math.cos(a) * rd, rand(-2.4, 2.4), Math.sin(a) * rd], i * 3); }
+    const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    V.spark = new THREE.Points(geo, new THREE.PointsMaterial({ color: R.acc, size: .045, transparent: true, opacity: .9, blending: THREE.AdditiveBlending, depthWrite: false }));
+    V.scene.add(V.spark);
+  }
+}
+function viewLoop() {
+  if (!V.on) return;
+  const dt = Math.min(V.clock.getDelta(), .05), t = V.clock.elapsedTime;
+  if (!V.dragging()) {
+    V.tgt.y += V.spin; V.spin *= .94; V.tgt.x *= .97;
+    // settle on whichever face is closest once it stops spinning
+    if (Math.abs(V.spin) < .002) V.tgt.y += (Math.round(V.tgt.y / Math.PI) * Math.PI - V.tgt.y) * .04;
+  }
+  V.rot.x += (V.tgt.x - V.rot.x) * Math.min(1, dt * 8);
+  V.rot.y += (V.tgt.y - V.rot.y) * Math.min(1, dt * 5);
+  V.scale += (1 - V.scale) * Math.min(1, dt * 4);
+  V.card.scale.setScalar(V.scale);
+  V.card.rotation.set(V.rot.x + V.hover.y + Math.sin(t * .8) * .04, V.rot.y + V.hover.x + Math.sin(t * .5) * .12, Math.sin(t * .7) * .02);
+  V.card.position.y = Math.sin(t * 1.3) * .07;
+  if (V.holo) V.holo.material.uniforms.uT.value = t;
+  if (V.spark) V.spark.rotation.y = t * .15;
+  V.r.render(V.scene, V.cam);
+}
+
+/* card colors taken from the profile photo: its strongest hue becomes the theme */
+function hslHex(h, s, l) {
+  s /= 100; l /= 100;
+  const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l);
+  const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1));
+  return '#' + [f(0), f(8), f(4)].map(v => Math.round(v * 255).toString(16).padStart(2, '0')).join('');
+}
+function photoTheme(img) {
+  const N = 48, c = document.createElement('canvas'); c.width = c.height = N;
+  const x = c.getContext('2d'); x.drawImage(img, 0, 0, N, N);
+  const d = x.getImageData(0, 0, N, N).data, bins = new Array(24).fill(0);
+  let sat = 0, cnt = 0;
+  for (let i = 0; i < d.length; i += 4) {
+    const r = d[i] / 255, g = d[i + 1] / 255, b = d[i + 2] / 255, mx = Math.max(r, g, b), mn = Math.min(r, g, b), dl = mx - mn;
+    if (dl < .1 || mx < .12) continue; // skip greys and near-black
+    let h = mx === r ? ((g - b) / dl) % 6 : mx === g ? (b - r) / dl + 2 : (r - g) / dl + 4;
+    h = (h * 60 + 360) % 360;
+    const s = dl / (1 - Math.abs(mx + mn - 1) || 1);
+    bins[Math.floor(h / 15) % 24] += s * mx; sat += s; cnt++;
+  }
+  if (cnt < N * N * .04) return null; // black-and-white photo: keep the rarity colors
+  let best = -1, bi = 0;
+  for (let i = 0; i < 24; i++) { const v = bins[i] + .5 * (bins[(i + 23) % 24] + bins[(i + 1) % 24]); if (v > best) { best = v; bi = i; } }
+  const h = bi * 15 + 7.5, s = clamp(Math.round(sat / cnt * 100), 35, 85);
+  return { acc: hslHex(h, Math.max(s, 70), 68), bg: [hslHex(h, s * .7, 7), hslHex(h, s * .7, 20), hslHex((h + 25) % 360, s, 36)], ink: '#ffffff' };
+}
+async function renderCard() {
+  const { ovr, rar, top } = last;
+  const pt = S.photo && S.matchPhoto ? photoTheme(S.photo) : null;
+  const theme = pt ? { ...rar, ...pt } : rar;
+  $('#theme').hidden = !S.photo || !photoTheme(S.photo);
+  $('#theme').textContent = `Photo colors: ${S.matchPhoto ? 'on' : 'off'}`;
+  await drawCard({ ...S.pc, name: S.name, photo: S.photo, stats: S.stats, ovr, rar: theme, code: CLASS[top].code, cls: CLASS[top].name });
+  initViewer();
+  V.frontTex.needsUpdate = true;
+  buildCard(theme);
+}
+
+let last = null;
+async function reveal() {
+  show('result', 'Your card');
+  const st = S.stats;
+  const ovr = clamp(Math.round(KEYS.reduce((a, k) => a + st[k], 0) / KEYS.length), 1, 99);
+  const rar = RAR.find(r => ovr >= r.min);
+  const top = KEYS.reduce((a, k) => st[k] > st[a] ? k : a);
+  const low = KEYS.reduce((a, k) => st[k] < st[a] ? k : a);
+  last = { ovr, rar, top };
+  let newBest = false;
+  if (ME) {
+    ME.history = [...(ME.history || []), { ovr, rar: rar.name, at: Date.now() }].slice(-20);
+    if (!ME.best || ovr > ME.best.ovr) { newBest = !!ME.best; ME.best = { ovr, rar: rar.name }; }
+    await saveProfile(ME); renderProfiles();
+  }
+  loadLeaderboard();
+  $('#rKick').textContent = `${rar.name} · ${ovr} OVR`;
+  const cls = CLASS[top].name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+  $('#rTitle').textContent = `You're ${/^[aeiou]/i.test(cls) ? 'an' : 'a'} ${cls}.`;
+  $('#rSub').textContent = rar.sub + (ME && ME.best ? ` · Your best: ${ME.best.ovr} OVR` : '');
+  if (newBest) toast('New personal best!');
+  const pc = S.pc, parts = pc.parts || {};
+  const rows = [
+    ...['REA', 'AIM', 'TRK', 'MOV'].map(k => [LABEL[k], `${S.res[k]} → ${st[k]}`]),
+    ['Arena FPS', `${pc.fps} fps → FPS ${st.FPS}`],
+    ['GPU', `${pc.gpu}${parts.gpu ? ` → ${parts.gpu}` : ''}`],
+    ['GPU benchmark', pc.gpuPts ? `${pc.gpuPts} G shader ops/s` : 'did not run'],
+    ['CPU single-core', pc.cpu1 ? `${pc.cpu1} pts → ${parts.cpu1}` : 'did not run'],
+    ['CPU all cores', pc.cpuN ? `${pc.cpuN} pts (${pc.cores} threads) → ${parts.cpuN}` : 'did not run'],
+    ['RAM', pc.mem ? (pc.mem >= 8 ? '8+ GB' : pc.mem + ' GB') : 'hidden by browser'],
+    ['Refresh rate', `${pc.hz} Hz`], ['Rig score', `RIG ${st.RIG}`],
+  ];
+  $('#bd').innerHTML = rows.map(([k, v]) => `<div><span>${k}</span><b>${esc(v)}</b></div>`).join('');
+  $('#tip').innerHTML = `<b>Weakness: ${low}.</b> ${TIPS[low]}`;
+  await renderCard();
+  // "pack opening": spin in from small
+  V.rot.set(0, -Math.PI * 4); V.tgt.set(0, 0); V.spin = 0; V.scale = .35;
+  V.on = true; resizeViewer(); V.clock.getDelta();
+}
+
+function saveURL(url, name) { const a = document.createElement('a'); a.download = name; a.href = url; a.click(); }
+const fileName = s => `gg-card-${S.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}${s}.png`;
+$('#dl').onclick = () => saveURL($('#card').toDataURL('image/png'), fileName(''));
+$('#shot3d').onclick = () => {
+  const src = V.r.domElement, c = document.createElement('canvas');
+  c.width = src.width; c.height = src.height;
+  const x = c.getContext('2d'), g = x.createRadialGradient(c.width / 2, c.height / 2, 0, c.width / 2, c.height / 2, c.width * .7);
+  g.addColorStop(0, '#131c28'); g.addColorStop(1, '#07090d');
+  x.fillStyle = g; x.fillRect(0, 0, c.width, c.height); x.drawImage(src, 0, 0);
+  saveURL(c.toDataURL('image/png'), fileName('-3d'));
+};
+$('#flip').onclick = () => { V.tgt.y += Math.PI; };
+$('#theme').onclick = () => {
+  S.matchPhoto = !S.matchPhoto; $('#match').checked = S.matchPhoto;
+  if (ME) { ME.match = S.matchPhoto; saveProfile(ME); }
+  renderCard();
+};
+$('#share').onclick = async () => {
+  const text = `My GG Card: ${last.ovr} OVR ${last.rar.name}. Think you can beat it? ${location.href}`;
+  const blob = await new Promise(r => $('#card').toBlob(r, 'image/png'));
+  const file = new File([blob], 'gg-card.png', { type: 'image/png' });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try { await navigator.share({ files: [file], text }); } catch (e) {}
+  } else {
+    try { await navigator.clipboard.writeText(text); toast('Copied! Paste it to your squad.'); }
+    catch (e) { saveURL($('#card').toDataURL('image/png'), fileName('')); }
+  }
+};
+$('#again').onclick = () => { V.on = false; S.stats = {}; S.res = {}; show('intro', 'Ready'); };
+
+// handy for testing from the console
+window.GG = { S, G, reveal, startGame, openBrief, finishTest, endGame, cpuBench, gpuBench, step: updatePlayer };
+</script>
+</body>
+</html>
