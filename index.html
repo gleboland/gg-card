@@ -112,6 +112,25 @@ input[type=text]:focus{border-color:var(--acc)}
 .simon{position:absolute;inset:0;margin:auto;width:min(80vw,62vh);height:min(80vw,62vh);display:grid;grid-template-columns:1fr 1fr;gap:14px;top:-40px}
 .simon button{border:0;border-radius:22px;background:var(--c);opacity:.35;cursor:pointer;transition:opacity .08s,transform .08s}
 .simon button.on{opacity:1;transform:scale(1.03);box-shadow:0 0 30px var(--c)}
+.socin{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px}
+.socin label{display:flex;flex-direction:column;gap:4px;font:11px 'JetBrains Mono',monospace;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.socin input{background:var(--panel);border:1px solid var(--line);color:var(--text);font:15px 'JetBrains Mono',monospace;padding:9px 10px;border-radius:8px;outline:none;text-transform:none;letter-spacing:0}
+.socin input:focus{border-color:var(--acc)}
+.socs{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:12px}
+.soc{display:inline-flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:999px;padding:5px 12px;font:13px 'JetBrains Mono',monospace;cursor:pointer;text-decoration:none}
+.soc b{color:var(--muted);font-weight:400}
+.soc:hover{border-color:var(--acc)}
+.mtabs{flex-wrap:wrap}
+.mtabs button{flex:none;padding:7px 12px}
+.lb div .soc{margin-left:auto}
+.mi.gift{border-color:#3a3417}
+.mi.gift .ic{background:#2a2410}
+.adov{position:fixed;inset:0;z-index:16;background:#05070b;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:24px}
+.adtag{position:absolute;top:16px;right:16px;font:13px 'JetBrains Mono',monospace;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+.adbox{max-width:560px;width:100%;text-align:center;background:linear-gradient(160deg,#0f1a26,#132a22);border:1px solid var(--line);border-radius:20px;padding:40px 28px}
+.adbox p{color:var(--muted);margin-top:12px;font-size:17px}
+.adbox b{color:var(--text)}
+.adov .btn{max-width:560px}
 .simmsg{position:absolute;left:0;right:0;bottom:20px;font:700 22px 'Chakra Petch',sans-serif;color:var(--muted)}
 .clist{display:grid;gap:10px;margin-bottom:6px}
 .citem{display:flex;align-items:center;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
@@ -224,6 +243,8 @@ kbd{font:700 12px 'JetBrains Mono',monospace;color:var(--text);background:#18212
       <button class="mi play" id="go"><span class="ic">▶</span><span><b>Play</b><small id="cool">Scan + 4 tests = new card</small></span></button>
       <button class="mi" id="mCards"><span class="ic">◆</span><span><b>My cards</b><small>your PC and mobile cards</small></span></button>
       <button class="mi" id="mBoard"><span class="ic">#</span><span><b>Leaderboard</b><small>top 10 on PC and mobile</small></span></button>
+      <button class="mi" id="mMates"><span class="ic">✚</span><span><b>Find teammates</b><small>Discord, Roblox, Epic and more</small></span></button>
+      <button class="mi gift" id="mReward"><span class="ic">🎁</span><span><b>Free reward</b><small id="rewardSmall">watch a 15-second break, one time only</small></span></button>
       <button class="mi" id="mArcade"><span class="ic">◉</span><span><b>Minigames</b><small>3 quick games, no cooldown</small></span></button>
       <button class="mi" id="mQuests"><span class="ic">✦</span><span><b>Quests</b><small id="questSmall">unlock special card designs</small></span></button>
       <button class="mi" id="mProfile"><span class="ic">●</span><span><b>Profile</b><small>gamertag, photo, card design</small></span></button>
@@ -251,6 +272,8 @@ kbd{font:700 12px 'JetBrains Mono',monospace;color:var(--text);background:#18212
     <label class="match" id="matchRow" hidden><input type="checkbox" id="match" checked> Match my card's colors to my photo</label>
     <div class="label"><span>Card design</span><span>unlock more in Quests</span></div>
     <div class="designs" id="designs"></div>
+    <div class="label"><span>Gaming accounts</span><span>public · so people can play with you</span></div>
+    <div class="socin" id="socin"></div>
     <button class="btn full" id="pSave">Save</button>
     <button class="btn ghost full back" data-back>← Menu</button>
   </section>
@@ -261,6 +284,31 @@ kbd{font:700 12px 'JetBrains Mono',monospace;color:var(--text);background:#18212
     <h2>My cards</h2>
     <p class="lead">One card per platform. A new run replaces the old card.</p>
     <div class="clist" id="clist"></div>
+    <button class="btn ghost full back" data-back>← Menu</button>
+  </section>
+
+  <!-- FIND TEAMMATES -->
+  <section class="screen" id="mates">
+    <div class="kicker">Menu · Find teammates</div>
+    <h2>Find teammates</h2>
+    <p class="lead">Players who added a gaming account. Add them and play together. Tap a name to see their card.</p>
+    <div class="lbtabs mtabs" id="mtabs"></div>
+    <div class="lb" id="mlist"></div>
+    <p class="note">Add your own accounts in Profile.</p>
+    <button class="btn ghost full back" data-back>← Menu</button>
+  </section>
+
+  <!-- FREE REWARD -->
+  <section class="screen" id="reward">
+    <div class="kicker">Menu · Free reward</div>
+    <h2>Free reward</h2>
+    <p class="lead" id="rwLead"></p>
+    <ul class="perks">
+      <li><b>Diamond card design</b>: exclusive, you can’t get it any other way</li>
+      <li><b>1 free cooldown skip</b>: play again right away, once</li>
+    </ul>
+    <button class="btn full" id="rwGo">Watch the 15-second break</button>
+    <p class="note">One time per account. The break has to stay on screen to count.</p>
     <button class="btn ghost full back" data-back>← Menu</button>
   </section>
 
@@ -307,6 +355,7 @@ kbd{font:700 12px 'JetBrains Mono',monospace;color:var(--text);background:#18212
       <div class="kicker" id="rKick">Your card</div>
       <h2 id="rTitle"></h2>
       <p id="rSub"></p>
+      <div class="socs" id="rSocials"></div>
     </div>
     <div id="stage"></div>
     <div class="hint">drag to spin · double-click to flip</div>
@@ -362,6 +411,17 @@ kbd{font:700 12px 'JetBrains Mono',monospace;color:var(--text);background:#18212
     </div>
   </div>
 </div>
+<!-- SPONSOR BREAK (swap the promo for a real rewarded ad later) -->
+<div class="adov" id="adOv" hidden>
+  <div class="adtag">Sponsored break · <span id="adLeft">15</span>s</div>
+  <div class="adbox" id="adBox">
+    <div class="kicker">Presented by GG Card</div>
+    <h2>Bring your squad</h2>
+    <p>Send your friends <b>gleboland.github.io/gg-card</b> and see who gets the highest OVR. Then team up through <b>Find teammates</b>.</p>
+  </div>
+  <button class="btn full" id="adClaim" disabled>Keep watching…</button>
+</div>
+
 <!-- ARCADE GAME OVERLAY -->
 <div class="arcov" id="arcadeOv" hidden>
   <div class="arcbar"><b id="arcTitle"></b><span id="arcScore"></span><button class="link" id="arcQuit">✕ Quit</button></div>
@@ -505,7 +565,45 @@ function writePlayer(fields) {
   return Promise.resolve();
 }
 function saveProfile(p) {
-  return writePlayer({ name: p.name, photo: p.photo || null, match: p.match !== false, design: p.design || 'classic' }).catch(e => toast('Could not save: ' + e.code));
+  return writePlayer({ name: p.name, photo: p.photo || null, match: p.match !== false, design: p.design || 'classic', socials: p.socials || {} })
+    .catch(e => toast('Could not save: ' + e.code));
+}
+
+/* ---------- gaming accounts, so people can find each other and play together ---------- */
+const SOCIALS = [
+  { k: 'discord', label: 'Discord', ph: 'username' },
+  { k: 'roblox', label: 'Roblox', ph: 'username', link: v => `https://www.roblox.com/search/users?keyword=${encodeURIComponent(v)}` },
+  { k: 'epic', label: 'Epic Games', ph: 'display name' },
+  { k: 'ubisoft', label: 'Ubisoft', ph: 'username' },
+  { k: 'steam', label: 'Steam', ph: 'profile name' },
+  { k: 'xbox', label: 'Xbox', ph: 'gamertag' },
+  { k: 'psn', label: 'PlayStation', ph: 'online ID' },
+  { k: 'twitch', label: 'Twitch', ph: 'channel', link: v => `https://www.twitch.tv/${encodeURIComponent(v)}` },
+  { k: 'youtube', label: 'YouTube', ph: '@handle', link: v => `https://www.youtube.com/@${encodeURIComponent(v.replace(/^@/, ''))}` },
+];
+const cleanSocial = v => String(v || '').replace(/[\u0000-\u001f<>"]/g, '').trim().slice(0, 40);
+function renderSocialInputs() {
+  const s = (ME && ME.socials) || {};
+  $('#socin').innerHTML = SOCIALS.map(x => `<label>${x.label}<input type="text" data-soc="${x.k}" maxlength="40" placeholder="${x.ph}" value="${esc(s[x.k] || '')}" autocomplete="off"></label>`).join('');
+}
+function readSocials() {
+  const out = {};
+  $('#socin').querySelectorAll('[data-soc]').forEach(i => { const v = cleanSocial(i.value); if (v) out[i.dataset.soc] = v; });
+  return out;
+}
+// chips: link where the platform has a public profile URL, otherwise copy to clipboard
+function socialChips(s, only) {
+  return SOCIALS.filter(x => s && s[x.k] && (!only || x.k === only)).map(x => {
+    const v = esc(s[x.k]);
+    return x.link ? `<a class="soc" href="${esc(x.link(s[x.k]))}" target="_blank" rel="noopener nofollow"><b>${x.label}</b>${v}</a>`
+      : `<button class="soc" data-copy="${v}" type="button"><b>${x.label}</b>${v}</button>`;
+  }).join('');
+}
+function wireCopy(el) {
+  el.querySelectorAll('[data-copy]').forEach(b => b.onclick = async e => {
+    e.stopPropagation();
+    try { await navigator.clipboard.writeText(b.dataset.copy); toast(`Copied ${b.dataset.copy}. Add them and play!`); } catch (err) { toast(b.dataset.copy); }
+  });
 }
 
 /* one run per platform every 4 hours; the run is stamped when it starts,
@@ -514,11 +612,16 @@ const ms = v => !v ? 0 : typeof v === 'number' ? v : v.toMillis ? v.toMillis() :
 const OWNER_UID = '9iiHNBoEARZQkX8hDrteTdSD22o1'; // the site owner plays without a cooldown
 const isOwner = () => !!(FB && FB.user && FB.user.uid === OWNER_UID);
 const cooldownLeft = () => ME && !isOwner() ? Math.max(0, ms((ME.attempts || {})[PLAT]) + COOLDOWN - Date.now()) : 0;
+const skipsLeft = () => (ME && ME.bonus && ME.bonus.skips) || 0; // from the free reward
 const fmtLeft = t => { const m = Math.ceil(t / 60000); return m >= 60 ? `${Math.floor(m / 60)}h ${m % 60}m` : `${m}m`; };
-async function startAttempt() {
+// useSkip spends the free-reward skip in the same write, which is what lets the rules allow it
+async function startAttempt(useSkip = false) {
+  const fields = { attempts: { [PLAT]: FB ? FB.F.serverTimestamp() : Date.now() } };
+  if (useSkip) fields.bonus = { skips: skipsLeft() - 1 };
+  if (FB) await FB.F.setDoc(playerRef(), fields, { merge: true });
   ME.attempts = { ...(ME.attempts || {}), [PLAT]: Date.now() };
-  if (FB) await FB.F.setDoc(playerRef(), { attempts: { [PLAT]: FB.F.serverTimestamp() } }, { merge: true });
-  else await writePlayer();
+  if (useSkip) ME.bonus = { ...ME.bonus, skips: skipsLeft() - 1 };
+  if (!FB) await writePlayer();
 }
 async function saveCard(card) {
   ME.cards = { ...(ME.cards || {}), [PLAT]: { ...card, at: Date.now() } };
@@ -530,9 +633,11 @@ async function saveCard(card) {
 function updateCooldown() {
   const left = cooldownLeft(), c = ME && ME.cards && ME.cards[PLAT];
   $('#menu').hidden = !!FB && !ME; // online mode: sign in first
-  $('#go').disabled = left > 0;
-  $('#cool').textContent = left > 0 ? `next ${PLAT_NAME} run in ${fmtLeft(left)}`
+  $('#go').disabled = left > 0 && !skipsLeft();
+  $('#cool').textContent = left > 0 ? (skipsLeft() ? `cooldown ${fmtLeft(left)} · tap to use your free skip` : `next ${PLAT_NAME} run in ${fmtLeft(left)}`)
     : c ? `new run replaces your ${c.ovr} OVR ${PLAT_NAME} card` : `scan + 4 tests = your ${PLAT_NAME} card`;
+  const claimed = ME && ME.bonus && ME.bonus.claimed;
+  $('#rewardSmall').textContent = claimed ? `claimed ✓${skipsLeft() ? ' · 1 skip left' : ''}` : 'watch a 15-second break, one time only';
 }
 
 /* ---------- menu ---------- */
@@ -546,7 +651,69 @@ function ensureMe() {
 }
 function toMenu() { V.on = false; show('intro', 'Menu'); renderProfiles(); }
 document.querySelectorAll('[data-back]').forEach(b => b.onclick = toMenu);
-$('#mProfile').onclick = () => { renderDesignPicker(); show('profile', 'Profile'); };
+$('#mProfile').onclick = () => { renderDesignPicker(); renderSocialInputs(); show('profile', 'Profile'); };
+$('#mMates').onclick = () => { show('mates', 'Teammates'); loadMates(); };
+$('#mReward').onclick = () => { renderReward(); show('reward', 'Free reward'); };
+
+/* ---------- find teammates: players with a gaming account on a platform ---------- */
+let matePlat = 'discord';
+async function loadMates() {
+  $('#mtabs').innerHTML = SOCIALS.map(x => `<button class="${x.k === matePlat ? 'on' : ''}" data-k="${x.k}">${x.label}</button>`).join('');
+  $('#mtabs').querySelectorAll('button').forEach(b => b.onclick = () => { matePlat = b.dataset.k; loadMates(); });
+  const el = $('#mlist');
+  if (!FB) { el.innerHTML = '<p class="note">Finding teammates needs online accounts.</p>'; return; }
+  el.innerHTML = '<p class="note">Loading…</p>';
+  try {
+    const { F, db } = FB;
+    // ordering by the field only returns players who filled it in
+    const snap = await F.getDocs(F.query(F.collection(db, 'players'), F.orderBy(`socials.${matePlat}`), F.limit(30)));
+    const rows = snap.docs.map(d => {
+      const p = d.data(); lbCache[d.id] = p;
+      const best = Math.max(0, ...['pc', 'mobile'].map(k => p.cards && p.cards[k] ? p.cards[k].ovr : 0));
+      const plat = p.cards && p.cards.pc ? 'pc' : p.cards && p.cards.mobile ? 'mobile' : '';
+      return `<div ${plat ? `data-uid="${d.id}" data-p="${plat}"` : ''}>${avatar(p)}<b>${esc(p.name)}</b><span>${best ? best + ' OVR' : 'no card yet'}</span>${socialChips(p.socials, matePlat)}</div>`;
+    });
+    const label = SOCIALS.find(x => x.k === matePlat).label;
+    el.innerHTML = rows.join('') || `<p class="note">Nobody has added a ${label} account yet. Be the first in Profile!</p>`;
+    el.querySelectorAll('[data-uid]').forEach(r => r.onclick = () => openOther(r.dataset.uid, r.dataset.p));
+    wireCopy(el);
+  } catch (e) { el.innerHTML = `<p class="note warn">Could not load (${esc(e.code || e.message)}).</p>`; }
+}
+
+/* ---------- free reward: watch a 15-second break once, get Diamond + 1 cooldown skip ---------- */
+function renderReward() {
+  const claimed = ME && ME.bonus && ME.bonus.claimed;
+  $('#rwLead').textContent = !ME ? 'Sign in first, so the reward is saved to your account.'
+    : claimed ? `Claimed! Diamond is unlocked in Profile${skipsLeft() ? ', and you still have your free skip.' : '.'}`
+    : 'Watch a short 15-second break and get:';
+  $('#rwGo').hidden = !ME || !!claimed;
+}
+$('#rwGo').onclick = () => {
+  const ov = $('#adOv'), btn = $('#adClaim');
+  let left = 15, last = performance.now();
+  ov.hidden = false; btn.disabled = true; btn.textContent = 'Keep watching…'; $('#adLeft').textContent = left;
+  // counts only while the break is actually on screen
+  const iv = setInterval(() => {
+    const now = performance.now();
+    if (!document.hidden) left -= (now - last) / 1000;
+    last = now;
+    $('#adLeft').textContent = Math.max(0, Math.ceil(left));
+    if (left <= 0) { clearInterval(iv); btn.disabled = false; btn.textContent = 'Claim my reward'; }
+  }, 250);
+};
+$('#adClaim').onclick = async () => {
+  const btn = $('#adClaim');
+  btn.disabled = true; btn.textContent = 'Saving…';
+  const before = unlockedDesigns(ME);
+  try {
+    if (FB) await FB.F.setDoc(playerRef(), { bonus: { claimed: true, skips: 1 } }, { merge: true });
+    ME.bonus = { claimed: true, skips: 1 };
+    if (!FB) await writePlayer();
+    toast('Reward claimed: Diamond design + 1 free skip!');
+    announceUnlocks(before);
+  } catch (e) { toast(e.code === 'permission-denied' ? 'You already claimed this reward.' : 'Could not claim: ' + (e.code || e.message)); }
+  $('#adOv').hidden = true; renderReward(); updateCooldown();
+};
 $('#mArcade').onclick = () => { renderArcade(); show('arcade', 'Minigames'); };
 $('#mQuests').onclick = () => { renderQuests(); show('quests', 'Quests'); };
 
@@ -562,6 +729,7 @@ const DESIGNS = {
   shadow: { label: 'Shadow', bg: ['#000000', '#0a0a0f', '#191924'], acc: '#a3a8ff', ink: '#e9eaff', foil: .15, pattern: 'smoke' },
   lava: { label: 'Lava', bg: ['#100200', '#3a0900', '#7a1800'], acc: '#ff8a3d', ink: '#fff0e6', foil: .25, pattern: 'cracks' },
   retro: { label: 'Retro', bg: ['#140a2b', '#3a1a5e', '#ff5e8a'], acc: '#ffd84d', ink: '#ffffff', foil: .3, pattern: 'sunset' },
+  diamond: { label: 'Diamond', bg: ['#06141c', '#0d3b52', '#bfe9ff'], acc: '#e9fbff', ink: '#ffffff', foil: .6, pattern: 'facets' },
 };
 const swatch = k => { const d = DESIGNS[k], s = d.sw || [d.bg[0], d.bg[2], d.acc]; return `--a:${s[0]};--b:${s[1]};--c:${s[2]}`; };
 
@@ -581,7 +749,7 @@ const QUESTS = [
   { title: 'Minigame Fan', desc: 'Play all 3 minigames', reward: 'retro', prog: m => [['rush', 'simon', 'dodge'].filter(k => m && m.mini && m.mini[k] != null).length, 3] },
 ];
 const questDone = (q, m) => { const [a, b] = q.prog(m); return a >= b; };
-const unlockedDesigns = m => ['classic', ...QUESTS.filter(q => questDone(q, m)).map(q => q.reward)];
+const unlockedDesigns = m => ['classic', ...QUESTS.filter(q => questDone(q, m)).map(q => q.reward), ...(m && m.bonus && m.bonus.claimed ? ['diamond'] : [])];
 // call before and after progress; celebrates anything newly unlocked
 function announceUnlocks(before) {
   unlockedDesigns(ME).filter(d => !before.includes(d)).forEach((d, i) => setTimeout(() => toast(`Quest complete! ${DESIGNS[d].label} design unlocked`), i * 2400));
@@ -601,7 +769,7 @@ function renderDesignPicker() {
   if (!un.includes(S.design)) S.design = 'classic';
   $('#designs').innerHTML = Object.keys(DESIGNS).map(k => `<button class="dz ${un.includes(k) ? '' : 'locked'} ${S.design === k ? 'on' : ''}" data-d="${k}" style="${swatch(k)}" type="button"><i></i>${DESIGNS[k].label}${un.includes(k) ? '' : ' 🔒'}</button>`).join('');
   $('#designs').querySelectorAll('.dz').forEach(b => b.onclick = () => {
-    if (b.classList.contains('locked')) return toast(`Unlock ${DESIGNS[b.dataset.d].label} in Quests`);
+    if (b.classList.contains('locked')) return toast(b.dataset.d === 'diamond' ? 'Get Diamond from the Free reward' : `Unlock ${DESIGNS[b.dataset.d].label} in Quests`);
     S.design = b.dataset.d; renderDesignPicker();
   });
 }
@@ -731,7 +899,7 @@ $('#arcQuit').onclick = $('#arcBack').onclick = () => { stopGame(); $('#arcadeOv
 $('#arcAgain').onclick = () => playGame(arcGame);
 
 /* ---------- other players' cards ---------- */
-const ownerOf = p => ({ name: p.name, photo: p.photo || null, match: p.match !== false, design: p.design || 'classic' });
+const ownerOf = p => ({ name: p.name, photo: p.photo || null, match: p.match !== false, design: p.design || 'classic', socials: p.socials || {} });
 function viewButtons(id, p) {
   return ['pc', 'mobile'].filter(k => p.cards && p.cards[k]).map(k => `<button class="vb" data-uid="${id}" data-p="${k}">${k === 'pc' ? 'PC' : 'Mobile'} ${p.cards[k].ovr}</button>`).join(' ');
 }
@@ -765,6 +933,7 @@ $('#pSave').onclick = async () => {
   if (!me) return toMenu();
   me.name = ($('#name').value.trim() || 'PLAYER').toUpperCase(); me.photo = S.photoURL || null; me.match = S.matchPhoto;
   me.design = unlockedDesigns(me).includes(S.design) ? S.design : 'classic';
+  me.socials = readSocials();
   await saveProfile(me);
   toast('Profile saved'); toMenu();
 };
@@ -835,11 +1004,13 @@ $('#go').onclick = async () => {
   if (!ensureMe()) return updateCooldown(); // online mode: must be signed in
   S.name = ME.name = ($('#name').value.trim() || ME.name || 'PLAYER').toUpperCase();
   ME.photo = S.photoURL || null; ME.match = S.matchPhoto;
-  if (cooldownLeft() > 0) return updateCooldown();
+  const useSkip = cooldownLeft() > 0; // on cooldown: only possible with the free-reward skip
+  if (useSkip && !skipsLeft()) return updateCooldown();
   $('#go').disabled = true;
   try {
     await saveProfile(ME);
-    await startAttempt();
+    await startAttempt(useSkip);
+    if (useSkip) toast('Free skip used. Good luck!');
   } catch (e) {
     $('#go').disabled = false;
     toast(`Couldn't start: ${e.code === 'permission-denied' ? 'your 4-hour wait isn’t over yet' : (e.code || e.message)}`);
@@ -1857,6 +2028,17 @@ const PATTERNS = {
       c.stroke();
     }
   },
+  facets(c, R, W, H, rnd) { // cut-diamond facets catching the light
+    for (let y = -60; y < H + 60; y += 90) for (let x = -60; x < W + 60; x += 80) {
+      const ox = x + (y / 90 % 2 ? 40 : 0), a = .04 + rnd() * .16;
+      c.fillStyle = `rgba(220,248,255,${a})`;
+      c.beginPath(); c.moveTo(ox, y); c.lineTo(ox + 40, y + 45); c.lineTo(ox, y + 90); c.lineTo(ox - 40, y + 45); c.closePath(); c.fill();
+      c.strokeStyle = 'rgba(255,255,255,.12)'; c.lineWidth = 1; c.stroke();
+    }
+    const g = c.createRadialGradient(W * .7, H * .25, 0, W * .7, H * .25, 360);
+    g.addColorStop(0, 'rgba(255,255,255,.35)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+    c.fillStyle = g; c.fillRect(0, 0, W, H);
+  },
   sunset(c, R, W, H) { // retro sun and grid
     const cx = W / 2, cy = H * .62, r = 230, g = c.createLinearGradient(0, cy - r, 0, cy + r);
     g.addColorStop(0, 'rgba(255,216,77,.55)'); g.addColorStop(1, 'rgba(255,94,138,.45)');
@@ -2127,7 +2309,7 @@ function photoTheme(img) {
 }
 const loadImg = src => new Promise(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
 // your own card uses your live profile; someone else's uses what they saved
-const myOwner = () => ({ mine: true, name: (ME && ME.name) || S.name, img: S.photo, match: S.matchPhoto, design: (ME && ME.design) || 'classic' });
+const myOwner = () => ({ mine: true, name: (ME && ME.name) || S.name, img: S.photo, match: S.matchPhoto, design: (ME && ME.design) || 'classic', socials: (ME && ME.socials) || {} });
 async function renderCard() {
   const { ovr, rar, top, keys, platName, stats, rig, owner } = last;
   const img = owner.img !== undefined ? owner.img : owner.photo ? await loadImg(owner.photo) : null;
@@ -2199,6 +2381,8 @@ async function showCard(card, plat, { fresh = false, prev = null, owner = null }
   ];
   $('#bd').innerHTML = rows.map(([k, v]) => `<div><span>${k}</span><b>${esc(v)}</b></div>`).join('');
   $('#tip').innerHTML = `<b>Weakness: ${low}.</b> ${TIPS[low]}`;
+  $('#rSocials').innerHTML = socialChips(owner.socials);
+  wireCopy($('#rSocials'));
   await renderCard();
   // "pack opening": spin in from small
   V.rot.set(0, -Math.PI * 4); V.tgt.set(0, 0); V.spin = 0; V.scale = .35;
@@ -2240,3 +2424,4 @@ window.GG = { S, G, reveal, showCard, playGame, DESIGNS, QUESTS, unlockedDesigns
 </script>
 </body>
 </html>
+
