@@ -690,7 +690,7 @@ const S = { name: 'PLAYER', photo: null, stats: {}, res: {}, pc: {} };
 // phones and tablets get their own touch tests and their own MOBILE card
 const MOBILE = matchMedia('(pointer: coarse)').matches && !matchMedia('(pointer: fine)').matches;
 const KEYS_PC = ['REA', 'AIM', 'TRK', 'MOV', 'RIG', 'FPS'], KEYS_MOBILE = ['REA', 'AIM', 'TRK', 'TAP', 'RIG', 'FPS'],
-  KEYS_CONSOLE = ['REA', 'AIM', 'TRK', 'BTN', 'RIG', 'FPS'];
+  KEYS_CONSOLE = ['REA', 'AIM', 'TRK', 'MOV', 'RIG', 'FPS'];
 const KEYS_OF = { pc: KEYS_PC, mobile: KEYS_MOBILE, console: KEYS_CONSOLE };
 const PLAT_NAMES = { pc: 'PC', mobile: 'MOBILE', console: 'CONSOLE' };
 const PLATS = ['pc', 'mobile', 'console'];
@@ -698,7 +698,7 @@ const platLabel = p => ({ pc: 'PC', mobile: 'Mobile', console: 'Console' })[p];
 const COOLDOWN = 4 * 3600 * 1000; // one run per platform every 4 hours
 // the platform you're playing on: PC or phone from the device, Console when you pick it with a controller
 let PLAT, PLAT_NAME, KEYS, ACT, ACT_UP, TESTS;
-const FLAT = () => PLAT !== 'pc'; // phone and console tests are flat screens, not the 3D arena
+const FLAT = () => PLAT === 'mobile'; // phone tests are flat screens; PC and console play in the 3D arena
 function setPlatform(p) {
   PLAT = p; PLAT_NAME = PLAT_NAMES[p]; KEYS = KEYS_OF[p];
   ACT = p === 'mobile' ? 'tap' : p === 'console' ? 'press A' : 'click';
@@ -1634,16 +1634,16 @@ function initGame() {
   const cv = r.domElement;
   document.addEventListener('pointerlockchange', () => { G.locked = document.pointerLockElement === cv; onLockChange(); });
   document.addEventListener('mousemove', e => {
-    if (!G.locked || !e.isTrusted) return;
+    if (!G.locked || G.padLocked || !e.isTrusted) return;
     G.moves = (G.moves || 0) + 1;
     const s = 0.0022 * G.sens;
     G.yaw -= e.movementX * s;
     G.pitch = clamp(G.pitch - e.movementY * s, -1.5, 1.5);
   });
-  document.addEventListener('mousedown', e => { if (G.locked && e.isTrusted && e.button === 0) { G.mouseDown = true; shoot(); } });
+  document.addEventListener('mousedown', e => { if (G.locked && !G.padLocked && e.isTrusted && e.button === 0) { G.mouseDown = true; shoot(); } });
   document.addEventListener('mouseup', e => { if (e.button === 0) G.mouseDown = false; });
   addEventListener('keydown', e => {
-    if (!G.locked || !e.isTrusted) return;
+    if (!G.locked || G.padLocked || !e.isTrusted) return;
     G.keys.add(e.code);
     if (['Space', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'ShiftLeft'].includes(e.code)) e.preventDefault();
   });
@@ -1658,7 +1658,7 @@ function initGame() {
 function resizeGame() {
   if (!G.r) return;
   G.r.setSize(innerWidth, innerHeight);
-  G.cam.aspect = innerWidth / innerHeight; G.cam.updateProjectionMatrix();
+  G.cam.aspect = innerWidth / innerHeight || 1; G.cam.updateProjectionMatrix(); // a hidden window can be 0 × 0
 }
 function lock() {
   const cv = G.r.domElement;
@@ -1674,7 +1674,7 @@ function onLockChange() {
     // walking is only allowed in the parkour run; the aim tests are stand-and-shoot
     if (G.phase === 'brief') { $('#brief').hidden = true; G.phase = 'count'; G.count = 3; G.canMove = TESTS[G.ti].key === 'MOV'; }
   } else {
-    G.keys.clear(); G.mouseDown = false;
+    G.keys.clear(); G.mouseDown = false; G.padMove = { x: 0, y: 0 }; G.padJump = false;
     if (G.phase === 'count' || G.phase === 'run') $('#pause').hidden = false;
   }
 }
@@ -1707,9 +1707,11 @@ function groundAt() {
 }
 function updatePlayer(dt) {
   const k = c => G.keys.has(c);
-  const f = (k('KeyW') ? 1 : 0) - (k('KeyS') ? 1 : 0), s = (k('KeyD') ? 1 : 0) - (k('KeyA') ? 1 : 0);
-  const sprint = k('ShiftLeft') || k('ShiftRight');
-  const max = G.canMove ? (sprint ? 8 : 5) : 0;
+  // keyboard, plus the controller's left stick (analog: a light push walks slowly)
+  const pm = G.padMove || { x: 0, y: 0 };
+  const f = (k('KeyW') ? 1 : 0) - (k('KeyS') ? 1 : 0) - pm.y, s = (k('KeyD') ? 1 : 0) - (k('KeyA') ? 1 : 0) + pm.x;
+  const sprint = k('ShiftLeft') || k('ShiftRight') || Math.hypot(pm.x, pm.y) > .9;
+  const max = G.canMove ? (sprint ? 8 : 5) * Math.min(1, Math.hypot(f, s)) : 0;
   const sy = Math.sin(G.yaw), cy = Math.cos(G.yaw);
   let wx = -sy * f + cy * s, wz = -cy * f - sy * s;
   const wl = Math.hypot(wx, wz);
@@ -1717,7 +1719,7 @@ function updatePlayer(dt) {
   const accel = G.onGround ? 60 : 16;
   const ex = wx - G.vel.x, ez = wz - G.vel.z, el = Math.hypot(ex, ez);
   if (el > 0) { const st = Math.min(el, accel * dt); G.vel.x += ex / el * st; G.vel.z += ez / el * st; }
-  if (k('Space') && G.onGround && G.canMove) { G.vel.y = JUMP; G.onGround = false; }
+  if ((k('Space') || G.padJump) && G.onGround && G.canMove) { G.vel.y = JUMP; G.onGround = false; }
   G.vel.y -= GRAV * dt;
 
   G.pos.x += G.vel.x * dt; G.pos.z += G.vel.z * dt; pushOut();
@@ -1893,7 +1895,8 @@ function quickDraw() {
         state = 'done'; A.hidden = true;
         const avg = Math.round(times.reduce((a, b) => a + b) / times.length);
         checkReaction(times);
-        finishTest(lerpScore(avg, 170, 99, 450, 30), `${avg} ms average reaction`);
+        // controllers add a little input lag, so console gets a softer scale
+        finishTest(PLAT === 'console' ? lerpScore(avg, 200, 99, 520, 30) : lerpScore(avg, 170, 99, 450, 30), `${avg} ms average reaction`);
       }
     }
   };
@@ -2018,7 +2021,8 @@ function flickTest() {
           const avg = Math.round((G.time - t0) / N * 1000), acc = hits / shots;
           if (avg < 160) cheat('targets hit faster than a human can');
           info();
-          return finishTest(clamp(Math.round(lerpScore(avg, 550, 99, 1700, 30) * (.65 + .35 * acc)), 1, 99), `${avg} ms per target · ${Math.round(acc * 100)}% accuracy`);
+          const [best, worst] = PLAT === 'console' ? [800, 2400] : [550, 1700]; // sticks are slower than a mouse
+          return finishTest(clamp(Math.round(lerpScore(avg, best, 99, worst, 30) * (.7 + .3 * acc)), 1, 99), `${avg} ms per target · ${Math.round(acc * 100)}% accuracy`);
         }
         spawn();
       }
@@ -2063,7 +2067,7 @@ function trackTest() {
       tot += dt;
       mat.emissiveIntensity = skin.emissiveIntensity = onIt ? .35 : 0;
       hud(`ON TARGET <b>${Math.round(on / tot * 100)}%</b>`, `TIME <b>${Math.max(0, D - tot).toFixed(1)}s</b>`);
-      if (tot >= D) { const p = on / tot; if (p > .97) cheat('tracking too perfect for a human hand'); finishTest(lerpScore(p, .75, 99, .12, 30), `${Math.round(p * 100)}% time on target`); }
+      if (tot >= D) { const p = on / tot; if (p > (PLAT === 'console' ? .99 : .97)) cheat('tracking too perfect for a human hand'); finishTest(PLAT === 'console' ? lerpScore(p, .62, 99, .08, 30) : lerpScore(p, .75, 99, .12, 30), `${Math.round(p * 100)}% time on target`); }
     },
     cleanup() { G.scene.remove(bot); },
   };
@@ -2118,7 +2122,7 @@ function moveTest() {
         if (i === rings.length) {
           const t = G.time - t0;
           if (t < 11) cheat('course finished faster than the fastest possible run');
-          return finishTest(lerpScore(t, PAR_99, 99, PAR_30, 30), `${t.toFixed(2)} s course time · ${falls} fall${falls === 1 ? '' : 's'}`);
+          return finishTest(PLAT === 'console' ? lerpScore(t, PAR_99 + 5, 99, PAR_30 + 20, 30) : lerpScore(t, PAR_99, 99, PAR_30, 30), `${t.toFixed(2)} s course time · ${falls} fall${falls === 1 ? '' : 's'}`);
         }
         mark();
       }
@@ -2143,9 +2147,9 @@ const TESTS_MOBILE = [
 ];
 const TESTS_CONSOLE = [
   { key: 'REA', title: 'Quick draw', flat: true, desc: 'The screen turns red. Wait for it to turn green, then press A as fast as you can. 3 rounds. Press too early and the round restarts.', keys: K('A', 'react'), make: quickDraw },
-  { key: 'AIM', title: 'Stick aim', flat: true, desc: '15 targets pop up one at a time. Move the crosshair with the left stick and press A on each one.', keys: K('Left stick', 'aim') + K('A', 'shoot'), make: tapAim },
-  { key: 'TRK', title: 'Stick tracking', flat: true, desc: 'Hold A to start, then keep the crosshair on the moving target with the left stick for 7 seconds.', keys: K('Left stick', 'follow') + K('A', 'start'), make: fingerTrack },
-  { key: 'BTN', title: 'Button mash', flat: true, desc: 'Press A as fast as you can for 5 seconds.', keys: K('A', 'mash'), make: tapSpeed },
+  { key: 'AIM', title: 'Flick range', desc: '20 targets appear around you, one at a time. Aim with the right stick and shoot them as fast as you can. Aim assist slows your crosshair over a target.', keys: K('Right stick', 'aim') + K('RT', 'shoot'), make: flickTest },
+  { key: 'TRK', title: 'Tracking duel', desc: 'A bot strafes and jumps in front of you. Keep your crosshair on it for 8 seconds. Hold RT to spray. Aim assist helps you stick to it.', keys: K('Right stick', 'track') + K('Hold RT', 'spray'), make: trackTest },
+  { key: 'MOV', title: 'Parkour run', desc: 'Run through all the rings in order, jumping crate to crate. The floor between raised rings is lava: touch it and you go back a ring (+2 s).', keys: K('Left stick', 'move') + K('A', 'jump') + K('Push stick fully', 'sprint'), make: moveTest },
 ];
 setPlatform(MOBILE ? 'mobile' : 'pc');
 
@@ -2168,9 +2172,9 @@ function openBrief(i) {
   $('#bKick').textContent = PRACTICE ? `Practice · ${T.key} · doesn’t change your card` : `Step ${i + 2} · Test ${i + 1}/${TESTS.length} · ${T.key}`;
   $('#bTitle').textContent = T.title;
   $('#bDesc').textContent = T.desc;
-  $('#bKeys').innerHTML = T.keys + (T.flat ? '' : K('Esc', 'pause'));
+  $('#bKeys').innerHTML = T.keys + (T.flat ? '' : PLAT === 'console' ? K('Start', 'pause') : K('Esc', 'pause'));
   $('#sensRow').hidden = !!T.flat;
-  $('#bGo').textContent = T.flat ? 'Start →' : 'Click to start';
+  $('#bGo').textContent = T.flat ? 'Start →' : PLAT === 'console' ? 'Press A to start' : 'Click to start';
   $('#tres').hidden = true; $('#pause').hidden = true; $('#brief').hidden = false;
 }
 function finishTest(score, detail) {
@@ -2184,6 +2188,7 @@ function finishTest(score, detail) {
   $('#tNext').textContent = PRACTICE ? 'Back to training →' : G.ti < TESTS.length - 1 ? 'Next test →' : 'Reveal my card →';
   $('#tres').hidden = false;
   if (document.pointerLockElement) document.exitPointerLock();
+  if (G.padLocked) padLock(false);
 }
 function startGame(first = 0) {
   // phone and console tests are flat screens, so they never load the 3D arena
@@ -2208,10 +2213,10 @@ function endGame() {
 $('#sens').value = G.sens; $('#sensV').textContent = G.sens.toFixed(2);
 $('#sens').addEventListener('input', e => { G.sens = parseFloat(e.target.value); $('#sensV').textContent = G.sens.toFixed(2); store.set('gg-sens', G.sens); });
 $('#bGo').onclick = () => {
-  if (!TESTS[G.ti].flat) return lock();
+  if (!TESTS[G.ti].flat) return PLAT === 'console' ? padLock(true) : lock();
   $('#brief').hidden = true; G.phase = 'flat'; G.test = TESTS[G.ti].make();
 };
-$('#pGo').onclick = () => lock();
+$('#pGo').onclick = () => PLAT === 'console' ? padLock(true) : lock();
 $('#tNext').onclick = () => PRACTICE ? endPractice() : G.ti < TESTS.length - 1 ? openBrief(G.ti + 1) : endGame();
 
 /* =====================================================================
@@ -2655,7 +2660,7 @@ async function reveal() {
     // quest progress that outlives the card itself
     const extra = {};
     if (ovr > (ME.bestOvr || 0)) { ME.bestOvr = ovr; extra.bestOvr = ovr; }
-    if (PLAT === 'pc' && /· 0 falls/.test(S.res.MOV || '')) { ME.flags = { ...(ME.flags || {}), cleanRun: true }; extra.flags = { cleanRun: true }; }
+    if (PLAT !== 'mobile' && /· 0 falls/.test(S.res.MOV || '')) { ME.flags = { ...(ME.flags || {}), cleanRun: true }; extra.flags = { cleanRun: true }; }
     if (Object.keys(extra).length) await writePlayer(extra).catch(() => {});
   }
   await showCard(card, PLAT, { fresh: true, prev });
@@ -2667,8 +2672,10 @@ let last = null;
 async function showCard(card, plat, { fresh = false, prev = null, owner = null } = {}) {
   show('result', fresh ? 'New card' : owner ? 'Player card' : 'My cards');
   owner = owner || myOwner();
-  const keys = KEYS_OF[plat], platName = PLAT_NAMES[plat];
-  const tests = plat === 'pc' ? TESTS_PC : plat === 'console' ? TESTS_CONSOLE : TESTS_MOBILE;
+  // early console cards had a button-mash test instead of the parkour run
+  const oldConsole = plat === 'console' && card.stats.BTN != null;
+  const keys = oldConsole ? ['REA', 'AIM', 'TRK', 'BTN', 'RIG', 'FPS'] : KEYS_OF[plat], platName = PLAT_NAMES[plat];
+  const tests = (plat === 'pc' ? TESTS_PC : plat === 'console' ? TESTS_CONSOLE : TESTS_MOBILE).filter(t => card.stats[t.key] != null);
   const st = card.stats, rig = card.rig || {}, res = card.res || {}, parts = rig.parts || {};
   const rar = RAR.find(r => r.name === card.rar) || RAR.find(r => card.ovr >= r.min);
   const low = keys.reduce((a, k) => st[k] < st[a] ? k : a);
@@ -2685,7 +2692,7 @@ async function showCard(card, plat, { fresh = false, prev = null, owner = null }
   if (fresh && prev && card.ovr > prev.ovr) toast(`Up ${card.ovr - prev.ovr} from your last card!`);
   const rows = [
     ...tests.map(t => [t.title, `${res[t.key] || '—'} → ${st[t.key]}`]),
-    plat !== 'pc' ? ['Screen', `${rig.hz} Hz → FPS ${st.FPS}`] : ['Arena FPS', `${rig.fps} fps → FPS ${st.FPS}`],
+    plat === 'mobile' || oldConsole ? ['Screen', `${rig.hz} Hz → FPS ${st.FPS}`] : ['Arena FPS', `${rig.fps} fps → FPS ${st.FPS}`],
     ['GPU', `${rig.gpu || 'unknown'}${parts.gpu ? ` → ${parts.gpu}` : ''}`],
     ['GPU benchmark', rig.gpuPts ? `${rig.gpuPts} G shader ops/s` : 'did not run'],
     ['CPU single-core', rig.cpu1 ? `${rig.cpu1} pts → ${parts.cpu1}` : 'did not run'],
@@ -2825,10 +2832,10 @@ function renderPadBar() {
 }
 function applyPlatformText() {
   const c = PLAT === 'console';
-  $('#introNote').textContent = c ? 'Console mode: 4 controller tests and a CONSOLE card. Use the left stick to aim and A to shoot. You can also move around the menus with the D-pad and A / B.'
+  $('#introNote').textContent = c ? 'Console mode: the 3D FPS arena with your controller, with aim assist on. Right stick aims, RT shoots, left stick moves, A jumps, Start pauses. You get a CONSOLE card. In the menus, use the D-pad and A / B.'
     : MOBILE ? 'Mobile mode: 4 touch tests and a MOBILE card. On a PC you get the 3D FPS tests and a separate PC card.'
     : 'Needs a mouse and keyboard. The game locks your mouse; press Esc to pause.';
-  $('#step2').innerHTML = c ? '<b>02</b> You take 4 controller tests: quick draw, stick aim, stick tracking and button mash.'
+  $('#step2').innerHTML = c ? '<b>02</b> You drop into the 3D arena with your controller: quick draw, flick shots, tracking and a parkour run.'
     : MOBILE ? '<b>02</b> You take 4 touch tests: quick draw, tap targets, finger tracking and tap speed.'
     : '<b>02</b> You drop into a 3D arena for quick draw, flick shots, tracking and a parkour run.';
 }
@@ -2849,9 +2856,36 @@ function padLoop(now) {
   const edge = i => pressed(p, i) && !padPrev[i];
   const inGame = !$('#game').hidden, flatTest = inGame && G.phase === 'flat' && PLAT === 'console';
   const cur = $('#padCursor');
-  if (flatTest) {
+  if (inGame && G.padLocked) {
+    // 3D arena: right stick looks, left stick walks, A jumps, RT/RB shoots, Start pauses
+    const stick = (x, y, dead = .13) => {
+      const m = Math.hypot(x, y);
+      if (m < dead) return [0, 0];
+      const k = Math.min(1, (m - dead) / (1 - dead)) ** 1.8 / m; // gentle near the centre, fast at the edge
+      return [x * k, y * k];
+    };
+    let [lx, ly] = stick(p.axes[2] || 0, p.axes[3] || 0);
+    const [mx, my] = stick(p.axes[0] || 0, p.axes[1] || 0, .18);
+    G.padMove = { x: mx, y: my };
+    G.padJump = pressed(p, 0);
+    if (lx || ly) {
+      // aim assist, like on console shooters: the crosshair slows down over a target
+      const near = aimAssist();
+      const slow = near < .05 ? .45 : near < .1 ? .7 : 1;
+      const speed = 3.4 * G.sens * slow;
+      G.yaw -= lx * speed * dt;
+      G.pitch = clamp(G.pitch - ly * speed * .75 * dt, -1.5, 1.5);
+      G.moves = (G.moves || 0) + 1;
+    }
+    const fire = pressed(p, 7) || pressed(p, 5) || (p.buttons[7] && p.buttons[7].value > .4);
+    if (fire && !padPrev.fire) { G.mouseDown = true; shoot(); }
+    if (!fire) G.mouseDown = false;
+    padPrev.fire = fire;
+    if (edge(9)) padLock(false); // Start: pause
+  } else if (flatTest) {
     // left stick moves the crosshair; A shoots / holds
     const A = $('#rbox').getBoundingClientRect();
+    cur.style.visibility = TESTS[G.ti].key === 'REA' ? 'hidden' : ''; // quick draw only needs A
     if (cur.hidden) { cur.hidden = false; padCur.x = A.left + A.width / 2; padCur.y = A.top + A.height / 2; }
     let ax = p.axes[0] || 0, ay = p.axes[1] || 0;
     const mag = Math.hypot(ax, ay), dead = .14;
@@ -2870,6 +2904,7 @@ function padLoop(now) {
     if (edge(0)) {
       const vis = id => !$(id).hidden;
       if (inGame && vis('#brief')) $('#bGo').click();
+      else if (inGame && vis('#pause')) $('#pGo').click();
       else if (inGame && vis('#tres')) $('#tNext').click();
       else if (document.activeElement && document.activeElement !== document.body) document.activeElement.click();
       else padFocus(1);
@@ -2885,6 +2920,22 @@ function padLoop(now) {
     padPrev.ay = ay; padPrev.ax = ax;
   }
   p.buttons.forEach((b, i) => { padPrev[i] = b.pressed; });
+}
+// controller play in the arena: no mouse lock, the game just listens to the pad
+function padLock(on) {
+  G.padLocked = on; G.locked = on;
+  onLockChange();
+}
+// how far (in radians) the crosshair is from the nearest target
+function aimAssist() {
+  if (!G.cam || !G.targets.length) return 9;
+  const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(G.cam.quaternion), eye = G.cam.position, v = new THREE.Vector3();
+  let best = 9;
+  for (const t of G.targets) {
+    t.getWorldPosition(v);
+    best = Math.min(best, fwd.angleTo(v.sub(eye)));
+  }
+  return best;
 }
 function padFocus(dir) {
   const items = [...document.querySelectorAll('.screen.on button, .screen.on .mi, .screen.on input, .screen.on [data-uid]')]
@@ -2919,7 +2970,7 @@ const TRAIN_TIPS = {
 function renderTraining() {
   const card = ME && ME.cards && ME.cards[PLAT], st = card ? card.stats : null;
   const best = ((ME || guest).train || {})[PLAT] || {};
-  const order = [...KEYS].sort((a, b) => (st ? st[a] - st[b] : 0));
+  const order = [...KEYS].sort((a, b) => (st ? (st[a] ?? 99) - (st[b] ?? 99) : 0));
   const tests = TESTS.map(t => t.key), weakest = order.find(k => tests.includes(k));
   const wt = TESTS.find(t => t.key === weakest);
   $('#trainLead').textContent = card ? `Based on your ${PLAT_NAME} card (${card.ovr} OVR), weakest skills first.` : `No ${PLAT_NAME} card yet, so practice anything. Make a card to get a personal plan.`;
