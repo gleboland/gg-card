@@ -378,6 +378,27 @@ body:has(#scan.on) .seafx{display:none} /* keep the rig check quiet */
 .keep>b{display:block;font:800 22px 'Bricolage Grotesque',sans-serif;margin-bottom:4px}
 .keep>p{color:var(--muted);margin:0 0 12px;line-height:1.5}
 .keep .row{margin:0}
+/* GG Coins and the Auction House */
+.coinchip{background:#2a2108;border:2px solid var(--hard);border-radius:999px;color:#ffd866;font:800 12px 'JetBrains Mono',monospace;padding:5px 11px;cursor:pointer;box-shadow:2px 2px 0 var(--hard)}
+.menu .mi.more{grid-column:1/-1;min-height:0}
+.wallet{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--panel);border:2px solid var(--hard);border-radius:16px;box-shadow:4px 4px 0 var(--hard);padding:14px 18px;margin:6px 0 14px}
+.wallet .bal{font:800 34px 'Bricolage Grotesque',sans-serif;color:#ffd866}
+.wallet .bal small{display:block;font:700 11px 'JetBrains Mono',monospace;letter-spacing:.12em;color:var(--muted)}
+.wallet .btn{margin-left:auto}
+.mklist{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin:14px 0 22px}
+.mkcard{background:var(--panel);border:2px solid var(--hard);border-radius:16px;box-shadow:4px 4px 0 var(--hard);padding:12px;display:flex;flex-direction:column;gap:10px}
+.mkface{position:relative;aspect-ratio:72/104;border-radius:12px;border:2px solid var(--c);background:linear-gradient(160deg,var(--a),var(--b));padding:12px;color:#fff;cursor:pointer;overflow:hidden}
+.mkface .o{font:800 46px 'Bricolage Grotesque',sans-serif;line-height:1;text-shadow:3px 3px 0 rgba(0,0,0,.45)}
+.mkface .r{font:700 10px 'JetBrains Mono',monospace;letter-spacing:.14em;opacity:.85}
+.mkface .n{position:absolute;left:12px;right:12px;bottom:12px;font:800 18px 'Bricolage Grotesque',sans-serif;text-shadow:2px 2px 0 rgba(0,0,0,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mkface .n small{display:block;font:600 11px 'Inter',sans-serif;opacity:.85}
+.mkface .pl{position:absolute;top:12px;right:12px;font:700 10px 'JetBrains Mono',monospace;background:rgba(0,0,0,.35);padding:3px 7px;border-radius:999px}
+.mkmeta{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.mkmeta b{color:#ffd866;font:800 18px 'Bricolage Grotesque',sans-serif}
+.mkcard .btn{width:100%;padding:10px;font-size:15px}
+.mkcard input{width:100%;padding:9px 12px;font-size:15px;margin:0}
+.mkcard .fee{font-size:12px;color:var(--muted)}
+.mkempty{grid-column:1/-1;color:var(--muted);line-height:1.6}
 .topr{display:flex;align-items:center;gap:12px}
 .sndbtn{background:var(--panel);border:2px solid var(--hard);border-radius:999px;color:var(--text);font:700 11px 'JetBrains Mono',monospace;letter-spacing:.08em;padding:5px 11px;cursor:pointer;box-shadow:2px 2px 0 var(--hard)}
 .sndbtn:hover{border-color:var(--acc2)}
@@ -454,7 +475,7 @@ body:has(#scan.on) .seafx{display:none} /* keep the rig check quiet */
 <body>
 <div class="seafx" id="seaFx" aria-hidden="true"></div>
 <div class="wrap" id="wrap">
-  <div class="top"><span><b>●</b> GG CARD · <span id="seaTop">S1</span></span><span class="topr"><button class="sndbtn" id="sndBtn" type="button"></button><span id="step">READY</span></span></div>
+  <div class="top"><span><b>●</b> GG CARD · <span id="seaTop">S1</span></span><span class="topr"><button class="coinchip" id="coinChip" type="button" hidden></button><button class="sndbtn" id="sndBtn" type="button"></button><span id="step">READY</span></span></div>
 
   <!-- INTRO -->
   <section class="screen on" id="intro">
@@ -487,6 +508,7 @@ body:has(#scan.on) .seafx{display:none} /* keep the rig check quiet */
       <button class="mi" id="mArcade"><span class="ic">◉</span><span><b>Minigames</b><small>3 quick games, no cooldown</small></span></button>
       <button class="mi" id="mQuests"><span class="ic">✦</span><span><b>Quests</b><small id="questSmall">unlock special card designs</small></span></button>
       <button class="mi" id="mBoard"><span class="ic">#</span><span><b>Leaderboard</b><small>this season and all-time</small></span></button>
+      <button class="mi" id="mMarket"><span class="ic">⚖</span><span><b>Auction House</b><small>sell and collect cards for GG Coins</small></span></button>
       <button class="mi more" id="mMore"><span class="ic">⋯</span><span><b>More</b><small>my cards, teammates, profile</small></span></button>
       <button class="mi sec" id="mCards"><span class="ic">◆</span><span><b>My cards</b><small>your PC, mobile and console cards</small></span></button>
       <button class="mi sec" id="mMates"><span class="ic">✚</span><span><b>Find teammates</b><small>Discord, Roblox, Epic and more</small></span></button>
@@ -546,6 +568,16 @@ body:has(#scan.on) .seafx{display:none} /* keep the rig check quiet */
   </section>
 
   <!-- FIND TEAMMATES -->
+  <section class="screen" id="market">
+    <div class="kicker">Menu · Auction House</div>
+    <h2>Auction House</h2>
+    <p class="lead">Mint a copy of your card and sell it for GG Coins, or collect cards from other players. Your own card stays on the leaderboard. Every sale has a 10% fee.</p>
+    <div class="wallet" id="wallet"></div>
+    <div class="lbtabs mode" id="mkTabs"><button data-t="buy" class="on" type="button">Market</button><button data-t="sell" type="button">Sell</button><button data-t="mine" type="button">My collection</button></div>
+    <div class="mklist" id="mkList"></div>
+    <button class="btn ghost full back" data-back>← Menu</button>
+  </section>
+
   <section class="screen" id="mates">
     <div class="kicker">Menu · Find teammates</div>
     <h2>Find teammates</h2>
@@ -988,7 +1020,8 @@ async function saveCard(card) {
     if (FB) {
       const c = { ...card, at: FB.F.serverTimestamp() };
       // field paths replace the whole card, so stats from an older card on this platform don't linger
-      const write = s => FB.F.updateDoc(playerRef(), { [`cards.${PLAT}`]: c, [`season.${PLAT}`]: s });
+      // +20 GG Coins for every new card
+      const write = s => FB.F.updateDoc(playerRef(), { [`cards.${PLAT}`]: c, [`season.${PLAT}`]: s, coins: FB.F.increment(20) });
       try { await write(sea); }
       catch (e) {
         // the device clock is in a different month than the server (right at a month change): try the months either side
@@ -1002,6 +1035,7 @@ async function saveCard(card) {
         }
         if (!ok) throw e;
       }
+      ME.coins = (ME.coins || 0) + 20; renderCoins();
     } else await writePlayer();
   } catch (e) { toast('Could not save your card: ' + e.code); }
 }
@@ -1018,6 +1052,7 @@ function updateCooldown() {
   const claimed = ME && ME.bonus && ME.bonus.claimed;
   $('#rewardSmall').textContent = claimed ? `claimed ✓${skipsLeft() ? ' · 1 skip left' : ''}` : 'watch a 15-second break, one time only';
   renderSeason();
+  renderCoins();
 }
 
 /* ---------- menu ---------- */
@@ -1433,7 +1468,8 @@ async function keepGuestCard() {
   try {
     await saveProfile(ME); // a new account gets its profile first
     // the run's start, the card and the season update go in one write, which is what the rules check
-    await FB.F.updateDoc(playerRef(), { [`attempts.${plat}`]: ts, [`cards.${plat}`]: { ...g.card, at: ts }, [`season.${plat}`]: sea });
+    await FB.F.updateDoc(playerRef(), { [`attempts.${plat}`]: ts, [`cards.${plat}`]: { ...g.card, at: ts }, [`season.${plat}`]: sea, coins: FB.F.increment(20) });
+    ME.coins = (ME.coins || 0) + 20;
   } catch (e) {
     const left = cooldownLeft();
     renderKeep(e.code === 'permission-denied'
@@ -3351,6 +3387,160 @@ document.addEventListener('pointerover', e => {
   const b = e.target.closest('.mi, .btn');
   if (b !== lastHover) { lastHover = b; if (b && e.pointerType === 'mouse' && !b.disabled) uiSound('hover'); }
 });
+
+/* =====================================================================
+   GG COINS + AUCTION HOUSE
+   Coins: 100 to start, 50 a day, 20 per new card, and whatever your cards sell for.
+   You can mint one copy of each card you make and list it at a fixed price;
+   the buyer pays the price, you get it minus a 10% fee (those coins are gone).
+   The Firestore rules check every step, so trades can't be faked.
+   ===================================================================== */
+const FEE = .1, payoutOf = price => Math.floor(price * (1 - FEE) + 1e-9);
+const coinDay = () => Math.floor(Date.now() / 864e5);
+function renderCoins() {
+  const c = $('#coinChip');
+  c.hidden = !(FB && ME);
+  c.textContent = `🪙 ${((ME && ME.coins) || 0).toLocaleString()}`;
+}
+$('#coinChip').onclick = () => $('#mMarket').click();
+function renderWallet() {
+  const el = $('#wallet'), coins = (ME && ME.coins) || 0;
+  const starter = !ME.coinsInit, daily = !starter && (ME.daily || 0) < coinDay();
+  el.innerHTML = `<div class="bal"><small>GG COINS</small>🪙 ${coins.toLocaleString()}</div>
+    <span class="note">${starter ? 'New here? Grab your starter coins.' : daily ? 'Your daily coins are ready.' : 'Daily coins claimed. Back tomorrow for 50 more.'}</span>
+    ${starter ? '<button class="btn" id="claimCoins" type="button">Claim 100 🪙</button>' : daily ? '<button class="btn" id="claimCoins" type="button">Claim 50 🪙</button>' : ''}`;
+  const b = $('#claimCoins');
+  if (b) b.onclick = async () => {
+    b.disabled = true;
+    const add = starter ? 100 : 50, f = starter ? { coinsInit: true } : { daily: coinDay() };
+    try {
+      await FB.F.updateDoc(playerRef(), { ...f, coins: FB.F.increment(add) });
+      Object.assign(ME, f); ME.coins = coins + add;
+      toast(`+${add} GG Coins!`); uiSound('reveal');
+    } catch (e) { toast('Could not claim: ' + (e.code === 'permission-denied' ? 'already claimed today' : e.code)); }
+    renderWallet(); renderCoins();
+  };
+}
+// a small card face for the market grid
+function cardTile(card, plat, name) {
+  const rar = RAR.find(r => r.name === card.rar) || RAR[RAR.length - 1];
+  return `<div class="mkface" style="--a:${rar.bg[0]};--b:${rar.bg[2]};--c:${rar.acc}">
+    <span class="pl">${PLAT_NAMES[plat]}</span><div class="o">${card.ovr}</div><div class="r">${esc(card.rar)} · ${esc(CLASS[card.top] ? CLASS[card.top].code : card.top)}</div>
+    <div class="n">${esc(name)}<small>${esc(CLASS[card.top] ? CLASS[card.top].name : '')}</small></div></div>`;
+}
+function viewItem(card, plat, name) {
+  showCard({ ovr: card.ovr, rar: card.rar, top: card.top, stats: card.stats, res: {}, rig: { gpu: card.gpu || null } }, plat,
+    { owner: { name, photo: null, match: false, design: card.design || 'classic', socials: {}, motto: card.motto || '', photoOn: false } });
+}
+let mkTab = 'buy';
+async function renderMarket() {
+  if (!FB || !ME) return;
+  // fresh coins and cards from the server (sales credit you while you're away; card times must match exactly)
+  try { const d = (await FB.F.getDoc(playerRef())).data() || {}; Object.assign(ME, { coins: d.coins || 0, cards: d.cards || {}, daily: d.daily, coinsInit: d.coinsInit }); } catch (e) {}
+  renderWallet(); renderCoins();
+  document.querySelectorAll('#mkTabs button').forEach(b => b.classList.toggle('on', b.dataset.t === mkTab));
+  const el = $('#mkList'), { F, db } = FB, me = FB.user.uid;
+  el.innerHTML = '<p class="mkempty">Loading…</p>';
+  try {
+    if (mkTab === 'buy') {
+      const snap = await F.getDocs(F.query(F.collection(db, 'listings'), F.orderBy('created', 'desc'), F.limit(60)));
+      const rows = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      el.innerHTML = rows.length ? rows.map(l => `<div class="mkcard">${cardTile(l.card, l.plat, l.originName)}
+          <div class="mkmeta"><span>sold by ${esc(l.sellerName)}</span><b>🪙 ${l.price.toLocaleString()}</b></div>
+          ${l.seller === me ? '<button class="btn ghost" disabled type="button">Your listing</button>'
+            : `<button class="btn" data-buy="${l.id}" type="button" ${(ME.coins || 0) < l.price ? 'disabled' : ''}>${(ME.coins || 0) < l.price ? 'Not enough coins' : 'Buy'}</button>`}</div>`).join('')
+        : '<p class="mkempty">Nothing for sale yet. Be the first: go to Sell, mint a copy of your card and list it.</p>';
+      el.querySelectorAll('[data-buy]').forEach(b => b.onclick = () => buyListing(rows.find(r => r.id === b.dataset.buy), b));
+      el.querySelectorAll('.mkface').forEach((f, i) => f.onclick = () => viewItem(rows[i].card, rows[i].plat, rows[i].originName));
+    } else if (mkTab === 'sell') {
+      const mine = PLATS.filter(p => ME.cards && ME.cards[p] && ME.cards[p].at);
+      const ids = mine.map(p => `${me}_${p}_${Math.floor(ms(ME.cards[p].at))}`);
+      const exist = await Promise.all(ids.map(id => F.getDoc(F.doc(db, 'items', id)).then(s => s.exists())));
+      el.innerHTML = mine.length ? mine.map((p, i) => `<div class="mkcard">${cardTile(ME.cards[p], p, ME.name)}
+          ${exist[i] ? '<button class="btn ghost" disabled type="button">Copy minted ✓</button><span class="fee">One copy per card. Make a new card to mint again, or sell it from My collection.</span>'
+            : `<button class="btn" data-mint="${p}" type="button">Mint a copy</button><span class="fee">Puts one copy of this card in your collection, ready to sell.</span>`}</div>`).join('')
+        : '<p class="mkempty">You need a card first. Hit Play, then come back to mint a copy.</p>';
+      el.querySelectorAll('[data-mint]').forEach(b => b.onclick = () => mintCard(b.dataset.mint, b));
+    } else {
+      const snap = await F.getDocs(F.query(F.collection(db, 'items'), F.where('owner', '==', me)));
+      const items = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => b.card.ovr - a.card.ovr);
+      el.innerHTML = items.length ? items.map(it => `<div class="mkcard">${cardTile(it.card, it.plat, it.originName)}
+          ${it.listed ? `<button class="btn ghost" data-cancel="${it.id}" type="button">Listed · take it off sale</button>`
+            : `<input type="number" min="10" step="10" placeholder="Price in coins (10+)" data-price="${it.id}">
+               <button class="btn" data-list="${it.id}" type="button">Sell</button><span class="fee" data-fee="${it.id}">You get the price minus a 10% fee.</span>`}</div>`).join('')
+        : '<p class="mkempty">Your collection is empty. Mint a copy of your own card under Sell, or buy one on the Market.</p>';
+      el.querySelectorAll('[data-price]').forEach(i => i.oninput = () => {
+        const v = parseInt(i.value) || 0;
+        el.querySelector(`[data-fee="${i.dataset.price}"]`).textContent = v >= 10 ? `Sells for 🪙 ${v} · fee 🪙 ${v - payoutOf(v)} · you get 🪙 ${payoutOf(v)}` : 'Minimum price is 10 coins.';
+      });
+      el.querySelectorAll('[data-list]').forEach(b => b.onclick = () => listItem(items.find(x => x.id === b.dataset.list), parseInt(el.querySelector(`[data-price="${b.dataset.list}"]`).value), b));
+      el.querySelectorAll('[data-cancel]').forEach(b => b.onclick = () => cancelListing(items.find(x => x.id === b.dataset.cancel), b));
+      el.querySelectorAll('.mkface').forEach((f, i) => f.onclick = () => viewItem(items[i].card, items[i].plat, items[i].originName));
+    }
+  } catch (e) { el.innerHTML = `<p class="mkempty">Could not load the Auction House (${esc(e.code || e.message)}).</p>`; }
+}
+async function mintCard(plat, btn) {
+  const { F, db } = FB;
+  btn.disabled = true;
+  try {
+    // re-read the saved card so the copy matches it exactly (the rules compare them)
+    const snap = await F.getDoc(playerRef()), saved = snap.data().cards[plat], id = `${FB.user.uid}_${plat}_${Math.floor(ms(saved.at))}`;
+    await F.setDoc(F.doc(db, 'items', id), {
+      owner: FB.user.uid, origin: FB.user.uid, originName: snap.data().name, plat, cardAt: saved.at, listed: null, minted: F.serverTimestamp(),
+      card: { ovr: saved.ovr, rar: saved.rar, top: saved.top, stats: saved.stats, design: ME.design || 'classic', motto: ME.motto || '', gpu: ((saved.rig && saved.rig.gpu) || '').slice(0, 80) },
+    });
+    toast('Copy minted! Find it in My collection.'); uiSound('reveal');
+    mkTab = 'mine';
+  } catch (e) { toast('Could not mint: ' + (e.code || e.message)); }
+  renderMarket();
+}
+async function listItem(it, price, btn) {
+  if (!(price >= 10 && price <= 1e6)) return toast('Set a price from 10 to 1,000,000 coins.');
+  price = Math.floor(price);
+  const { F, db } = FB, L = F.doc(F.collection(db, 'listings'));
+  btn.disabled = true;
+  try {
+    const b = F.writeBatch(db);
+    b.set(L, { item: it.id, seller: FB.user.uid, sellerName: ME.name, price, payout: payoutOf(price), created: F.serverTimestamp(), card: it.card, plat: it.plat, originName: it.originName });
+    b.update(F.doc(db, 'items', it.id), { listed: L.id });
+    await b.commit();
+    toast(`Listed for 🪙 ${price}. You'll get 🪙 ${payoutOf(price)} when it sells.`);
+  } catch (e) { toast('Could not list it: ' + (e.code || e.message)); }
+  renderMarket();
+}
+async function cancelListing(it, btn) {
+  const { F, db } = FB;
+  btn.disabled = true;
+  try {
+    const b = F.writeBatch(db);
+    b.delete(F.doc(db, 'listings', it.listed));
+    b.update(F.doc(db, 'items', it.id), { listed: null });
+    await b.commit();
+    toast('Taken off sale.');
+  } catch (e) { toast('Could not cancel: ' + (e.code || e.message)); }
+  renderMarket();
+}
+async function buyListing(l, btn) {
+  if (!l || (ME.coins || 0) < l.price) return;
+  if (!confirm(`Buy ${l.originName}'s ${l.card.ovr} OVR ${PLAT_NAMES[l.plat]} card for ${l.price} GG Coins?`)) return;
+  const { F, db } = FB;
+  btn.disabled = true;
+  try {
+    // one write: the card moves to you, you pay, the seller gets paid minus the fee, the listing closes
+    const b = F.writeBatch(db);
+    b.update(F.doc(db, 'items', l.item), { owner: FB.user.uid, listed: null });
+    b.delete(F.doc(db, 'listings', l.id));
+    b.update(playerRef(), { coins: F.increment(-l.price), lastBuy: l.id });
+    b.update(F.doc(db, 'players', l.seller), { coins: F.increment(l.payout), lastSale: l.id });
+    await b.commit();
+    ME.coins = (ME.coins || 0) - l.price;
+    toast('Bought! It’s in your collection.'); uiSound('reveal');
+    mkTab = 'mine';
+  } catch (e) { toast('Could not buy it: ' + (e.code === 'permission-denied' ? 'someone got there first, or not enough coins' : (e.code || e.message))); }
+  renderMarket();
+}
+$('#mMarket').onclick = () => { mkTab = 'buy'; show('market', 'Auction House'); renderMarket(); };
+document.querySelectorAll('#mkTabs button').forEach(b => b.onclick = () => { mkTab = b.dataset.t; renderMarket(); });
 
 window.GG = { MUS, seasonNow, S, G, reveal, showCard, playGame, DESIGNS, QUESTS, unlockedDesigns, startGame, openBrief, finishTest, endGame, cpuBench, gpuBench, step: updatePlayer, me: () => ME, BOXES, RINGS };
 </script>
