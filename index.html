@@ -57,6 +57,31 @@ input[type=text]:focus{border-color:var(--acc)}
 .auth .note{margin-top:8px;min-height:1em}
 .lb{margin-top:22px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
 .lb h3{font-size:22px;margin-bottom:8px}
+.lbtabs{display:flex;gap:6px;margin-bottom:6px}
+.lbtabs button{flex:1;background:transparent;border:1px solid var(--line);color:var(--muted);font:700 13px 'JetBrains Mono',monospace;letter-spacing:.1em;padding:8px;border-radius:8px;cursor:pointer;text-transform:uppercase}
+.lbtabs button.on{background:var(--acc);border-color:var(--acc);color:#04120a}
+.warn{color:var(--bad)}
+.menu{display:grid;gap:10px;margin:6px 0 26px}
+.mi{display:flex;align-items:center;gap:16px;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:14px;padding:16px 18px;cursor:pointer;font:700 22px 'Chakra Petch',sans-serif;transition:border-color .15s,transform .1s}
+.mi:hover{border-color:var(--acc)}
+.mi:active{transform:scale(.99)}
+.mi:disabled{opacity:.55;cursor:not-allowed;border-color:var(--line)}
+.mi .ic{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;background:#18212e;color:var(--acc);font-size:18px;flex:none}
+.mi b{display:block;text-transform:uppercase;letter-spacing:.04em}
+.mi small{display:block;font:400 13px 'JetBrains Mono',monospace;color:var(--muted);margin-top:2px}
+.mi.play{background:var(--acc);border-color:var(--acc);color:#04120a}
+.mi.play .ic{background:rgba(0,0,0,.15);color:#04120a}
+.mi.play small{color:rgba(4,18,10,.75)}
+.mi.play:disabled{background:var(--panel);border-color:var(--line);color:var(--text)}
+.mi.play:disabled .ic{background:#18212e;color:var(--muted)}
+.mi.play:disabled small{color:var(--muted)}
+.back{margin-top:12px}
+.clist{display:grid;gap:10px;margin-bottom:6px}
+.citem{display:flex;align-items:center;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.citem .ovr{font:700 40px/1 'Chakra Petch',sans-serif;color:var(--acc);min-width:2ch}
+.citem div{flex:1}
+.citem small{display:block;font:12px 'JetBrains Mono',monospace;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.citem .btn{font-size:14px;padding:10px 14px}
 .lb div{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:16px}
 .lb div:last-of-type{border:0}
 .lb div.you b{color:var(--acc)}
@@ -90,7 +115,17 @@ input[type=text]:focus{border-color:var(--acc)}
 #game{position:fixed;inset:0;background:#000;z-index:10;user-select:none;-webkit-user-select:none;overflow:hidden}
 #gl,#gl canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .ch,.hm{position:absolute;left:50%;top:50%;pointer-events:none;--c:#fff}
-.rbox{position:absolute;inset:0;display:grid;place-items:center;text-align:center;background:#11161d;font:700 clamp(32px,6vw,56px) 'Chakra Petch',sans-serif;cursor:pointer;user-select:none;padding:20px}
+.rbox{position:absolute;inset:0;display:grid;place-items:center;text-align:center;background:#11161d;font:700 clamp(32px,6vw,56px) 'Chakra Petch',sans-serif;cursor:pointer;user-select:none;padding:20px;touch-action:none}
+.ghud,#gCenter{z-index:2}
+.ov{z-index:3}
+.rbox.pad{display:block;padding:0}
+.padmsg{position:absolute;inset:0;display:grid;place-items:center;align-content:center;pointer-events:none;padding:20px}
+.padmsg .big{font-size:110px;line-height:1}
+.ftarget{position:absolute;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;background:radial-gradient(circle,#c8102e 0 16%,#f4f1ea 17% 34%,#c8102e 35% 52%,#f4f1ea 53% 70%,#c8102e 71% 100%);box-shadow:0 4px 14px rgba(0,0,0,.5)}
+.ftarget.trk{background:radial-gradient(circle,rgba(240,122,26,.35) 0 60%,transparent 61%);border:3px solid #f07a1a;box-shadow:none}
+.ftarget.trk.lock{border-color:#fff;background:radial-gradient(circle,rgba(255,255,255,.35) 0 60%,transparent 61%)}
+.miss{position:absolute;width:30px;height:30px;border:2px solid var(--bad);border-radius:50%;transform:translate(-50%,-50%);animation:ping .4s ease-out forwards;pointer-events:none}
+@keyframes ping{to{opacity:0;transform:translate(-50%,-50%) scale(2)}}
 .rbox.wait{background:#8c1c2c}
 .rbox.go{background:#1e8a4f}
 .rbox small{display:block;font:400 14px 'JetBrains Mono',monospace;color:rgba(255,255,255,.7);margin-top:12px;letter-spacing:.06em}
@@ -146,8 +181,27 @@ kbd{font:700 12px 'JetBrains Mono',monospace;color:var(--text);background:#18212
   <!-- INTRO -->
   <section class="screen on" id="intro">
     <h1>GG<br><span>CARD</span></h1>
-    <p class="lead">1 PC scan. 4 FPS challenges in a 3D arena. 1 holographic card. Find out your OVR before your squad does.</p>
+    <p class="lead" id="introLead">1 PC scan. 4 FPS challenges in a 3D arena. 1 holographic card. Find out your OVR before your squad does.</p>
     <div class="prof" id="prof"></div>
+    <nav class="menu" id="menu" hidden>
+      <button class="mi play" id="go"><span class="ic">▶</span><span><b>Play</b><small id="cool">Scan + 4 tests = new card</small></span></button>
+      <button class="mi" id="mCards"><span class="ic">◆</span><span><b>My cards</b><small>your PC and mobile cards</small></span></button>
+      <button class="mi" id="mBoard"><span class="ic">#</span><span><b>Leaderboard</b><small>top 10 on PC and mobile</small></span></button>
+      <button class="mi" id="mProfile"><span class="ic">●</span><span><b>Profile</b><small>gamertag, photo, card colors</small></span></button>
+    </nav>
+    <p class="note" id="introNote">Needs a mouse + keyboard. Your mouse gets locked in the game; press Esc to pause.</p>
+    <div class="steps">
+      <div><b>01</b> We scan your device: GPU, CPU, RAM, refresh rate.</div>
+      <div id="step2"><b>02</b> You drop into the arena: quick draw, flick shots, tracking and a parkour run.</div>
+      <div><b>03</b> You get a 3D card with your OVR, rarity and 6 stats. One run every 4 hours.</div>
+    </div>
+  </section>
+
+  <!-- PROFILE -->
+  <section class="screen" id="profile">
+    <div class="kicker">Menu · Profile</div>
+    <h2>Your profile</h2>
+    <p class="lead">This is what goes on your card.</p>
     <div class="label"><span>Gamertag</span><span id="cnt">0/14</span></div>
     <input type="text" id="name" maxlength="14" placeholder="PLAYER" autocomplete="off">
     <label class="photo">
@@ -156,13 +210,25 @@ kbd{font:700 12px 'JetBrains Mono',monospace;color:var(--text);background:#18212
       <input type="file" id="file" accept="image/*" hidden>
     </label>
     <label class="match" id="matchRow" hidden><input type="checkbox" id="match" checked> Match my card's colors to my photo</label>
-    <button class="btn full" id="go">Start the scan →</button>
-    <p class="note" id="introNote">Needs a mouse + keyboard. Your mouse gets locked in the game; press Esc to pause.</p>
-    <div class="steps">
-      <div><b>01</b> We scan your PC: GPU, CPU, RAM, refresh rate.</div>
-      <div><b>02</b> You drop into the arena: quick draw, flick shots, tracking and a parkour run.</div>
-      <div><b>03</b> You get a 3D card with your OVR, rarity and 6 stats. Spin it. Flex it.</div>
-    </div>
+    <button class="btn full" id="pSave">Save</button>
+    <button class="btn ghost full back" data-back>← Menu</button>
+  </section>
+
+  <!-- MY CARDS -->
+  <section class="screen" id="cards">
+    <div class="kicker">Menu · My cards</div>
+    <h2>My cards</h2>
+    <p class="lead">One card per platform. A new run replaces the old card.</p>
+    <div class="clist" id="clist"></div>
+    <button class="btn ghost full back" data-back>← Menu</button>
+  </section>
+
+  <!-- LEADERBOARD -->
+  <section class="screen" id="board">
+    <div class="kicker">Menu · Leaderboard</div>
+    <h2>Leaderboard</h2>
+    <div class="lb" id="lb2"></div>
+    <button class="btn ghost full back" data-back>← Menu</button>
   </section>
 
   <!-- PC SCAN -->
@@ -189,7 +255,7 @@ kbd{font:700 12px 'JetBrains Mono',monospace;color:var(--text);background:#18212
       <button class="btn ghost" id="flip">Flip</button>
       <button class="btn ghost" id="theme" hidden>Photo colors: on</button>
       <button class="btn ghost" id="share">Share</button>
-      <button class="btn ghost" id="again">Retake</button>
+      <button class="btn ghost" id="again">← Menu</button>
     </div>
     <div class="breakdown" id="bd"></div>
     <div class="tip" id="tip"></div>
@@ -257,7 +323,13 @@ const curve = (v, pts) => {
 const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
 
 const S = { name: 'PLAYER', photo: null, stats: {}, res: {}, pc: {} };
-const KEYS = ['REA', 'AIM', 'TRK', 'MOV', 'RIG', 'FPS'];
+// phones and tablets get their own touch tests and their own MOBILE card
+const MOBILE = matchMedia('(pointer: coarse)').matches && !matchMedia('(pointer: fine)').matches;
+const PLAT = MOBILE ? 'mobile' : 'pc', PLAT_NAME = MOBILE ? 'MOBILE' : 'PC';
+const KEYS_PC = ['REA', 'AIM', 'TRK', 'MOV', 'RIG', 'FPS'], KEYS_MOBILE = ['REA', 'AIM', 'TRK', 'TAP', 'RIG', 'FPS'];
+const KEYS = MOBILE ? KEYS_MOBILE : KEYS_PC;
+const COOLDOWN = 4 * 3600 * 1000; // one run per platform every 4 hours
+const ACT = MOBILE ? 'tap' : 'click', ACT_UP = MOBILE ? 'Tap' : 'Click';
 
 function show(id, step) {
   document.querySelectorAll('.screen').forEach(e => e.classList.toggle('on', e.id === id));
@@ -267,10 +339,10 @@ function show(id, step) {
 function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('on'); setTimeout(() => el.classList.remove('on'), 2200); }
 
 /* ---------- INTRO ---------- */
-if (!matchMedia('(pointer: fine)').matches) {
-  $('#introNote').textContent = 'The FPS challenges need a computer with a mouse and keyboard. Open this page on your PC.';
-  $('#introNote').classList.add('warn');
-  $('#go').disabled = true;
+if (MOBILE) {
+  $('#introNote').textContent = 'Mobile mode: 4 touch tests and a MOBILE card. On a PC you get the 3D FPS tests and a separate PC card.';
+  $('#introLead').textContent = '1 phone scan. 4 touch challenges. 1 holographic MOBILE card. Find out your OVR before your squad does.';
+  $('#step2').innerHTML = '<b>02</b> You take 4 touch tests: quick draw, tap targets, finger tracking and tap speed.';
 }
 $('#name').addEventListener('input', e => { $('#cnt').textContent = e.target.value.length + '/14'; });
 function setPhoto(url) {
@@ -328,8 +400,8 @@ async function onUser(user) {
   const ref = FB.F.doc(FB.db, 'players', user.uid);
   let data = null;
   try { const snap = await FB.F.getDoc(ref); data = snap.exists() ? snap.data() : null; } catch (e) { authMsg('Could not load your profile: ' + e.code); }
-  if (!data) data = { name: (user.displayName || user.email || 'PLAYER').split(/[@\s]/)[0].toUpperCase().slice(0, 14), history: [] };
-  await signIn({ ...data, id: user.uid });
+  if (!data) data = { name: (user.displayName || user.email || 'PLAYER').split(/[@\s]/)[0].toUpperCase().slice(0, 14) };
+  await signIn({ cards: {}, attempts: {}, ...data, id: user.uid });
 }
 const authMsg = t => { const m = $('#authMsg'); if (m) m.textContent = t; };
 const AUTH_ERRORS = {
@@ -348,28 +420,91 @@ async function authDo(fn) {
 }
 
 const loadProfiles = () => { try { return JSON.parse(store.get('gg-profiles')) || []; } catch (e) { return []; } };
-function saveProfile(p) {
-  if (FB) {
-    if (!FB.user) return; // guests aren't saved
-    const { id, ...data } = p;
-    return FB.F.setDoc(FB.F.doc(FB.db, 'players', FB.user.uid), data).catch(e => toast('Could not save: ' + e.code));
-  }
-  const list = loadProfiles().filter(x => x.id !== p.id);
-  list.unshift(p);
+const playerRef = () => FB.F.doc(FB.db, 'players', FB.user.uid);
+// writes only the given fields; the server keeps everything else
+function writePlayer(fields) {
+  if (FB) return FB.user ? FB.F.setDoc(playerRef(), fields, { merge: true }) : Promise.resolve();
+  const list = loadProfiles().filter(x => x.id !== ME.id);
+  list.unshift(ME);
   store.set('gg-profiles', JSON.stringify(list.slice(0, 12)));
+  return Promise.resolve();
 }
+function saveProfile(p) {
+  return writePlayer({ name: p.name, photo: p.photo || null, match: p.match !== false }).catch(e => toast('Could not save: ' + e.code));
+}
+
+/* one run per platform every 4 hours; the run is stamped when it starts,
+   so quitting a bad run doesn't give you another try */
+const ms = v => !v ? 0 : typeof v === 'number' ? v : v.toMillis ? v.toMillis() : 0;
+const cooldownLeft = () => ME ? Math.max(0, ms((ME.attempts || {})[PLAT]) + COOLDOWN - Date.now()) : 0;
+const fmtLeft = t => { const m = Math.ceil(t / 60000); return m >= 60 ? `${Math.floor(m / 60)}h ${m % 60}m` : `${m}m`; };
+async function startAttempt() {
+  ME.attempts = { ...(ME.attempts || {}), [PLAT]: Date.now() };
+  if (FB) await FB.F.setDoc(playerRef(), { attempts: { [PLAT]: FB.F.serverTimestamp() } }, { merge: true });
+  else await writePlayer();
+}
+async function saveCard(card) {
+  ME.cards = { ...(ME.cards || {}), [PLAT]: { ...card, at: Date.now() } };
+  try {
+    if (FB) await FB.F.setDoc(playerRef(), { cards: { [PLAT]: { ...card, at: FB.F.serverTimestamp() } } }, { merge: true });
+    else await writePlayer();
+  } catch (e) { toast('Could not save your card: ' + e.code); }
+}
+function updateCooldown() {
+  const left = cooldownLeft(), c = ME && ME.cards && ME.cards[PLAT];
+  $('#menu').hidden = !!FB && !ME; // online mode: sign in first
+  $('#go').disabled = left > 0;
+  $('#cool').textContent = left > 0 ? `next ${PLAT_NAME} run in ${fmtLeft(left)}`
+    : c ? `new run replaces your ${c.ovr} OVR ${PLAT_NAME} card` : `scan + 4 tests = your ${PLAT_NAME} card`;
+}
+
+/* ---------- menu ---------- */
+function ensureMe() {
+  if (FB) return ME;
+  // local mode: a gamertag picks a saved player or makes a new one
+  const name = ($('#name').value.trim() || 'PLAYER').toUpperCase();
+  if (!ME || ME.name !== name) ME = loadProfiles().find(p => p.name === name) || { id: Date.now().toString(36), name };
+  store.set('gg-current', ME.id);
+  return ME;
+}
+function toMenu() { V.on = false; show('intro', 'Menu'); renderProfiles(); }
+document.querySelectorAll('[data-back]').forEach(b => b.onclick = toMenu);
+$('#mProfile').onclick = () => show('profile', 'Profile');
+$('#mBoard').onclick = () => { show('board', 'Leaderboard'); lbPlat = PLAT; loadLeaderboard($('#lb2')); };
+$('#mCards').onclick = () => { renderCardList(); show('cards', 'My cards'); };
+$('#pSave').onclick = async () => {
+  const me = ensureMe();
+  if (!me) return toMenu();
+  me.name = ($('#name').value.trim() || 'PLAYER').toUpperCase(); me.photo = S.photoURL || null; me.match = S.matchPhoto;
+  await saveProfile(me);
+  toast('Profile saved'); toMenu();
+};
+function renderCardList() {
+  const cards = (ME && ME.cards) || {};
+  $('#clist').innerHTML = ['pc', 'mobile'].map(p => {
+    const c = cards[p], label = p === 'pc' ? 'PC card' : 'Mobile card';
+    if (!c) return `<div class="citem"><span class="ovr">–</span><div><small>${label}</small>No card yet${p === PLAT ? '. Hit Play to get one.' : `. Play on ${p === 'pc' ? 'a computer' : 'your phone'} to get one.`}</div></div>`;
+    const when = ms(c.at) ? new Date(ms(c.at)).toLocaleDateString() : '';
+    return `<div class="citem"><span class="ovr">${c.ovr}</span><div><small>${label} · ${esc(c.rar)}${when ? ' · ' + when : ''}</small>${esc(CLASS[c.top] ? CLASS[c.top].name : '')}</div><button class="btn ghost" data-view="${p}">View</button></div>`;
+  }).join('');
+  $('#clist').querySelectorAll('[data-view]').forEach(b => b.onclick = () => showCard(ME.cards[b.dataset.view], b.dataset.view));
+}
+setInterval(updateCooldown, 30000);
+
 let ME = null;
 const avatar = p => `<span class="av" style="${p.photo ? `background-image:url(${p.photo})` : ''}">${p.photo ? '' : esc((p.name || '?')[0])}</span>`;
 function renderProfiles() {
   const el = $('#prof');
+  updateCooldown();
   if (ME) {
-    el.innerHTML = `<div class="me">${avatar(ME)}<div><small>Signed in as</small><b>${esc(ME.name)}</b>${ME.best ? ` · best <i>${ME.best.ovr} OVR ${ME.best.rar}</i>` : ''}${ME.history && ME.history.length ? ` · ${ME.history.length} card${ME.history.length > 1 ? 's' : ''}` : ''}</div><button class="link" id="signOut">${FB ? 'Sign out' : 'Switch player'}</button></div>`;
+    const cards = ['pc', 'mobile'].map(p => ME.cards && ME.cards[p] ? `${p === 'pc' ? 'PC' : 'Mobile'} <i>${ME.cards[p].ovr}</i>` : '').filter(Boolean).join(' · ');
+    el.innerHTML = `<div class="me">${avatar(ME)}<div><small>Signed in as</small><b>${esc(ME.name)}</b>${cards ? ` · ${cards}` : ''}</div><button class="link" id="signOut">${FB ? 'Sign out' : 'Switch player'}</button></div>`;
     $('#signOut').onclick = signOut;
     return;
   }
   if (FB) {
     el.innerHTML = `<div class="auth">
-      <div class="label"><span>Sign in to save your cards</span><span>or play as a guest</span></div>
+      <div class="label"><span>Sign in to play</span><span>one card per account</span></div>
       <button class="btn ghost full" id="gSign">Continue with Google</button>
       <div class="or">or use email</div>
       <input type="email" id="em" placeholder="Email" autocomplete="email">
@@ -384,7 +519,7 @@ function renderProfiles() {
   }
   const list = loadProfiles();
   if (!list.length) { el.innerHTML = ''; return; }
-  el.innerHTML = `<div class="label"><span>Sign in as</span><span>or type a new gamertag</span></div><div class="chips">${list.map(p => `<button class="chip" data-id="${p.id}">${avatar(p)}<span>${esc(p.name)}${p.best ? `<i>${p.best.ovr}</i>` : ''}</span></button>`).join('')}</div>`;
+  el.innerHTML = `<div class="label"><span>Sign in as</span><span>or type a new gamertag</span></div><div class="chips">${list.map(p => `<button class="chip" data-id="${p.id}">${avatar(p)}<span>${esc(p.name)}${p.cards && p.cards[PLAT] ? `<i>${p.cards[PLAT].ovr}</i>` : ''}</span></button>`).join('')}</div>`;
   el.querySelectorAll('.chip').forEach(b => b.onclick = () => signIn(list.find(p => p.id === b.dataset.id)));
 }
 async function signIn(p) {
@@ -406,33 +541,41 @@ initFirebase().then(() => {
   if (p) signIn(p); else renderProfiles();
 });
 
-$('#go').onclick = () => {
-  S.name = ($('#name').value.trim() || 'PLAYER').toUpperCase();
-  if (FB) {
-    if (ME) { ME.name = S.name; ME.photo = S.photoURL || null; ME.match = S.matchPhoto; saveProfile(ME); }
-  } else {
-    // local mode: picking a saved player signs in; a new gamertag makes a new one
-    if (!ME || ME.name !== S.name) ME = loadProfiles().find(p => p.name === S.name) || { id: Date.now().toString(36), name: S.name, history: [] };
-    ME.photo = S.photoURL || ME.photo || null; ME.match = S.matchPhoto;
-    saveProfile(ME); store.set('gg-current', ME.id);
+$('#go').onclick = async () => {
+  if (!ensureMe()) return updateCooldown(); // online mode: must be signed in
+  S.name = ME.name = ($('#name').value.trim() || ME.name || 'PLAYER').toUpperCase();
+  ME.photo = S.photoURL || null; ME.match = S.matchPhoto;
+  if (cooldownLeft() > 0) return updateCooldown();
+  $('#go').disabled = true;
+  try {
+    await saveProfile(ME);
+    await startAttempt();
+  } catch (e) {
+    $('#go').disabled = false;
+    toast(`Couldn't start: ${e.code === 'permission-denied' ? 'your 4-hour wait isn’t over yet' : (e.code || e.message)}`);
+    return;
   }
   runScan();
 };
 
-/* top 10 players by best OVR (online accounts only) */
-async function loadLeaderboard() {
-  const el = $('#lb');
-  if (!FB) { el.hidden = true; return; }
-  el.hidden = false; el.innerHTML = '<h3>Leaderboard</h3><p class="note">Loading…</p>';
+/* top 10 cards for a platform (online accounts only) */
+let lbPlat = PLAT;
+async function loadLeaderboard(el = $('#lb')) {
+  if (!FB) { el.hidden = el.id === 'lb'; if (!el.hidden) el.innerHTML = '<p class="note">The leaderboard needs online accounts.</p>'; return; }
+  const tabs = `<div class="lbtabs">${['pc', 'mobile'].map(p => `<button class="${p === lbPlat ? 'on' : ''}" data-p="${p}">${p === 'pc' ? 'PC' : 'Mobile'}</button>`).join('')}</div>`;
+  const head = `${el.id === 'lb' ? '<h3>Leaderboard</h3>' : ''}${tabs}`;
+  const wire = () => el.querySelectorAll('.lbtabs button').forEach(b => b.onclick = () => { lbPlat = b.dataset.p; loadLeaderboard(el); });
+  el.hidden = false; el.innerHTML = head + '<p class="note">Loading…</p>'; wire();
   try {
     const { F, db } = FB;
-    const snap = await F.getDocs(F.query(F.collection(db, 'players'), F.orderBy('best.ovr', 'desc'), F.limit(10)));
+    const snap = await F.getDocs(F.query(F.collection(db, 'players'), F.orderBy(`cards.${lbPlat}.ovr`, 'desc'), F.limit(10)));
     const rows = snap.docs.map((d, i) => {
-      const p = d.data(), me = FB.user && d.id === FB.user.uid;
-      return `<div class="${me ? 'you' : ''}"><span class="rk">${i + 1}</span>${avatar(p)}<b>${esc(p.name)}</b><span>${esc(p.best.rar)}</span><i>${p.best.ovr}</i></div>`;
+      const p = d.data(), c = p.cards[lbPlat], me = FB.user && d.id === FB.user.uid;
+      return `<div class="${me ? 'you' : ''}"><span class="rk">${i + 1}</span>${avatar(p)}<b>${esc(p.name)}</b><span>${esc(c.rar)}</span><i>${c.ovr}</i></div>`;
     });
-    el.innerHTML = '<h3>Leaderboard</h3>' + (rows.join('') || '<p class="note">No cards yet. You could be first.</p>') + (FB.user ? '' : '<p class="note">Sign in to get on the board.</p>');
-  } catch (e) { el.innerHTML = `<h3>Leaderboard</h3><p class="note warn">Could not load it (${esc(e.code || e.message)}).</p>`; }
+    el.innerHTML = head + (rows.join('') || '<p class="note">No cards yet. You could be first.</p>');
+  } catch (e) { el.innerHTML = head + `<p class="note warn">Could not load it (${esc(e.code || e.message)}).</p>`; }
+  wire();
 }
 
 /* ---------- PC SCAN ---------- */
@@ -521,7 +664,8 @@ function gpuBench(ms = 500) {
   } catch (e) { return null; }
 }
 // calibrated so a current high-end PC (RTX 5080 class GPU, 16-thread CPU) lands around 95
-const GPU_REF = 450, CPU1_REF = 2900, CPUN_REF = 29000;
+// phones are scored against a top phone instead (rough estimates of a current flagship)
+const GPU_REF = MOBILE ? 60 : 450, CPU1_REF = MOBILE ? 2200 : 2900, CPUN_REF = MOBILE ? 10000 : 29000;
 const benchScore = (v, ref) => curve(v / ref, [[.02, 10], [.08, 35], [.25, 60], [.55, 80], [1, 95], [1.4, 99]]);
 function measureHz() {
   return new Promise(res => {
@@ -586,7 +730,8 @@ async function runScan() {
   S.stats.RIG = clamp(Math.round(gpu * .5 + cpu1 * .2 + cpuN * .2 + ram * .1), 1, 99);
   await sleep(300);
   const sum = document.createElement('div'); sum.className = 'sum';
-  sum.innerHTML = `RIG <b>${S.stats.RIG}</b> &nbsp;·&nbsp; your in-game FPS gets measured next`;
+  sum.innerHTML = `RIG <b>${S.stats.RIG}</b> &nbsp;·&nbsp; ${MOBILE ? `screen ${S.pc.hz} Hz` : 'your in-game FPS gets measured next'}`;
+  $('#scanNext').textContent = MOBILE ? 'Start the tests →' : 'Enter the arena →';
   T.appendChild(sum);
   $('#scanNext').hidden = false;
 }
@@ -775,7 +920,8 @@ function lock() {
 function onLockChange() {
   if (G.locked) {
     $('#pause').hidden = true;
-    if (G.phase === 'brief') { $('#brief').hidden = true; G.phase = 'count'; G.count = 3; G.canMove = true; }
+    // walking is only allowed in the parkour run; the aim tests are stand-and-shoot
+    if (G.phase === 'brief') { $('#brief').hidden = true; G.phase = 'count'; G.count = 3; G.canMove = TESTS[G.ti].key === 'MOV'; }
   } else {
     G.keys.clear(); G.mouseDown = false;
     if (G.phase === 'count' || G.phase === 'run') $('#pause').hidden = false;
@@ -975,22 +1121,22 @@ function quickDraw() {
   const A = $('#rbox'), msg = (big, small) => { A.innerHTML = `<div>${big}${small ? `<small>${small}</small>` : ''}</div>`; };
   let round = 0, times = [], state = 'idle', t0 = 0, tm;
   A.className = 'rbox'; A.hidden = false;
-  msg('Click to start', 'wait for green, then click · 3 rounds');
+  msg(`${ACT_UP} to start`, `wait for green, then ${ACT} · 3 rounds`);
   A.onpointerdown = () => {
     if (state === 'idle') {
       state = 'wait'; A.className = 'rbox wait'; msg('Wait for green…');
       tm = setTimeout(() => {
-        state = 'go'; A.className = 'rbox go'; msg('CLICK!');
+        state = 'go'; A.className = 'rbox go'; msg(`${ACT.toUpperCase()}!`);
         t0 = performance.now();
         requestAnimationFrame(() => { t0 = performance.now(); });
       }, rand(1200, 3500));
     } else if (state === 'wait') {
       clearTimeout(tm); state = 'idle'; A.className = 'rbox';
-      msg('Too early!', 'click to retry this round');
+      msg('Too early!', `${ACT} to retry this round`);
     } else if (state === 'go') {
       const dt = Math.round(performance.now() - t0);
       times.push(dt); round++; A.className = 'rbox';
-      if (round < 3) { state = 'idle'; msg(`${dt} ms`, `round ${round}/3 · click for the next one`); }
+      if (round < 3) { state = 'idle'; msg(`${dt} ms`, `round ${round}/3 · ${ACT} for the next one`); }
       else {
         state = 'done'; A.hidden = true;
         const avg = Math.round(times.reduce((a, b) => a + b) / times.length);
@@ -999,6 +1145,101 @@ function quickDraw() {
     }
   };
   return { cleanup() { clearTimeout(tm); A.hidden = true; A.onpointerdown = null; } };
+}
+
+/* ---------- touch tests for the MOBILE card (flat screen, no 3D) ---------- */
+function flatPad(big, small) {
+  const A = $('#rbox');
+  A.className = 'rbox pad'; A.hidden = false;
+  A.innerHTML = `<div class="padmsg">${big}${small ? `<small>${small}</small>` : ''}</div>`;
+  return A;
+}
+const padPos = (A, e) => { const r = A.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+const padCleanup = A => ({ cleanup() { A.onpointerdown = A.onpointermove = null; A.hidden = true; A.innerHTML = ''; } });
+
+function tapAim() {
+  const N = 15, R = 30; let hits = 0, miss = 0, t0 = 0, cur = null, el = null;
+  const A = flatPad('Tap to start', `${N} targets · speed + accuracy`);
+  const info = () => hud(`TARGETS <b>${hits}/${N}</b>`, `MISSES <b>${miss}</b>`);
+  info();
+  const spawn = () => {
+    const w = A.clientWidth, h = A.clientHeight;
+    cur = { x: rand(R + 12, w - R - 12), y: rand(R + 60, h - R - 80) }; // keep clear of the HUD
+    if (!el) { el = document.createElement('div'); el.className = 'ftarget'; el.style.width = el.style.height = 2 * R + 'px'; A.appendChild(el); }
+    el.style.left = cur.x + 'px'; el.style.top = cur.y + 'px';
+  };
+  A.onpointerdown = e => {
+    if (hits >= N) return;
+    if (!t0) { A.innerHTML = ''; t0 = performance.now(); spawn(); return; }
+    const p = padPos(A, e);
+    if (Math.hypot(p.x - cur.x, p.y - cur.y) <= R + 8) {
+      hits++; info();
+      if (hits === N) {
+        const avg = Math.round((performance.now() - t0) / N);
+        return finishTest(clamp(lerpScore(avg, 420, 99, 1200, 30) - miss * 3, 1, 99), `${avg} ms per target · ${miss} miss${miss === 1 ? '' : 'es'}`);
+      }
+      spawn();
+    } else {
+      miss++; info();
+      const m = document.createElement('div'); m.className = 'miss';
+      m.style.left = p.x + 'px'; m.style.top = p.y + 'px';
+      A.appendChild(m); setTimeout(() => m.remove(), 400);
+    }
+  };
+  return padCleanup(A);
+}
+
+function fingerTrack() {
+  const D = 7000, R = 34; let px = -999, py = -999, t0 = 0, last = 0, on = 0, tot = 0, el, raf;
+  const A = flatPad('Touch and hold to start', 'keep your finger on the target');
+  hud('ON TARGET <b>0%</b>', `TIME <b>${(D / 1000).toFixed(1)}s</b>`);
+  const pos = e => { const p = padPos(A, e); px = p.x; py = p.y; };
+  A.onpointermove = pos;
+  A.onpointerup = A.onpointercancel = () => { px = py = -999; }; // lifting your finger counts as off target
+  A.onpointerdown = e => {
+    pos(e); if (t0) return;
+    A.innerHTML = '';
+    el = document.createElement('div'); el.className = 'ftarget trk';
+    el.style.width = el.style.height = 2 * R + 'px'; A.appendChild(el);
+    t0 = last = performance.now();
+    raf = requestAnimationFrame(frame);
+  };
+  function frame(now) {
+    const t = (now - t0) / 1000, p = t + .04 * t * t; // speeds up over time
+    const w = A.clientWidth, h = A.clientHeight, ax = w / 2 - R - 12, ay = h / 2 - R - 80;
+    const x = w / 2 + ax * (.65 * Math.sin(1.1 * p) + .35 * Math.sin(2.3 * p + .7));
+    const y = h / 2 + ay * (.6 * Math.sin(1.5 * p + 1.3) + .4 * Math.sin(2.9 * p));
+    el.style.left = x + 'px'; el.style.top = y + 'px';
+    const dt = now - last; last = now;
+    const hit = Math.hypot(px - x, py - y) <= R * 1.25;
+    if (hit) on += dt;
+    tot += dt;
+    el.classList.toggle('lock', hit);
+    hud(`ON TARGET <b>${Math.round(on / Math.max(tot, 1) * 100)}%</b>`, `TIME <b>${(Math.max(0, D - (now - t0)) / 1000).toFixed(1)}s</b>`);
+    if (now - t0 < D) raf = requestAnimationFrame(frame);
+    else { const pct = on / Math.max(tot, 1); finishTest(lerpScore(pct, .9, 99, .25, 30), `${Math.round(pct * 100)}% time on target`); }
+  }
+  const c = padCleanup(A);
+  return { cleanup() { cancelAnimationFrame(raf); A.onpointerup = A.onpointercancel = null; c.cleanup(); } };
+}
+
+function tapSpeed() {
+  const D = 5000; let n = 0, t0 = 0, iv, live = true;
+  const A = flatPad('Tap to start', 'then tap as fast as you can · 5 seconds');
+  hud('TAPS <b>0</b>', 'TIME <b>5.0s</b>');
+  const tick = () => {
+    const left = Math.max(0, D - (performance.now() - t0));
+    hud(`TAPS <b>${n}</b>`, `TIME <b>${(left / 1000).toFixed(1)}s</b>`);
+    if (left <= 0) { clearInterval(iv); live = false; const c = n / (D / 1000); finishTest(lerpScore(c, 12, 99, 4, 30), `${c.toFixed(1)} taps per second`); }
+  };
+  A.onpointerdown = () => {
+    if (!live) return;
+    if (!t0) { t0 = performance.now(); iv = setInterval(tick, 50); }
+    n++;
+    A.innerHTML = `<div class="padmsg"><span class="big">${n}</span></div>`;
+  };
+  const c = padCleanup(A);
+  return { cleanup() { clearInterval(iv); c.cleanup(); } };
 }
 
 function flickTest() {
@@ -1104,12 +1345,19 @@ function moveTest() {
 }
 
 const K = (k, l) => `<span><kbd>${k}</kbd>${l}</span>`;
-const TESTS = [
+const TESTS_PC = [
   { key: 'REA', title: 'Quick draw', flat: true, desc: 'The screen turns red. Wait for it to turn green, then click as fast as you can. 3 rounds. Click too early and the round restarts.', keys: K('Click', 'react'), make: quickDraw },
-  { key: 'AIM', title: 'Flick range', desc: '20 targets appear around you, one at a time. Hit them as fast as you can. Missed shots cost you.', keys: K('Mouse', 'aim') + K('Click', 'shoot') + K('WASD', 'move'), make: flickTest },
-  { key: 'TRK', title: 'Tracking duel', desc: 'A bot strafes and jumps in front of you. Keep your crosshair on it for 8 seconds. Hold click to spray.', keys: K('Mouse', 'track') + K('Hold click', 'spray') + K('WASD', 'strafe'), make: trackTest },
-  { key: 'MOV', title: 'Parkour run', desc: 'Run through all 8 glowing rings, in order, as fast as you can. Some are on top of crates: sprint and jump.', keys: K('WASD', 'move') + K('Shift', 'sprint') + K('Space', 'jump'), make: moveTest },
+  { key: 'AIM', title: 'Flick range', desc: '20 targets appear around you, one at a time. Stand your ground and hit them as fast as you can. Missed shots cost you.', keys: K('Mouse', 'aim') + K('Click', 'shoot'), make: flickTest },
+  { key: 'TRK', title: 'Tracking duel', desc: 'A bot strafes and jumps in front of you. Keep your crosshair on it for 8 seconds. Hold click to spray. You can’t walk in this one.', keys: K('Mouse', 'track') + K('Hold click', 'spray'), make: trackTest },
+  { key: 'MOV', title: 'Parkour run', desc: 'Run through all 8 rings, in order, as fast as you can. Some are on top of crates: sprint and jump.', keys: K('WASD', 'move') + K('Shift', 'sprint') + K('Space', 'jump'), make: moveTest },
 ];
+const TESTS_MOBILE = [
+  { key: 'REA', title: 'Quick draw', flat: true, desc: 'The screen turns red. Wait for it to turn green, then tap as fast as you can. 3 rounds. Tap too early and the round restarts.', keys: K('Tap', 'react'), make: quickDraw },
+  { key: 'AIM', title: 'Tap targets', flat: true, desc: '15 targets pop up one at a time. Tap each one as fast as you can. Missed taps cost you.', keys: K('Tap', 'hit'), make: tapAim },
+  { key: 'TRK', title: 'Finger tracking', flat: true, desc: 'Keep your finger on the moving target for 7 seconds. It speeds up. Lifting your finger counts as a miss.', keys: K('Drag', 'follow'), make: fingerTrack },
+  { key: 'TAP', title: 'Tap speed', flat: true, desc: 'Tap the screen as fast as you can for 5 seconds. Two thumbs allowed.', keys: K('Tap', 'spam'), make: tapSpeed },
+];
+const TESTS = MOBILE ? TESTS_MOBILE : TESTS_PC;
 
 function clearTest() {
   if (G.test && G.test.cleanup) G.test.cleanup();
@@ -1148,20 +1396,21 @@ function finishTest(score, detail) {
   if (document.pointerLockElement) document.exitPointerLock();
 }
 function startGame() {
-  if (!initGame()) return;
+  // phones only run flat touch tests, so they never load the 3D arena
+  if (!MOBILE && !initGame()) return;
   $('#wrap').hidden = true; $('#game').hidden = false;
   G.fpsFrames = 0; G.fpsTime = 0;
-  resizeGame();
-  G.clock.getDelta();
+  if (!MOBILE) { resizeGame(); G.clock.getDelta(); }
   openBrief(0);
 }
 function endGame() {
   clearTest();
   G.phase = 'off';
-  const fps = G.fpsTime > 0 ? Math.round(G.fpsFrames / G.fpsTime) : (S.pc.hz || 60);
+  // PC: frame rate measured in the arena; phone: the screen's refresh rate
+  const fps = MOBILE ? (S.pc.hz || 60) : G.fpsTime > 0 ? Math.round(G.fpsFrames / G.fpsTime) : (S.pc.hz || 60);
   S.pc.fps = fps;
   S.stats.FPS = fpsScore(fps);
-  S.res.FPS = `${fps} fps average in the arena`;
+  S.res.FPS = MOBILE ? `${fps} Hz screen` : `${fps} fps average in the arena`;
   $('#game').hidden = true; $('#wrap').hidden = false;
   reveal();
 }
@@ -1186,17 +1435,18 @@ const RAR = [
 ];
 const CLASS = {
   REA: { code: 'RFX', name: 'REFLEX GOD' }, AIM: { code: 'SNP', name: 'SNIPER' }, TRK: { code: 'LCK', name: 'LOCK-ON' },
-  MOV: { code: 'SPD', name: 'SPEED DEMON' }, RIG: { code: 'FLX', name: 'RIG FLEXER' }, FPS: { code: 'FRM', name: 'FRAME CHASER' },
+  MOV: { code: 'SPD', name: 'SPEED DEMON' }, RIG: { code: 'FLX', name: MOBILE ? 'PHONE FLEXER' : 'RIG FLEXER' }, FPS: { code: 'FRM', name: 'FRAME CHASER' },
+  TAP: { code: 'TPR', name: 'TAP MACHINE' },
 };
 const TIPS = {
   REA: 'Your brain is lagging behind your screen. Try reaction drills, and sleep more.',
-  AIM: 'Ten minutes of aim training a day. Seriously.',
-  TRK: 'Lower your sensitivity and follow through with your arm, not your wrist.',
+  AIM: MOBILE ? 'Your taps are wandering. Slow down for a second and land them.' : 'Ten minutes of aim training a day. Seriously.',
+  TRK: MOBILE ? 'Keep your finger moving smoothly instead of chasing in jumps.' : 'Lower your sensitivity and follow through with your arm, not your wrist.',
   MOV: 'You move like a default bot. Sprint-jump and keep your momentum.',
-  RIG: 'Your PC is the weakest link on your team. Upgrade time?',
-  FPS: 'Your frame rate is holding you back. Lower your settings or get a faster screen.',
+  TAP: 'Your thumbs are on vacation. Use two of them.',
+  RIG: MOBILE ? 'Your phone is the weakest link on your team. Upgrade time?' : 'Your PC is the weakest link on your team. Upgrade time?',
+  FPS: MOBILE ? 'A higher refresh rate screen would make everything feel faster.' : 'Your frame rate is holding you back. Lower your settings or get a faster screen.',
 };
-const LABEL = { REA: 'Quick draw', AIM: 'Flick range', TRK: 'Tracking duel', MOV: 'Parkour run' };
 
 const hexA = (h, a) => `rgba(${parseInt(h.slice(1, 3), 16)},${parseInt(h.slice(3, 5), 16)},${parseInt(h.slice(5, 7), 16)},${a})`;
 const spaced = s => s.split('').join(' ');
@@ -1264,11 +1514,11 @@ async function drawCard(d) {
 
   // left column: OVR, class, specs
   c.textAlign = 'left'; c.textBaseline = 'alphabetic';
-  c.fillStyle = hexA(R.ink, .55); c.font = `700 18px ${M}`; c.fillText('GG CARD · S1', 56, 62);
+  c.fillStyle = hexA(R.ink, .55); c.font = `700 18px ${M}`; c.fillText(`GG CARD · ${d.platName}`, 56, 62);
   c.fillStyle = R.ink; c.font = `700 160px ${F}`; c.fillText(d.ovr, 46, 222);
   c.fillStyle = R.acc; c.font = `700 54px ${F}`; c.fillText(d.code, 54, 286);
   c.fillStyle = hexA(R.ink, .25); c.fillRect(56, 314, 180, 2);
-  [[d.fps || '?', 'AVG FPS'], [d.hz, 'HZ'], [d.cores || '?', 'THREADS']].forEach(([v, l], i) => {
+  [[d.fps || '?', d.platName === 'PC' ? 'AVG FPS' : 'SCREEN HZ'], [d.hz || '?', 'HZ'], [d.cores || '?', 'THREADS']].forEach(([v, l], i) => {
     const y = 378 + i * 64;
     c.fillStyle = R.ink; c.font = `700 40px ${F}`; c.fillText(v, 56, y);
     c.fillStyle = hexA(R.ink, .6); c.font = `700 16px ${M}`; c.fillText(l, 56, y + 24);
@@ -1281,7 +1531,7 @@ async function drawCard(d) {
   c.fillStyle = hexA(R.ink, .2); c.fillRect(80, 690, W - 160, 2);
 
   // stats
-  KEYS.forEach((k, i) => {
+  d.keys.forEach((k, i) => {
     const x = i % 2 ? 404 : 100, y = 758 + (i >> 1) * 70, v = d.stats[k];
     c.textAlign = 'left';
     c.fillStyle = R.ink; c.font = `700 54px ${F}`; c.fillText(v, x, y);
@@ -1480,48 +1730,59 @@ function photoTheme(img) {
   return { acc: hslHex(h, Math.max(s, 70), 68), bg: [hslHex(h, s * .7, 7), hslHex(h, s * .7, 20), hslHex((h + 25) % 360, s, 36)], ink: '#ffffff' };
 }
 async function renderCard() {
-  const { ovr, rar, top } = last;
+  const { ovr, rar, top, keys, platName, stats, rig } = last;
   const pt = S.photo && S.matchPhoto ? photoTheme(S.photo) : null;
   const theme = pt ? { ...rar, ...pt } : rar;
   $('#theme').hidden = !S.photo || !photoTheme(S.photo);
   $('#theme').textContent = `Photo colors: ${S.matchPhoto ? 'on' : 'off'}`;
-  await drawCard({ ...S.pc, name: S.name, photo: S.photo, stats: S.stats, ovr, rar: theme, code: CLASS[top].code, cls: CLASS[top].name });
+  await drawCard({ ...rig, gpu: rig.gpu || 'Unknown GPU', name: (ME && ME.name) || S.name, photo: S.photo, stats, keys, platName, ovr, rar: theme, code: CLASS[top].code, cls: CLASS[top].name });
   initViewer();
   V.frontTex.needsUpdate = true;
   buildCard(theme);
 }
 
-let last = null;
+// a finished run: score it, save it as this platform's card (replacing the old one), show it
 async function reveal() {
-  show('result', 'Your card');
   const st = S.stats;
   const ovr = clamp(Math.round(KEYS.reduce((a, k) => a + st[k], 0) / KEYS.length), 1, 99);
   const rar = RAR.find(r => ovr >= r.min);
   const top = KEYS.reduce((a, k) => st[k] > st[a] ? k : a);
-  const low = KEYS.reduce((a, k) => st[k] < st[a] ? k : a);
-  last = { ovr, rar, top };
-  let newBest = false;
-  if (ME) {
-    ME.history = [...(ME.history || []), { ovr, rar: rar.name, at: Date.now() }].slice(-20);
-    if (!ME.best || ovr > ME.best.ovr) { newBest = !!ME.best; ME.best = { ovr, rar: rar.name }; }
-    await saveProfile(ME); renderProfiles();
-  }
-  loadLeaderboard();
-  $('#rKick').textContent = `${rar.name} · ${ovr} OVR`;
-  const cls = CLASS[top].name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+  const p = S.pc;
+  const card = { ovr, rar: rar.name, top, stats: { ...st }, res: { ...S.res },
+    rig: { gpu: p.gpu || null, gpuPts: p.gpuPts || null, cores: p.cores || null, cpu1: p.cpu1 || null, cpuN: p.cpuN || null, mem: p.mem || null, hz: p.hz || null, fps: p.fps || null, parts: p.parts || {} } };
+  const prev = ME && ME.cards && ME.cards[PLAT];
+  if (ME) await saveCard(card);
+  await showCard(card, PLAT, { fresh: true, prev });
+}
+
+// shows a card: right after a run, or a saved one from "My cards"
+let last = null;
+async function showCard(card, plat, { fresh = false, prev = null } = {}) {
+  show('result', fresh ? 'New card' : 'My cards');
+  const keys = plat === 'pc' ? KEYS_PC : KEYS_MOBILE, platName = plat === 'pc' ? 'PC' : 'MOBILE';
+  const tests = plat === 'pc' ? TESTS_PC : TESTS_MOBILE;
+  const st = card.stats, rig = card.rig || {}, res = card.res || {}, parts = rig.parts || {};
+  const rar = RAR.find(r => r.name === card.rar) || RAR.find(r => card.ovr >= r.min);
+  const low = keys.reduce((a, k) => st[k] < st[a] ? k : a);
+  last = { ovr: card.ovr, rar, top: card.top, keys, platName, stats: st, rig };
+  lbPlat = plat; loadLeaderboard();
+  $('#rKick').textContent = `${platName} card · ${rar.name} · ${card.ovr} OVR`;
+  const cls = CLASS[card.top].name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
   $('#rTitle').textContent = `You're ${/^[aeiou]/i.test(cls) ? 'an' : 'a'} ${cls}.`;
-  $('#rSub').textContent = rar.sub + (ME && ME.best ? ` · Your best: ${ME.best.ovr} OVR` : '');
-  if (newBest) toast('New personal best!');
-  const pc = S.pc, parts = pc.parts || {};
+  const when = ms(card.at) ? new Date(ms(card.at)).toLocaleString() : '';
+  $('#rSub').textContent = fresh
+    ? rar.sub + (prev ? ` · Your old ${platName} card was ${prev.ovr} OVR.` : '') + ' Next run in 4 hours.'
+    : `Saved ${when}.`;
+  if (fresh && prev && card.ovr > prev.ovr) toast(`Up ${card.ovr - prev.ovr} from your last card!`);
   const rows = [
-    ...['REA', 'AIM', 'TRK', 'MOV'].map(k => [LABEL[k], `${S.res[k]} → ${st[k]}`]),
-    ['Arena FPS', `${pc.fps} fps → FPS ${st.FPS}`],
-    ['GPU', `${pc.gpu}${parts.gpu ? ` → ${parts.gpu}` : ''}`],
-    ['GPU benchmark', pc.gpuPts ? `${pc.gpuPts} G shader ops/s` : 'did not run'],
-    ['CPU single-core', pc.cpu1 ? `${pc.cpu1} pts → ${parts.cpu1}` : 'did not run'],
-    ['CPU all cores', pc.cpuN ? `${pc.cpuN} pts (${pc.cores} threads) → ${parts.cpuN}` : 'did not run'],
-    ['RAM', pc.mem ? (pc.mem >= 8 ? '8+ GB' : pc.mem + ' GB') : 'hidden by browser'],
-    ['Refresh rate', `${pc.hz} Hz`], ['Rig score', `RIG ${st.RIG}`],
+    ...tests.map(t => [t.title, `${res[t.key] || '—'} → ${st[t.key]}`]),
+    plat === 'mobile' ? ['Screen', `${rig.hz} Hz → FPS ${st.FPS}`] : ['Arena FPS', `${rig.fps} fps → FPS ${st.FPS}`],
+    ['GPU', `${rig.gpu || 'unknown'}${parts.gpu ? ` → ${parts.gpu}` : ''}`],
+    ['GPU benchmark', rig.gpuPts ? `${rig.gpuPts} G shader ops/s` : 'did not run'],
+    ['CPU single-core', rig.cpu1 ? `${rig.cpu1} pts → ${parts.cpu1}` : 'did not run'],
+    ['CPU all cores', rig.cpuN ? `${rig.cpuN} pts (${rig.cores} threads) → ${parts.cpuN}` : 'did not run'],
+    ['RAM', rig.mem ? (rig.mem >= 8 ? '8+ GB' : rig.mem + ' GB') : 'hidden by browser'],
+    ['Refresh rate', `${rig.hz} Hz`], ['Rig score', `RIG ${st.RIG}`],
   ];
   $('#bd').innerHTML = rows.map(([k, v]) => `<div><span>${k}</span><b>${esc(v)}</b></div>`).join('');
   $('#tip').innerHTML = `<b>Weakness: ${low}.</b> ${TIPS[low]}`;
@@ -1549,7 +1810,7 @@ $('#theme').onclick = () => {
   renderCard();
 };
 $('#share').onclick = async () => {
-  const text = `My GG Card: ${last.ovr} OVR ${last.rar.name}. Think you can beat it? ${location.href}`;
+  const text = `My ${last.platName} GG Card: ${last.ovr} OVR ${last.rar.name}. Think you can beat it? ${location.origin + location.pathname}`;
   const blob = await new Promise(r => $('#card').toBlob(r, 'image/png'));
   const file = new File([blob], 'gg-card.png', { type: 'image/png' });
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -1559,10 +1820,10 @@ $('#share').onclick = async () => {
     catch (e) { saveURL($('#card').toDataURL('image/png'), fileName('')); }
   }
 };
-$('#again').onclick = () => { V.on = false; S.stats = {}; S.res = {}; show('intro', 'Ready'); };
+$('#again').onclick = () => { S.stats = {}; S.res = {}; toMenu(); };
 
 // handy for testing from the console
-window.GG = { S, G, reveal, startGame, openBrief, finishTest, endGame, cpuBench, gpuBench, step: updatePlayer };
+window.GG = { S, G, reveal, showCard, startGame, openBrief, finishTest, endGame, cpuBench, gpuBench, step: updatePlayer, me: () => ME };
 </script>
 </body>
 </html>
