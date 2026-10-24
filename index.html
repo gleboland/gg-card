@@ -7,7 +7,7 @@
 <meta name="description" content="A PC scan + 4 FPS challenges in a 3D arena = your personal 3D gamer card. What's your OVR?">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@400;500;600;700&family=Chakra+Petch:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script type="importmap">
 { "imports": {
   "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
@@ -228,6 +228,122 @@ kbd{font:700 12px 'JetBrains Mono',monospace;color:var(--text);background:#18212
 .tip b{color:var(--bad)}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--acc);color:#04120a;font-weight:700;padding:12px 18px;border-radius:10px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
 .toast.on{opacity:1}
+
+/* =====================================================================
+   Look & feel: hand-made sticker style on the brand palette.
+     White #F5F7FA    headings and main text
+     Purple #7C3AED   main buttons and branding
+     Blue #00B4FF     links and hover effects
+     Green #00FF88    online status and success
+     Navy #0B0F1A     page background
+   Chunky outlines and hard shadows instead of glow. (Cards keep their own colors.)
+   ===================================================================== */
+:root{--bg:#0B0F1A;--panel:#141a2b;--line:#232c42;--text:#F5F7FA;--muted:#9aa3b8;--acc:#7C3AED;--acc2:#00B4FF;--ok:#00FF88;--bad:#ff4d6d;--ink:#F5F7FA;--hard:#03050a}
+body{font-family:'Inter',system-ui,sans-serif;background:
+  radial-gradient(900px 440px at 85% -10%,rgba(124,58,237,.22),transparent 60%),
+  radial-gradient(700px 380px at -10% 110%,rgba(0,180,255,.10),transparent 60%),
+  radial-gradient(rgba(245,247,250,.035) 1px,transparent 1px) 0 0/22px 22px,var(--bg)}
+h1,h2,h3,.btn,.mi b,.chip,.tscore,.quest b,.find input,input[type=text],.rbox,.arcpad,.arcbar b,#gCenter,.simmsg{font-family:'Bricolage Grotesque','Inter',sans-serif}
+h1{font-weight:800;letter-spacing:-.045em;line-height:.84}
+h1 span{color:var(--acc);text-shadow:5px 5px 0 var(--hard);display:inline-block;transform:rotate(-2.5deg);transform-origin:left bottom}
+h2{font-weight:800;letter-spacing:-.025em}
+.lead{font-size:18px;line-height:1.55;color:var(--muted)}
+.kicker{color:var(--acc2);letter-spacing:.12em}
+.top b{color:var(--ok)}
+.top{color:var(--muted)}
+.note{line-height:1.6}
+.steps b{color:var(--acc2)}
+a,.link,.note a{color:var(--acc2)}
+.link:hover{color:var(--text)}
+h1 span{color:var(--acc)}
+.steps div{line-height:1.5}
+.btn{background:var(--acc);color:var(--ink);border:2px solid var(--hard);border-radius:12px;box-shadow:3px 3px 0 var(--hard);font-weight:800;font-size:17px;letter-spacing:.01em;text-transform:none;transition:transform .1s,box-shadow .1s}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--hard)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--hard)}
+.btn.ghost{background:var(--panel);color:var(--text);border:2px solid var(--hard)}
+.btn.ghost:hover{box-shadow:4px 4px 0 var(--hard)}
+.btn:disabled{transform:none;box-shadow:3px 3px 0 var(--hard)}
+.mi{border:2px solid var(--hard);border-radius:16px;box-shadow:4px 4px 0 var(--hard);background:var(--panel);transition:transform .12s,box-shadow .12s;padding:16px 18px}
+.mi:hover{transform:translate(-2px,-2px) rotate(-.4deg);box-shadow:6px 6px 0 var(--acc2);border-color:var(--acc2)}
+.mi:hover .ic{color:var(--acc2)}
+.btn.ghost:hover{border-color:var(--acc2);box-shadow:4px 4px 0 var(--acc2)}
+.chip:hover,.soc:hover,.dz:hover{border-color:var(--acc2)}
+.lb div[data-uid]:hover b{color:var(--acc2)}
+.me i{color:var(--ok)}
+.quest.done{border-color:var(--ok)}
+.quest.done .st{color:var(--ok)}
+.qbar i{background:var(--ok)}
+.citem .best{color:var(--ok)}
+.term .v,.term .sum b{color:var(--ok)}
+.lb i{color:var(--text)}
+.lb div.you b{color:var(--ok)}
+.toast{background:var(--ok);color:#03130b}
+.goldtxt{color:#ffd866}
+.mi:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--hard)}
+.mi b{text-transform:none;letter-spacing:-.01em;font-size:21px;font-weight:800}
+.mi small{font-family:'Inter',sans-serif;font-size:13.5px}
+.mi .ic{background:#27231e;color:var(--acc);border-radius:12px;font-size:19px}
+.mi.play{background:var(--acc);color:var(--ink);border-color:var(--hard)}
+.mi.play .ic{background:rgba(0,0,0,.22);color:var(--ink)}
+.mi.play small{color:rgba(245,247,250,.78)}
+.mi.play:hover .ic{color:var(--ink)}
+.mi.play:disabled{background:var(--panel);color:var(--text)}
+.mi.prem,.mi.gift{background:linear-gradient(135deg,#231d10,var(--panel))}
+.mi.gift .ic{background:#33290f}
+.me,.term,.breakdown,.lb,.citem,.quest,.perks li,.premset{border-radius:16px;border:2px solid #000;box-shadow:3px 3px 0 rgba(0,0,0,.6)}
+.panel{border:2px solid var(--hard);border-radius:18px;box-shadow:6px 6px 0 var(--hard)}
+input[type=text],.auth input,.socin input,.find input{border:2px solid #2a2622;border-radius:12px}
+input[type=text]:focus,.auth input:focus,.socin input:focus,.find input:focus{border-color:var(--acc)}
+.chip{border:2px solid #000;box-shadow:2px 2px 0 #000}
+.lbtabs button{border-radius:999px;text-transform:none;letter-spacing:0;font-family:'Inter',sans-serif;font-weight:600;border:2px solid #2a2622}
+.lbtabs button.on{color:var(--ink);border-color:var(--hard)}
+.dz.on{border-color:var(--acc);box-shadow:3px 3px 0 #000}
+.tscore{text-shadow:5px 5px 0 #000}
+.toast{border:2px solid var(--hard);box-shadow:4px 4px 0 var(--hard);border-radius:12px}
+.tip{border-radius:0 14px 14px 0}
+.signin-hint{border:2px dashed #3a342d;border-radius:16px;padding:22px;color:var(--muted);line-height:1.5}
+.signin-hint b{display:block;font:800 22px 'Bricolage Grotesque',sans-serif;color:var(--text);margin-bottom:14px}
+.lockgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lockgrid span{background:var(--panel);border:2px solid #000;border-radius:12px;padding:14px;font:700 16px 'Bricolage Grotesque',sans-serif;color:var(--muted);box-shadow:3px 3px 0 rgba(0,0,0,.6)}
+.lockgrid span::after{content:' 🔒';font-size:12px;opacity:.6}
+.res-head h2{margin-top:2px}
+
+/* phones: menu right under your profile, the "how it works" bits after it */
+@media (max-width: 979px){
+  #intro.on{display:flex;flex-direction:column}
+  #intro .col-l,#intro .col-r{display:contents}
+  #intro h1{order:1} #intro .lead{order:2} #intro .prof{order:3}
+  #intro .menu,#intro .signin-hint{order:4;margin-bottom:22px}
+  #intro .note{order:5} #intro .steps{order:6}
+}
+/* ---------- wide screens: use the space instead of a phone-shaped column ---------- */
+@media (min-width: 980px){
+  .wrap{max-width:1200px;padding:28px 40px 80px}
+  .top{margin-bottom:40px}
+  #intro.on{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:56px;align-items:start}
+  #intro h1{font-size:clamp(110px,10vw,150px)}
+  #intro .col-r{position:sticky;top:24px}
+  .menu{grid-template-columns:1fr 1fr;gap:14px;margin:0}
+  .menu .mi.play{grid-column:1/-1;padding:22px 22px}
+  .menu .mi.play b{font-size:28px}
+  .menu .mi{min-height:92px}
+  .menu .mi:last-child:nth-child(even){grid-column:1/-1}
+  #result.on{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:40px;align-items:start}
+  #result .res-head{text-align:left}
+  #result .socs{justify-content:flex-start}
+  #result .row{justify-content:flex-start}
+  #result .col-r{padding-top:8px}
+  #stage{height:min(74vh,680px);margin:0}
+  .hint{text-align:left}
+  #profile.on,#cards.on,#arcade.on,#quests.on,#board.on,#mates.on,#reward.on,#terms.on{max-width:1000px}
+  .qlist{grid-template-columns:1fr 1fr}
+  .clist{grid-template-columns:1fr 1fr}
+  #alist{grid-template-columns:repeat(3,1fr)}
+  #alist .citem{flex-direction:column;align-items:flex-start;gap:14px}
+  .socin{grid-template-columns:repeat(3,1fr)}
+  .perks{grid-template-columns:1fr 1fr}
+  #scan.on,#profile.on,#reward.on{max-width:760px}
+}
 </style>
 </head>
 <body>
@@ -236,9 +352,18 @@ kbd{font:700 12px 'JetBrains Mono',monospace;color:var(--text);background:#18212
 
   <!-- INTRO -->
   <section class="screen on" id="intro">
+   <div class="col-l">
     <h1>GG<br><span>CARD</span></h1>
-    <p class="lead" id="introLead">1 PC scan. 4 FPS challenges in a 3D arena. 1 holographic card. Find out your OVR before your squad does.</p>
+    <p class="lead" id="introLead">Test your reflexes, your aim and your PC. Get a card that says how good you really are. Then send it to the group chat.</p>
     <div class="prof" id="prof"></div>
+    <p class="note" id="introNote">Needs a mouse and keyboard. The game locks your mouse; press Esc to pause.</p>
+    <div class="steps">
+      <div><b>01</b> We check your device: graphics card, processor, memory, screen.</div>
+      <div id="step2"><b>02</b> You drop into a 3D arena for quick draw, flick shots, tracking and a parkour run.</div>
+      <div><b>03</b> You get a 3D card with your OVR, rarity and 6 stats. One run every 4 hours, so make it count.</div>
+    </div>
+   </div>
+   <div class="col-r">
     <nav class="menu" id="menu" hidden>
       <button class="mi play" id="go"><span class="ic">▶</span><span><b>Play</b><small id="cool">Scan + 4 tests = new card</small></span></button>
       <button class="mi" id="mCards"><span class="ic">◆</span><span><b>My cards</b><small>your PC and mobile cards</small></span></button>
@@ -249,12 +374,14 @@ kbd{font:700 12px 'JetBrains Mono',monospace;color:var(--text);background:#18212
       <button class="mi" id="mQuests"><span class="ic">✦</span><span><b>Quests</b><small id="questSmall">unlock special card designs</small></span></button>
       <button class="mi" id="mProfile"><span class="ic">●</span><span><b>Profile</b><small>gamertag, photo, card design</small></span></button>
     </nav>
-    <p class="note" id="introNote">Needs a mouse + keyboard. Your mouse gets locked in the game; press Esc to pause.</p>
-    <div class="steps">
-      <div><b>01</b> We scan your device: GPU, CPU, RAM, refresh rate.</div>
-      <div id="step2"><b>02</b> You drop into the arena: quick draw, flick shots, tracking and a parkour run.</div>
-      <div><b>03</b> You get a 3D card with your OVR, rarity and 6 stats. One run every 4 hours.</div>
+    <div class="signin-hint" id="signinHint">
+      <b>Sign in to unlock all of this</b>
+      <div class="lockgrid">
+        <span>▶ Play</span><span>◆ My cards</span><span># Leaderboard</span><span>✚ Find teammates</span>
+        <span>◉ Minigames</span><span>✦ Quests</span><span>🎁 Free reward</span><span>● Card designs</span>
+      </div>
     </div>
+   </div>
   </section>
 
   <!-- PROFILE -->
@@ -351,6 +478,7 @@ kbd{font:700 12px 'JetBrains Mono',monospace;color:var(--text);background:#18212
 
   <!-- RESULT -->
   <section class="screen" id="result">
+   <div class="col-l">
     <div class="res-head">
       <div class="kicker" id="rKick">Your card</div>
       <h2 id="rTitle"></h2>
@@ -368,9 +496,12 @@ kbd{font:700 12px 'JetBrains Mono',monospace;color:var(--text);background:#18212
       <button class="btn ghost" id="share">Share</button>
       <button class="btn ghost" id="again">← Menu</button>
     </div>
+   </div>
+   <div class="col-r">
     <div class="breakdown" id="bd"></div>
     <div class="tip" id="tip"></div>
     <div class="lb" id="lb" hidden></div>
+   </div>
   </section>
 </div>
 
@@ -476,7 +607,7 @@ function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add
 /* ---------- INTRO ---------- */
 if (MOBILE) {
   $('#introNote').textContent = 'Mobile mode: 4 touch tests and a MOBILE card. On a PC you get the 3D FPS tests and a separate PC card.';
-  $('#introLead').textContent = '1 phone scan. 4 touch challenges. 1 holographic MOBILE card. Find out your OVR before your squad does.';
+  $('#introLead').textContent = 'Test your reflexes and your thumbs. Get a MOBILE card that says how good you really are. Then send it to the group chat.';
   $('#step2').innerHTML = '<b>02</b> You take 4 touch tests: quick draw, tap targets, finger tracking and tap speed.';
 }
 $('#name').addEventListener('input', e => { $('#cnt').textContent = e.target.value.length + '/14'; });
@@ -633,6 +764,7 @@ async function saveCard(card) {
 function updateCooldown() {
   const left = cooldownLeft(), c = ME && ME.cards && ME.cards[PLAT];
   $('#menu').hidden = !!FB && !ME; // online mode: sign in first
+  $('#signinHint').hidden = !$('#menu').hidden;
   $('#go').disabled = left > 0 && !skipsLeft();
   $('#cool').textContent = left > 0 ? (skipsLeft() ? `cooldown ${fmtLeft(left)} · tap to use your free skip` : `next ${PLAT_NAME} run in ${fmtLeft(left)}`)
     : c ? `new run replaces your ${c.ovr} OVR ${PLAT_NAME} card` : `scan + 4 tests = your ${PLAT_NAME} card`;
@@ -2424,4 +2556,3 @@ window.GG = { S, G, reveal, showCard, playGame, DESIGNS, QUESTS, unlockedDesigns
 </script>
 </body>
 </html>
-
