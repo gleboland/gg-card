@@ -76,6 +76,43 @@ input[type=text]:focus{border-color:var(--acc)}
 .mi.play:disabled .ic{background:#18212e;color:var(--muted)}
 .mi.play:disabled small{color:var(--muted)}
 .back{margin-top:12px}
+.citem .best{font:12px 'JetBrains Mono',monospace;color:var(--acc)}
+.citem div{color:var(--muted);font-size:15px}
+.find{display:flex;gap:8px;margin:12px 0}
+.find input{flex:1;background:var(--panel);border:1px solid var(--line);color:var(--text);font:700 16px 'Chakra Petch',sans-serif;padding:10px 12px;border-radius:10px;outline:none;text-transform:uppercase}
+.find .btn{font-size:14px;padding:10px 16px}
+#findRes{margin-bottom:12px}
+.lb div[data-uid]{cursor:pointer}
+.lb div[data-uid]:hover b{text-decoration:underline}
+.lb .vb{background:none;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:4px 10px;font:700 12px 'JetBrains Mono',monospace;cursor:pointer}
+.qlist{display:grid;gap:10px;margin-bottom:6px}
+.quest{display:flex;gap:14px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.quest.done{border-color:#2b5c43}
+.quest .sw{width:46px;height:64px;border-radius:8px;flex:none;background:linear-gradient(160deg,var(--a),var(--b));border:2px solid var(--c);position:relative}
+.quest .sw::after{content:'';position:absolute;inset:0;border-radius:6px;background:var(--p,none)}
+.quest div.q{flex:1}
+.quest b{display:block;font-size:17px}
+.quest small{display:block;color:var(--muted);font-size:14px;margin:2px 0 8px}
+.qbar{height:6px;background:#18212e;border-radius:3px;overflow:hidden}
+.qbar i{display:block;height:100%;background:var(--acc)}
+.quest .st{font:12px 'JetBrains Mono',monospace;color:var(--muted);margin-top:6px}
+.quest.done .st{color:var(--acc)}
+.designs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.dz{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:6px 12px 6px 6px;font:700 13px 'Chakra Petch',sans-serif;cursor:pointer}
+.dz i{width:22px;height:30px;border-radius:5px;background:linear-gradient(160deg,var(--a),var(--b));border:1px solid var(--c)}
+.dz.on{border-color:var(--acc);box-shadow:0 0 0 2px rgba(57,255,159,.25)}
+.dz.locked{opacity:.4;cursor:not-allowed}
+.arcov{position:fixed;inset:0;background:#0b1018;z-index:15;display:flex;flex-direction:column;user-select:none;-webkit-user-select:none}
+.arcbar{display:flex;align-items:center;gap:16px;padding:12px 16px;border-bottom:1px solid var(--line);font:14px 'JetBrains Mono',monospace}
+.arcbar b{font:700 18px 'Chakra Petch',sans-serif;color:var(--acc)}
+.arcbar span{flex:1;color:var(--text)}
+.arcpad{position:relative;flex:1;overflow:hidden;touch-action:none;cursor:crosshair;font:700 clamp(28px,5vw,44px) 'Chakra Petch',sans-serif;text-align:center}
+.arcpad canvas{display:block;width:100%;height:100%}
+.arcpad .padmsg small{display:block;font:400 14px 'JetBrains Mono',monospace;color:var(--muted);margin-top:10px}
+.simon{position:absolute;inset:0;margin:auto;width:min(80vw,62vh);height:min(80vw,62vh);display:grid;grid-template-columns:1fr 1fr;gap:14px;top:-40px}
+.simon button{border:0;border-radius:22px;background:var(--c);opacity:.35;cursor:pointer;transition:opacity .08s,transform .08s}
+.simon button.on{opacity:1;transform:scale(1.03);box-shadow:0 0 30px var(--c)}
+.simmsg{position:absolute;left:0;right:0;bottom:20px;font:700 22px 'Chakra Petch',sans-serif;color:var(--muted)}
 .clist{display:grid;gap:10px;margin-bottom:6px}
 .citem{display:flex;align-items:center;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
 .citem .ovr{font:700 40px/1 'Chakra Petch',sans-serif;color:var(--acc);min-width:2ch}
@@ -187,7 +224,9 @@ kbd{font:700 12px 'JetBrains Mono',monospace;color:var(--text);background:#18212
       <button class="mi play" id="go"><span class="ic">▶</span><span><b>Play</b><small id="cool">Scan + 4 tests = new card</small></span></button>
       <button class="mi" id="mCards"><span class="ic">◆</span><span><b>My cards</b><small>your PC and mobile cards</small></span></button>
       <button class="mi" id="mBoard"><span class="ic">#</span><span><b>Leaderboard</b><small>top 10 on PC and mobile</small></span></button>
-      <button class="mi" id="mProfile"><span class="ic">●</span><span><b>Profile</b><small>gamertag, photo, card colors</small></span></button>
+      <button class="mi" id="mArcade"><span class="ic">◉</span><span><b>Minigames</b><small>3 quick games, no cooldown</small></span></button>
+      <button class="mi" id="mQuests"><span class="ic">✦</span><span><b>Quests</b><small id="questSmall">unlock special card designs</small></span></button>
+      <button class="mi" id="mProfile"><span class="ic">●</span><span><b>Profile</b><small>gamertag, photo, card design</small></span></button>
     </nav>
     <p class="note" id="introNote">Needs a mouse + keyboard. Your mouse gets locked in the game; press Esc to pause.</p>
     <div class="steps">
@@ -210,6 +249,8 @@ kbd{font:700 12px 'JetBrains Mono',monospace;color:var(--text);background:#18212
       <input type="file" id="file" accept="image/*" hidden>
     </label>
     <label class="match" id="matchRow" hidden><input type="checkbox" id="match" checked> Match my card's colors to my photo</label>
+    <div class="label"><span>Card design</span><span>unlock more in Quests</span></div>
+    <div class="designs" id="designs"></div>
     <button class="btn full" id="pSave">Save</button>
     <button class="btn ghost full back" data-back>← Menu</button>
   </section>
@@ -223,10 +264,31 @@ kbd{font:700 12px 'JetBrains Mono',monospace;color:var(--text);background:#18212
     <button class="btn ghost full back" data-back>← Menu</button>
   </section>
 
+  <!-- ARCADE -->
+  <section class="screen" id="arcade">
+    <div class="kicker">Menu · Minigames</div>
+    <h2>Minigames</h2>
+    <p class="lead">Quick minigames for fun. They don’t change your card, but they count for quests.</p>
+    <div class="clist" id="alist"></div>
+    <button class="btn ghost full back" data-back>← Menu</button>
+  </section>
+
+  <!-- QUESTS -->
+  <section class="screen" id="quests">
+    <div class="kicker">Menu · Quests</div>
+    <h2>Quests</h2>
+    <p class="lead">Each quest unlocks a special card design. Pick it in Profile.</p>
+    <div class="qlist" id="qlist"></div>
+    <button class="btn ghost full back" data-back>← Menu</button>
+  </section>
+
   <!-- LEADERBOARD -->
   <section class="screen" id="board">
     <div class="kicker">Menu · Leaderboard</div>
     <h2>Leaderboard</h2>
+    <p class="note">Tap a player to see their card.</p>
+    <div class="find"><input type="text" id="findName" maxlength="14" placeholder="Find a player by gamertag" autocomplete="off"><button class="btn ghost" id="findGo">Find</button></div>
+    <div class="lb" id="findRes" hidden></div>
     <div class="lb" id="lb2"></div>
     <button class="btn ghost full back" data-back>← Menu</button>
   </section>
@@ -297,6 +359,19 @@ kbd{font:700 12px 'JetBrains Mono',monospace;color:var(--text);background:#18212
       <div class="tscore" id="tScore"></div>
       <div class="tdetail" id="tDetail"></div>
       <button class="btn full" id="tNext">Next test →</button>
+    </div>
+  </div>
+</div>
+<!-- ARCADE GAME OVERLAY -->
+<div class="arcov" id="arcadeOv" hidden>
+  <div class="arcbar"><b id="arcTitle"></b><span id="arcScore"></span><button class="link" id="arcQuit">✕ Quit</button></div>
+  <div class="arcpad" id="arcPad"></div>
+  <div class="ov" id="arcRes" hidden>
+    <div class="panel" style="text-align:center">
+      <div class="kicker" id="arcResKick"></div>
+      <div class="tscore" id="arcResScore"></div>
+      <div class="tdetail" id="arcResDetail"></div>
+      <div class="row"><button class="btn" id="arcAgain">Play again</button><button class="btn ghost" id="arcBack">← Minigames</button></div>
     </div>
   </div>
 </div>
@@ -430,7 +505,7 @@ function writePlayer(fields) {
   return Promise.resolve();
 }
 function saveProfile(p) {
-  return writePlayer({ name: p.name, photo: p.photo || null, match: p.match !== false }).catch(e => toast('Could not save: ' + e.code));
+  return writePlayer({ name: p.name, photo: p.photo || null, match: p.match !== false, design: p.design || 'classic' }).catch(e => toast('Could not save: ' + e.code));
 }
 
 /* one run per platform every 4 hours; the run is stamped when it starts,
@@ -471,13 +546,225 @@ function ensureMe() {
 }
 function toMenu() { V.on = false; show('intro', 'Menu'); renderProfiles(); }
 document.querySelectorAll('[data-back]').forEach(b => b.onclick = toMenu);
-$('#mProfile').onclick = () => show('profile', 'Profile');
+$('#mProfile').onclick = () => { renderDesignPicker(); show('profile', 'Profile'); };
+$('#mArcade').onclick = () => { renderArcade(); show('arcade', 'Minigames'); };
+$('#mQuests').onclick = () => { renderQuests(); show('quests', 'Quests'); };
+
+/* ---------- special card designs (unlocked by quests) ---------- */
+const DESIGNS = {
+  classic: { label: 'Classic', sw: ['#1c2733', '#3a4b60', '#39ff9f'] },
+  carbon: { label: 'Carbon', bg: ['#0b0d10', '#191d23', '#2b3038'], acc: '#d0d6de', ink: '#ffffff', foil: .12, pattern: 'carbon' },
+  gold: { label: 'Gold Foil', bg: ['#2e1f03', '#9a7012', '#f0cc62'], acc: '#fff1bf', ink: '#fffaf0', foil: .5, pattern: 'shine' },
+  galaxy: { label: 'Galaxy', bg: ['#04021a', '#170c45', '#3d0e5f'], acc: '#cdb8ff', ink: '#ffffff', foil: .45, pattern: 'stars' },
+  dual: { label: 'Dual', bg: ['#003a40', '#13203f', '#3d0d4f'], acc: '#7ff0ff', acc2: '#ff7ad9', ink: '#ffffff', foil: .3, pattern: 'split' },
+  flame: { label: 'Flame', bg: ['#140300', '#5c1200', '#d9500f'], acc: '#ffd06b', ink: '#fff4e6', foil: .3, pattern: 'flames' },
+  ice: { label: 'Ice', bg: ['#03111d', '#0e3a5c', '#79c2e6'], acc: '#e8f8ff', ink: '#ffffff', foil: .35, pattern: 'frost' },
+  shadow: { label: 'Shadow', bg: ['#000000', '#0a0a0f', '#191924'], acc: '#a3a8ff', ink: '#e9eaff', foil: .15, pattern: 'smoke' },
+  lava: { label: 'Lava', bg: ['#100200', '#3a0900', '#7a1800'], acc: '#ff8a3d', ink: '#fff0e6', foil: .25, pattern: 'cracks' },
+  retro: { label: 'Retro', bg: ['#140a2b', '#3a1a5e', '#ff5e8a'], acc: '#ffd84d', ink: '#ffffff', foil: .3, pattern: 'sunset' },
+};
+const swatch = k => { const d = DESIGNS[k], s = d.sw || [d.bg[0], d.bg[2], d.acc]; return `--a:${s[0]};--b:${s[1]};--c:${s[2]}`; };
+
+/* ---------- quests ---------- */
+const myCards = m => ['pc', 'mobile'].filter(p => m && m.cards && m.cards[p]);
+const bestOvr = m => Math.max(m && m.bestOvr || 0, ...myCards(m).map(p => m.cards[p].ovr), 0);
+const miniBest = (m, k) => (m && m.mini && m.mini[k] != null) ? m.mini[k] : 0;
+const QUESTS = [
+  { title: 'Rookie', desc: 'Make your first card', reward: 'carbon', prog: m => [myCards(m).length ? 1 : 0, 1] },
+  { title: 'Gold Standard', desc: 'Get a card with 75+ OVR', reward: 'gold', prog: m => [Math.min(bestOvr(m), 75), 75] },
+  { title: 'Elite', desc: 'Get a card with 85+ OVR', reward: 'galaxy', prog: m => [Math.min(bestOvr(m), 85), 85] },
+  { title: 'Two Worlds', desc: 'Have a PC card and a Mobile card', reward: 'dual', prog: m => [myCards(m).length, 2] },
+  { title: 'Rusher', desc: 'Score 40 in Target Rush', reward: 'flame', prog: m => [Math.min(miniBest(m, 'rush'), 40), 40] },
+  { title: 'Big Brain', desc: 'Reach level 10 in Simon Says', reward: 'ice', prog: m => [Math.min(miniBest(m, 'simon'), 10), 10] },
+  { title: 'Untouchable', desc: 'Survive 30 seconds in Dodge', reward: 'shadow', prog: m => [Math.min(Math.floor(miniBest(m, 'dodge')), 30), 30] },
+  { title: 'Floor is Lava', desc: 'Finish the Parkour run without falling', reward: 'lava', prog: m => [m && m.flags && m.flags.cleanRun ? 1 : 0, 1] },
+  { title: 'Minigame Fan', desc: 'Play all 3 minigames', reward: 'retro', prog: m => [['rush', 'simon', 'dodge'].filter(k => m && m.mini && m.mini[k] != null).length, 3] },
+];
+const questDone = (q, m) => { const [a, b] = q.prog(m); return a >= b; };
+const unlockedDesigns = m => ['classic', ...QUESTS.filter(q => questDone(q, m)).map(q => q.reward)];
+// call before and after progress; celebrates anything newly unlocked
+function announceUnlocks(before) {
+  unlockedDesigns(ME).filter(d => !before.includes(d)).forEach((d, i) => setTimeout(() => toast(`Quest complete! ${DESIGNS[d].label} design unlocked`), i * 2400));
+}
+function renderQuests() {
+  const done = QUESTS.filter(q => questDone(q, ME)).length;
+  $('#qlist').innerHTML = (ME ? '' : '<p class="note warn">Sign in to save quest progress.</p>') + QUESTS.map(q => {
+    const [a, b] = q.prog(ME), ok = a >= b;
+    return `<div class="quest ${ok ? 'done' : ''}"><span class="sw" style="${swatch(q.reward)}"></span><div class="q"><b>${q.title}</b><small>${q.desc}</small>
+      <div class="qbar"><i style="width:${Math.round(Math.min(1, a / b) * 100)}%"></i></div>
+      <div class="st">${ok ? `✓ ${DESIGNS[q.reward].label} design unlocked` : `${a}/${b} · reward: ${DESIGNS[q.reward].label} design`}</div></div></div>`;
+  }).join('');
+  $('#questSmall').textContent = `${done}/${QUESTS.length} done · unlock special card designs`;
+}
+function renderDesignPicker() {
+  const un = unlockedDesigns(ME);
+  if (!un.includes(S.design)) S.design = 'classic';
+  $('#designs').innerHTML = Object.keys(DESIGNS).map(k => `<button class="dz ${un.includes(k) ? '' : 'locked'} ${S.design === k ? 'on' : ''}" data-d="${k}" style="${swatch(k)}" type="button"><i></i>${DESIGNS[k].label}${un.includes(k) ? '' : ' 🔒'}</button>`).join('');
+  $('#designs').querySelectorAll('.dz').forEach(b => b.onclick = () => {
+    if (b.classList.contains('locked')) return toast(`Unlock ${DESIGNS[b.dataset.d].label} in Quests`);
+    S.design = b.dataset.d; renderDesignPicker();
+  });
+}
+
+/* ---------- arcade: quick minigames, best scores count for quests ---------- */
+let arcStop = null, arcGame = null;
+const arcScore = t => { $('#arcScore').textContent = t; };
+function tone(f, d = .15) {
+  try {
+    const a = AC || (AC = new (window.AudioContext || window.webkitAudioContext)()), o = a.createOscillator(), g = a.createGain();
+    o.frequency.value = f; g.gain.setValueAtTime(.12, a.currentTime); g.gain.exponentialRampToValueAtTime(.001, a.currentTime + d);
+    o.connect(g); g.connect(a.destination); o.start(); o.stop(a.currentTime + d);
+  } catch (e) {}
+}
+function gameRush(done) {
+  const A = $('#arcPad'), D = 30;
+  A.innerHTML = `<div class="padmsg">${ACT_UP} to start<small>${D} seconds · hit as many targets as you can · they shrink</small></div>`;
+  let t0 = 0, hits = 0, miss = 0, cur = null, el = null, iv;
+  const radius = () => Math.max(15, 34 - (performance.now() - t0) / 1000 * .65);
+  const spawn = () => {
+    const w = A.clientWidth, h = A.clientHeight, r = radius();
+    cur = { x: rand(r + 10, w - r - 10), y: rand(r + 10, h - r - 10), r };
+    if (!el) { el = document.createElement('div'); el.className = 'ftarget'; A.appendChild(el); }
+    Object.assign(el.style, { left: cur.x + 'px', top: cur.y + 'px', width: 2 * r + 'px', height: 2 * r + 'px' });
+  };
+  const tick = () => {
+    const left = D - (performance.now() - t0) / 1000;
+    arcScore(`HITS ${hits} · MISSES ${miss} · ${Math.max(0, left).toFixed(1)}s`);
+    if (left <= 0) { clearInterval(iv); cur = null; const s = Math.max(0, hits - Math.floor(miss / 3)); done(s, `${hits} hits, ${miss} misses (every 3 misses cost a point)`); }
+  };
+  A.onpointerdown = e => {
+    if (!t0) { A.innerHTML = ''; t0 = performance.now(); spawn(); iv = setInterval(tick, 100); return; }
+    if (!cur) return;
+    const p = padPos(A, e);
+    if (Math.hypot(p.x - cur.x, p.y - cur.y) <= cur.r + 6) { hits++; tone(880, .05); spawn(); } else miss++;
+  };
+  return () => clearInterval(iv);
+}
+function gameSimon(done) {
+  const A = $('#arcPad'), cols = ['#e5484d', '#30a46c', '#0091ff', '#f5d90a'];
+  A.innerHTML = `<div class="simon">${cols.map((c, i) => `<button data-i="${i}" style="--c:${c}"></button>`).join('')}</div><div class="simmsg" id="simMsg"></div>`;
+  const pads = [...A.querySelectorAll('.simon button')], timers = [], later = (f, t) => timers.push(setTimeout(f, t));
+  let seq = [], step = 0, input = false;
+  const msg = t => { $('#simMsg').textContent = t; };
+  const flash = (i, d) => { pads[i].classList.add('on'); tone(330 + i * 110, d / 1000); later(() => pads[i].classList.remove('on'), d); };
+  const next = () => {
+    seq.push(Math.floor(Math.random() * 4)); step = 0; input = false;
+    arcScore(`LEVEL ${seq.length}`); msg('Watch…');
+    const gap = Math.max(260, 620 - seq.length * 25); // speeds up as it grows
+    seq.forEach((v, k) => later(() => flash(v, gap * .7), 700 + k * gap));
+    later(() => { input = true; msg('Your turn'); }, 700 + seq.length * gap);
+  };
+  pads.forEach(p => p.onpointerdown = () => {
+    if (!input) return;
+    const i = +p.dataset.i;
+    flash(i, 180);
+    if (i !== seq[step]) { input = false; msg('Wrong!'); const lvl = seq.length - 1; later(() => done(lvl, `you repeated ${lvl} pattern${lvl === 1 ? '' : 's'}`), 700); return; }
+    if (++step === seq.length) { input = false; msg('Nice!'); later(next, 600); }
+  });
+  next();
+  return () => timers.forEach(clearTimeout);
+}
+function gameDodge(done) {
+  const A = $('#arcPad');
+  A.innerHTML = `<canvas></canvas><div class="padmsg" id="dmsg">Move to start<small>dodge the falling blocks · mouse or finger</small></div>`;
+  const cv = A.querySelector('canvas'), c = cv.getContext('2d'), W = cv.width = A.clientWidth, H = cv.height = A.clientHeight;
+  let px = W / 2, py = H * .8, t0 = 0, last = 0, t = 0, blocks = [], spawnT = 0, raf;
+  c.fillStyle = '#0b1018'; c.fillRect(0, 0, W, H);
+  A.onpointermove = A.onpointerdown = e => {
+    const p = padPos(A, e); px = p.x; py = p.y;
+    if (!t0) { t0 = last = performance.now(); const m = $('#dmsg'); if (m) m.remove(); raf = requestAnimationFrame(frame); }
+  };
+  function frame(now) {
+    // only time actually played counts, so pausing the tab can't pile up a fake score
+    const dt = clamp((now - last) / 1000, 0, .05); last = now; t += dt;
+    spawnT -= dt;
+    if (spawnT <= 0) { // more, bigger and faster blocks over time
+      const s = rand(18, 40 + t * 1.2);
+      blocks.push({ x: rand(0, W - s), y: -s, s, v: rand(160, 260) + t * 14 });
+      spawnT = Math.max(.1, .5 - t * .012);
+    }
+    c.fillStyle = '#0b1018'; c.fillRect(0, 0, W, H);
+    c.fillStyle = '#c8102e';
+    for (const b of blocks) { b.y += b.v * dt; c.fillRect(b.x, b.y, b.s, b.s); }
+    blocks = blocks.filter(b => b.y < H + 60);
+    c.fillStyle = '#39ff9f'; c.beginPath(); c.arc(px, py, 10, 0, Math.PI * 2); c.fill();
+    arcScore(`${t.toFixed(1)} s`);
+    if (blocks.some(b => px + 8 > b.x && px - 8 < b.x + b.s && py + 8 > b.y && py - 8 < b.y + b.s)) {
+      tone(140, .3); return done(Math.round(t * 10) / 10, `you survived ${t.toFixed(1)} seconds`);
+    }
+    raf = requestAnimationFrame(frame);
+  }
+  return () => cancelAnimationFrame(raf);
+}
+const GAMES = {
+  rush: { title: 'Target Rush', desc: '30 seconds. Hit as many targets as you can while they shrink.', fn: gameRush, fmt: v => `${v} pts` },
+  simon: { title: 'Simon Says', desc: 'Watch the colors, then repeat them. One more every round.', fn: gameSimon, fmt: v => `level ${v}` },
+  dodge: { title: 'Dodge', desc: 'Move with your mouse or finger and dodge the falling blocks.', fn: gameDodge, fmt: v => `${v} s` },
+};
+function renderArcade() {
+  $('#alist').innerHTML = Object.entries(GAMES).map(([k, g]) => `<div class="citem"><div><small>${g.title}</small>${g.desc}<br><span class="best">${ME && ME.mini && ME.mini[k] != null ? `Your best: ${g.fmt(ME.mini[k])}` : 'Not played yet'}</span></div><button class="btn" data-g="${k}">Play</button></div>`).join('')
+    + (ME ? '' : '<p class="note warn">Sign in to save your best scores.</p>');
+  $('#alist').querySelectorAll('[data-g]').forEach(b => b.onclick = () => playGame(b.dataset.g));
+}
+function stopGame() { if (arcStop) arcStop(); arcStop = null; const A = $('#arcPad'); A.onpointerdown = A.onpointermove = null; }
+function playGame(k) {
+  stopGame(); arcGame = k;
+  const g = GAMES[k], A = $('#arcPad');
+  $('#arcadeOv').hidden = false; $('#arcRes').hidden = true;
+  $('#arcTitle').textContent = g.title; arcScore(''); A.innerHTML = '';
+  arcStop = g.fn(async (score, detail) => {
+    stopGame();
+    const before = unlockedDesigns(ME), prev = ME && ME.mini ? ME.mini[k] : undefined;
+    const isBest = prev == null || score > prev;
+    if (ME && isBest) {
+      ME.mini = { ...(ME.mini || {}), [k]: score };
+      await writePlayer({ mini: { [k]: score } }).catch(e => toast('Could not save: ' + e.code));
+      announceUnlocks(before);
+    }
+    $('#arcResKick').textContent = g.title + (ME && isBest && prev != null ? ' · New best!' : '');
+    $('#arcResScore').textContent = g.fmt(score);
+    $('#arcResDetail').textContent = detail + (ME ? ` · best: ${g.fmt(ME.mini[k])}` : ' · sign in to save it');
+    $('#arcRes').hidden = false;
+  });
+}
+$('#arcQuit').onclick = $('#arcBack').onclick = () => { stopGame(); $('#arcadeOv').hidden = true; renderArcade(); };
+$('#arcAgain').onclick = () => playGame(arcGame);
+
+/* ---------- other players' cards ---------- */
+const ownerOf = p => ({ name: p.name, photo: p.photo || null, match: p.match !== false, design: p.design || 'classic' });
+function viewButtons(id, p) {
+  return ['pc', 'mobile'].filter(k => p.cards && p.cards[k]).map(k => `<button class="vb" data-uid="${id}" data-p="${k}">${k === 'pc' ? 'PC' : 'Mobile'} ${p.cards[k].ovr}</button>`).join(' ');
+}
+const lbCache = {};
+async function findPlayer() {
+  const el = $('#findRes'), name = $('#findName').value.trim().toUpperCase();
+  if (!name) return;
+  el.hidden = false;
+  if (!FB) { el.innerHTML = '<p class="note">Search needs online accounts.</p>'; return; }
+  el.innerHTML = '<p class="note">Searching…</p>';
+  try {
+    const { F, db } = FB;
+    const snap = await F.getDocs(F.query(F.collection(db, 'players'), F.where('name', '==', name), F.limit(5)));
+    if (snap.empty) { el.innerHTML = `<p class="note">No player called ${esc(name)}.</p>`; return; }
+    el.innerHTML = snap.docs.map(d => { const p = d.data(); lbCache[d.id] = p; return `<div>${avatar(p)}<b>${esc(p.name)}</b>${viewButtons(d.id, p) || '<span>no cards yet</span>'}</div>`; }).join('');
+    el.querySelectorAll('.vb').forEach(b => b.onclick = () => openOther(b.dataset.uid, b.dataset.p));
+  } catch (e) { el.innerHTML = `<p class="note warn">Search failed (${esc(e.code || e.message)}).</p>`; }
+}
+$('#findGo').onclick = findPlayer;
+$('#findName').addEventListener('keydown', e => { if (e.key === 'Enter') findPlayer(); });
+function openOther(uid, plat) {
+  const p = lbCache[uid];
+  if (!p || !p.cards || !p.cards[plat]) return;
+  const mine = FB && FB.user && uid === FB.user.uid;
+  showCard(p.cards[plat], plat, mine ? {} : { owner: ownerOf(p) });
+}
 $('#mBoard').onclick = () => { show('board', 'Leaderboard'); lbPlat = PLAT; loadLeaderboard($('#lb2')); };
 $('#mCards').onclick = () => { renderCardList(); show('cards', 'My cards'); };
 $('#pSave').onclick = async () => {
   const me = ensureMe();
   if (!me) return toMenu();
   me.name = ($('#name').value.trim() || 'PLAYER').toUpperCase(); me.photo = S.photoURL || null; me.match = S.matchPhoto;
+  me.design = unlockedDesigns(me).includes(S.design) ? S.design : 'classic';
   await saveProfile(me);
   toast('Profile saved'); toMenu();
 };
@@ -529,6 +816,7 @@ async function signIn(p) {
   if (!FB) store.set('gg-current', p.id);
   $('#name').value = p.name; $('#cnt').textContent = p.name.length + '/14';
   S.matchPhoto = p.match !== false; $('#match').checked = S.matchPhoto;
+  S.design = p.design || 'classic';
   if (p.photo) await setPhoto(p.photo); else clearPhoto();
   renderProfiles();
 }
@@ -573,9 +861,12 @@ async function loadLeaderboard(el = $('#lb')) {
     const snap = await F.getDocs(F.query(F.collection(db, 'players'), F.orderBy(`cards.${lbPlat}.ovr`, 'desc'), F.limit(10)));
     const rows = snap.docs.map((d, i) => {
       const p = d.data(), c = p.cards[lbPlat], me = FB.user && d.id === FB.user.uid;
-      return `<div class="${me ? 'you' : ''}"><span class="rk">${i + 1}</span>${avatar(p)}<b>${esc(p.name)}</b><span>${esc(c.rar)}</span><i>${c.ovr}</i></div>`;
+      lbCache[d.id] = p;
+      return `<div class="${me ? 'you' : ''}" data-uid="${d.id}" title="See ${esc(p.name)}'s card"><span class="rk">${i + 1}</span>${avatar(p)}<b>${esc(p.name)}</b><span>${esc(c.rar)}</span><i>${c.ovr}</i></div>`;
     });
     el.innerHTML = head + (rows.join('') || '<p class="note">No cards yet. You could be first.</p>');
+    const plat = lbPlat;
+    el.querySelectorAll('[data-uid]').forEach(r => r.onclick = () => openOther(r.dataset.uid, plat));
   } catch (e) { el.innerHTML = head + `<p class="note warn">Could not load it (${esc(e.code || e.message)}).</p>`; }
   wire();
 }
@@ -1492,6 +1783,7 @@ function paintBg(c, R, W, H) {
   let g = c.createLinearGradient(0, 0, W, H);
   R.bg.forEach((col, i) => g.addColorStop(i / (R.bg.length - 1), col));
   c.fillStyle = g; c.fillRect(0, 0, W, H);
+  if (R.pattern) { c.save(); PATTERNS[R.pattern](c, R, W, H, seeded(7)); c.restore(); return; }
   if (R.holo) {
     g = c.createLinearGradient(0, H, W, 0);
     ['rgba(0,255,163,.22)', 'rgba(0,179,255,0)', 'rgba(255,61,242,.22)', 'rgba(0,179,255,0)', 'rgba(0,255,163,.18)'].forEach((col, i, a) => g.addColorStop(i / (a.length - 1), col));
@@ -1500,8 +1792,84 @@ function paintBg(c, R, W, H) {
   c.strokeStyle = 'rgba(255,255,255,.045)'; c.lineWidth = 2;
   for (let i = -H; i < W; i += 26) { c.beginPath(); c.moveTo(i, 0); c.lineTo(i + H, H); c.stroke(); }
 }
+// same "random" pattern every time a design is drawn
+function seeded(s) { return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }; }
+const PATTERNS = {
+  carbon(c, R, W, H) { // woven carbon fibre
+    for (let y = 0; y < H; y += 16) for (let x = 0; x < W; x += 16) {
+      const g = ((x + y) / 16) % 2 ? c.createLinearGradient(x, y, x + 16, y) : c.createLinearGradient(x, y, x, y + 16);
+      g.addColorStop(0, 'rgba(255,255,255,.06)'); g.addColorStop(.5, 'rgba(255,255,255,.14)'); g.addColorStop(1, 'rgba(0,0,0,.25)');
+      c.fillStyle = g; c.fillRect(x + 1, y + 1, 14, 14);
+    }
+  },
+  shine(c, R, W, H) { // foil light bands
+    for (const [o, a] of [[-200, .35], [120, .18], [380, .3], [700, .15]]) {
+      const g = c.createLinearGradient(o, 0, o + 260, H * .4);
+      g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(.5, `rgba(255,250,220,${a})`); g.addColorStop(1, 'rgba(255,255,255,0)');
+      c.fillStyle = g; c.fillRect(0, 0, W, H);
+    }
+  },
+  stars(c, R, W, H, rnd) { // nebula clouds and stars
+    for (const [x, y, r, col] of [[200, 300, 380, '255,80,200'], [560, 720, 420, '80,140,255'], [420, 120, 300, '160,90,255']]) {
+      const g = c.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0, `rgba(${col},.32)`); g.addColorStop(1, `rgba(${col},0)`);
+      c.fillStyle = g; c.fillRect(0, 0, W, H);
+    }
+    for (let i = 0; i < 260; i++) { c.fillStyle = `rgba(255,255,255,${.3 + rnd() * .7})`; c.beginPath(); c.arc(rnd() * W, rnd() * H, rnd() * 1.8 + .3, 0, Math.PI * 2); c.fill(); }
+  },
+  split(c, R, W, H) { // two colors split on the diagonal
+    c.fillStyle = hexA(R.acc2, .28); c.beginPath(); c.moveTo(W, 0); c.lineTo(W, H); c.lineTo(0, H); c.closePath(); c.fill();
+    c.strokeStyle = hexA(R.acc, .6); c.lineWidth = 3; c.beginPath(); c.moveTo(W, 0); c.lineTo(0, H); c.stroke();
+  },
+  flames(c, R, W, H, rnd) { // flames rising from the bottom
+    for (let i = 0; i < 16; i++) {
+      const x = rnd() * W, w = 60 + rnd() * 90, h = 260 + rnd() * 420;
+      const g = c.createLinearGradient(0, H, 0, H - h);
+      g.addColorStop(0, 'rgba(255,200,60,.55)'); g.addColorStop(.5, 'rgba(255,90,10,.35)'); g.addColorStop(1, 'rgba(255,60,0,0)');
+      c.fillStyle = g; c.beginPath(); c.moveTo(x - w / 2, H);
+      c.bezierCurveTo(x - w, H - h * .5, x + w * .3, H - h * .6, x, H - h);
+      c.bezierCurveTo(x - w * .2, H - h * .55, x + w, H - h * .4, x + w / 2, H); c.fill();
+    }
+  },
+  frost(c, R, W, H, rnd) { // branching ice crystals
+    c.strokeStyle = 'rgba(230,248,255,.22)'; c.lineCap = 'round';
+    const branch = (x, y, a, len, d) => {
+      if (d > 4 || len < 8) return;
+      const x2 = x + Math.cos(a) * len, y2 = y + Math.sin(a) * len;
+      c.lineWidth = 3 - d * .5; c.beginPath(); c.moveTo(x, y); c.lineTo(x2, y2); c.stroke();
+      branch(x2, y2, a - .6, len * .62, d + 1); branch(x2, y2, a + .6, len * .62, d + 1); branch(x2, y2, a, len * .7, d + 1);
+    };
+    for (let i = 0; i < 9; i++) branch(rnd() * W, rnd() * H, rnd() * Math.PI * 2, 60 + rnd() * 60, 0);
+  },
+  smoke(c, R, W, H, rnd) { // drifting smoke
+    for (let i = 0; i < 22; i++) {
+      const x = rnd() * W, y = rnd() * H, r = 80 + rnd() * 200, g = c.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0, `rgba(150,155,255,${.05 + rnd() * .07})`); g.addColorStop(1, 'rgba(150,155,255,0)');
+      c.fillStyle = g; c.fillRect(0, 0, W, H);
+    }
+  },
+  cracks(c, R, W, H, rnd) { // glowing cracks in rock
+    c.strokeStyle = 'rgba(255,120,30,.75)'; c.shadowColor = '#ff5a00'; c.shadowBlur = 14; c.lineJoin = 'round';
+    for (let i = 0; i < 12; i++) {
+      let x = rnd() * W, y = rnd() * H, a = rnd() * Math.PI * 2;
+      c.lineWidth = 1.5 + rnd() * 2.5; c.beginPath(); c.moveTo(x, y);
+      for (let k = 0; k < 9; k++) { a += (rnd() - .5) * 1.2; x += Math.cos(a) * 34; y += Math.sin(a) * 34; c.lineTo(x, y); }
+      c.stroke();
+    }
+  },
+  sunset(c, R, W, H) { // retro sun and grid
+    const cx = W / 2, cy = H * .62, r = 230, g = c.createLinearGradient(0, cy - r, 0, cy + r);
+    g.addColorStop(0, 'rgba(255,216,77,.55)'); g.addColorStop(1, 'rgba(255,94,138,.45)');
+    c.fillStyle = g; c.beginPath(); c.arc(cx, cy, r, 0, Math.PI * 2); c.fill();
+    c.fillStyle = R.bg[1];
+    for (let i = 0; i < 7; i++) c.fillRect(cx - r, cy + 20 + i * 30, r * 2, 6 + i * 2);
+    c.strokeStyle = 'rgba(255,94,200,.35)'; c.lineWidth = 2;
+    for (let i = 0; i < 9; i++) { const y = H * .8 + i * i * 4; c.beginPath(); c.moveTo(0, y); c.lineTo(W, y); c.stroke(); }
+    for (let i = -8; i <= 8; i++) { c.beginPath(); c.moveTo(cx + i * 20, H * .8); c.lineTo(cx + i * 120, H); c.stroke(); }
+  },
+};
 function paintBorder(c, R, W, H) {
-  if (R.holo) {
+  if (R.holo && !R.pattern) {
     const g = c.createLinearGradient(0, 0, W, H);
     g.addColorStop(0, '#00ffa3'); g.addColorStop(.5, '#00b3ff'); g.addColorStop(1, '#ff3df2');
     c.strokeStyle = g;
@@ -1757,13 +2125,19 @@ function photoTheme(img) {
   const h = bi * 15 + 7.5, s = clamp(Math.round(sat / cnt * 100), 35, 85);
   return { acc: hslHex(h, Math.max(s, 70), 68), bg: [hslHex(h, s * .7, 7), hslHex(h, s * .7, 20), hslHex((h + 25) % 360, s, 36)], ink: '#ffffff' };
 }
+const loadImg = src => new Promise(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
+// your own card uses your live profile; someone else's uses what they saved
+const myOwner = () => ({ mine: true, name: (ME && ME.name) || S.name, img: S.photo, match: S.matchPhoto, design: (ME && ME.design) || 'classic' });
 async function renderCard() {
-  const { ovr, rar, top, keys, platName, stats, rig } = last;
-  const pt = S.photo && S.matchPhoto ? photoTheme(S.photo) : null;
-  const theme = pt ? { ...rar, ...pt } : rar;
-  $('#theme').hidden = !S.photo || !photoTheme(S.photo);
+  const { ovr, rar, top, keys, platName, stats, rig, owner } = last;
+  const img = owner.img !== undefined ? owner.img : owner.photo ? await loadImg(owner.photo) : null;
+  // card look: special design first, then photo colors, then the rarity's colors
+  const des = owner.design && owner.design !== 'classic' && DESIGNS[owner.design] ? DESIGNS[owner.design] : null;
+  const pt = !des && img && owner.match ? photoTheme(img) : null;
+  const theme = des ? { ...rar, ...des } : pt ? { ...rar, ...pt } : rar;
+  $('#theme').hidden = !owner.mine || !!des || !img || !photoTheme(img);
   $('#theme').textContent = `Photo colors: ${S.matchPhoto ? 'on' : 'off'}`;
-  await drawCard({ ...rig, gpu: rig.gpu || 'Unknown GPU', name: (ME && ME.name) || S.name, photo: S.photo, stats, keys, platName, ovr, rar: theme, code: CLASS[top].code, cls: CLASS[top].name });
+  await drawCard({ ...rig, gpu: rig.gpu || 'Unknown GPU', name: owner.name, photo: img, stats, keys, platName, ovr, rar: theme, code: CLASS[top].code, cls: CLASS[top].name });
   initViewer();
   V.frontTex.needsUpdate = true;
   buildCard(theme);
@@ -1779,28 +2153,39 @@ async function reveal() {
   const card = { ovr, rar: rar.name, top, stats: { ...st }, res: { ...S.res },
     rig: { gpu: p.gpu || null, gpuPts: p.gpuPts || null, cores: p.cores || null, cpu1: p.cpu1 || null, cpuN: p.cpuN || null, mem: p.mem || null, hz: p.hz || null, fps: p.fps || null, parts: p.parts || {} } };
   const prev = ME && ME.cards && ME.cards[PLAT];
-  if (ME) await saveCard(card);
+  const before = unlockedDesigns(ME);
+  if (ME) {
+    await saveCard(card);
+    // quest progress that outlives the card itself
+    const extra = {};
+    if (ovr > (ME.bestOvr || 0)) { ME.bestOvr = ovr; extra.bestOvr = ovr; }
+    if (!MOBILE && /· 0 falls/.test(S.res.MOV || '')) { ME.flags = { ...(ME.flags || {}), cleanRun: true }; extra.flags = { cleanRun: true }; }
+    if (Object.keys(extra).length) await writePlayer(extra).catch(() => {});
+  }
   await showCard(card, PLAT, { fresh: true, prev });
+  if (ME) announceUnlocks(before);
 }
 
 // shows a card: right after a run, or a saved one from "My cards"
 let last = null;
-async function showCard(card, plat, { fresh = false, prev = null } = {}) {
-  show('result', fresh ? 'New card' : 'My cards');
+async function showCard(card, plat, { fresh = false, prev = null, owner = null } = {}) {
+  show('result', fresh ? 'New card' : owner ? 'Player card' : 'My cards');
+  owner = owner || myOwner();
   const keys = plat === 'pc' ? KEYS_PC : KEYS_MOBILE, platName = plat === 'pc' ? 'PC' : 'MOBILE';
   const tests = plat === 'pc' ? TESTS_PC : TESTS_MOBILE;
   const st = card.stats, rig = card.rig || {}, res = card.res || {}, parts = rig.parts || {};
   const rar = RAR.find(r => r.name === card.rar) || RAR.find(r => card.ovr >= r.min);
   const low = keys.reduce((a, k) => st[k] < st[a] ? k : a);
-  last = { ovr: card.ovr, rar, top: card.top, keys, platName, stats: st, rig };
+  last = { ovr: card.ovr, rar, top: card.top, keys, platName, stats: st, rig, owner };
   lbPlat = plat; loadLeaderboard();
-  $('#rKick').textContent = `${platName} card · ${rar.name} · ${card.ovr} OVR`;
+  $('#rKick').textContent = `${owner.mine ? '' : owner.name + '’s '}${platName} card · ${rar.name} · ${card.ovr} OVR`;
   const cls = CLASS[card.top].name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-  $('#rTitle').textContent = `You're ${/^[aeiou]/i.test(cls) ? 'an' : 'a'} ${cls}.`;
+  const article = /^[aeiou]/i.test(cls) ? 'an' : 'a';
+  $('#rTitle').textContent = owner.mine ? `You're ${article} ${cls}.` : `${owner.name} is ${article} ${cls}.`;
   const when = ms(card.at) ? new Date(ms(card.at)).toLocaleString() : '';
   $('#rSub').textContent = fresh
     ? rar.sub + (prev ? ` · Your old ${platName} card was ${prev.ovr} OVR.` : '') + (isOwner() ? ' No cooldown for you.' : ' Next run in 4 hours.')
-    : `Saved ${when}.`;
+    : owner.mine ? `Saved ${when}.` : `Made ${when}. Think you can beat it?`;
   if (fresh && prev && card.ovr > prev.ovr) toast(`Up ${card.ovr - prev.ovr} from your last card!`);
   const rows = [
     ...tests.map(t => [t.title, `${res[t.key] || '—'} → ${st[t.key]}`]),
@@ -1851,7 +2236,7 @@ $('#share').onclick = async () => {
 $('#again').onclick = () => { S.stats = {}; S.res = {}; toMenu(); };
 
 // handy for testing from the console
-window.GG = { S, G, reveal, showCard, startGame, openBrief, finishTest, endGame, cpuBench, gpuBench, step: updatePlayer, me: () => ME, BOXES, RINGS };
+window.GG = { S, G, reveal, showCard, playGame, DESIGNS, QUESTS, unlockedDesigns, startGame, openBrief, finishTest, endGame, cpuBench, gpuBench, step: updatePlayer, me: () => ME, BOXES, RINGS };
 </script>
 </body>
 </html>
