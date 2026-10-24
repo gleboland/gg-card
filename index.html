@@ -349,6 +349,7 @@ input[type=text]:focus,.auth input:focus,.socin input:focus,.find input:focus{bo
 @keyframes seafall{to{transform:translate(var(--dx),115vh) rotate(var(--r))}}
 @keyframes searise{to{transform:translate(var(--dx),-115vh) rotate(var(--r))}}
 @media (prefers-reduced-motion:reduce){.seafx{display:none}}
+body:has(#scan.on) .seafx{display:none} /* keep the rig check quiet */
 .season{position:relative;overflow:hidden;border:2px solid var(--hard);border-radius:18px;box-shadow:5px 5px 0 var(--acc);padding:16px 18px;margin-bottom:14px;background:linear-gradient(135deg,var(--sea-a),var(--panel) 72%)}
 .season::after{content:attr(data-big);position:absolute;right:-6px;bottom:-34px;font-size:130px;line-height:1;opacity:.1;pointer-events:none}
 .sea-top{display:flex;align-items:center;gap:14px}
@@ -967,7 +968,8 @@ async function saveCard(card) {
   try {
     if (FB) {
       const c = { ...card, at: FB.F.serverTimestamp() };
-      const write = s => FB.F.setDoc(playerRef(), { cards: { [PLAT]: c }, season: { [PLAT]: s } }, { merge: true });
+      // field paths replace the whole card, so stats from an older card on this platform don't linger
+      const write = s => FB.F.updateDoc(playerRef(), { [`cards.${PLAT}`]: c, [`season.${PLAT}`]: s });
       try { await write(sea); }
       catch (e) {
         // the device clock is in a different month than the server (right at a month change): try the months either side
@@ -1579,11 +1581,15 @@ async function runScan() {
   };
   const pc = S.pc;
   pc.gpu = await line('GPU', async () => getGPU());
-  pc.gpuPts = await line('GPU bench', async () => { await sleep(50); return gpuBench(); });
+  // best of 3 short runs: one slow moment (a background app, the GPU waking up) shouldn't sink your score
+  pc.gpuPts = await line('GPU bench', async () => { await sleep(50); const r = [gpuBench(), gpuBench(), gpuBench()].filter(Boolean); return r.length ? Math.max(...r) : null; });
   T.lastChild.querySelector('.v').textContent = pc.gpuPts ? `${pc.gpuPts} G shader ops/s` : 'could not run';
   pc.cores = navigator.hardwareConcurrency || 0;
   await line('CPU', async () => pc.cores ? `${pc.cores} threads` : 'hidden by browser');
-  const cpu = await line('CPU bench', async () => cpuBench());
+  const cpu = await line('CPU bench', async () => {
+    const a = await cpuBench(), b = await cpuBench(); // best of 2
+    return a && b ? { single: Math.max(a.single, b.single), multi: Math.max(a.multi, b.multi) } : a || b;
+  });
   pc.cpu1 = cpu && cpu.single; pc.cpuN = cpu && cpu.multi;
   T.lastChild.querySelector('.v').textContent = cpu ? `single ${cpu.single} · all cores ${cpu.multi} pts` : 'could not run';
   pc.mem = navigator.deviceMemory || 0;
@@ -1596,7 +1602,8 @@ async function runScan() {
 
   // measured numbers count most; the GPU name and thread count fill in if a benchmark could not run
   const model = gpuScore(pc.gpu);
-  const gpu = pc.gpuPts ? Math.round(benchScore(pc.gpuPts, GPU_REF) * .75 + model * .25) : model;
+  // a recognised graphics card can't score far below its tier, even if the browser held it back
+  const gpu = pc.gpuPts ? Math.max(Math.round(benchScore(pc.gpuPts, GPU_REF) * .75 + model * .25), model === 55 ? 0 : model - 8) : model;
   const core = pc.cores ? lerpScore(pc.cores, 2, 30, 16, 99) : 60;
   const cpu1 = pc.cpu1 ? benchScore(pc.cpu1, CPU1_REF) : core;
   const cpuN = pc.cpuN ? benchScore(pc.cpuN, CPUN_REF) : core;
@@ -2807,7 +2814,7 @@ async function showCard(card, plat, { fresh = false, prev = null, owner = null }
   show('result', fresh ? 'New card' : owner ? 'Player card' : 'My cards');
   owner = owner || myOwner();
   // early console cards had a button-mash test instead of the parkour run
-  const oldConsole = plat === 'console' && card.stats.BTN != null;
+  const oldConsole = plat === 'console' && card.stats.BTN != null && card.stats.MOV == null;
   const keys = oldConsole ? ['REA', 'AIM', 'TRK', 'BTN', 'RIG', 'FPS'] : KEYS_OF[plat], platName = PLAT_NAMES[plat];
   const tests = (plat === 'pc' ? TESTS_PC : plat === 'console' ? TESTS_CONSOLE : TESTS_MOBILE).filter(t => card.stats[t.key] != null);
   const st = card.stats, rig = card.rig || {}, res = card.res || {}, parts = rig.parts || {};
@@ -3190,7 +3197,7 @@ const SEASON_MUSIC = [
 const MAJOR = [0, 2, 4, 5, 7, 9, 11], MINOR = [0, 2, 3, 5, 7, 8, 10];
 const MUS = { step: 0, next: 0, out: null, playing: false };
 function musicWanted() {
-  return sndMode === 0 && document.visibilityState === 'visible' && $('#game').hidden && $('#arcadeOv').hidden && !$('#reward').classList.contains('on');
+  return sndMode === 0 && document.visibilityState === 'visible' && $('#game').hidden && !$('#scan').classList.contains('on') && $('#arcadeOv').hidden && !$('#reward').classList.contains('on');
 }
 function musicStep(i, t) {
   const m = SEASON_MUSIC[new Date().getUTCMonth()], sc = m.minor ? MINOR : MAJOR;
