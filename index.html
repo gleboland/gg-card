@@ -367,6 +367,17 @@ body:has(#scan.on) .seafx{display:none} /* keep the rig check quiet */
 .menu .mi .ic{color:var(--acc2)}
 .menu .mi.play .ic{color:var(--ink)}
 .lbtabs.mode button.on{background:var(--acc2);color:#03050a}
+/* first visit: one big button, sign-in tucked away; returning players: the menu, extras behind More */
+.guestbox{display:grid;gap:12px;margin-bottom:14px}
+.guestbox .mi.play{padding:26px 22px}
+.guestbox .mi.play b{font-size:32px}
+.guestbox .mi.play:disabled{opacity:.75}
+.guestbox .link{justify-self:center;font-size:15px;font-weight:600;background:none;border:0;cursor:pointer;padding:6px}
+.menu:not(.showmore) .mi.sec{display:none}
+.keep{background:linear-gradient(135deg,var(--sea-a),var(--panel) 70%);border:2px solid var(--hard);border-radius:16px;box-shadow:4px 4px 0 var(--acc);padding:16px 18px;margin:14px 0}
+.keep>b{display:block;font:800 22px 'Bricolage Grotesque',sans-serif;margin-bottom:4px}
+.keep>p{color:var(--muted);margin:0 0 12px;line-height:1.5}
+.keep .row{margin:0}
 .topr{display:flex;align-items:center;gap:12px}
 .sndbtn{background:var(--panel);border:2px solid var(--hard);border-radius:999px;color:var(--text);font:700 11px 'JetBrains Mono',monospace;letter-spacing:.08em;padding:5px 11px;cursor:pointer;box-shadow:2px 2px 0 var(--hard)}
 .sndbtn:hover{border-color:var(--acc2)}
@@ -404,9 +415,11 @@ body:has(#scan.on) .seafx{display:none} /* keep the rig check quiet */
   #intro.on{display:flex;flex-direction:column}
   #intro .col-l,#intro .col-r{display:contents}
   #intro h1{order:1} #intro .lead{order:2} #intro .prof{order:3}
-  #intro .menu,#intro .signin-hint{order:4;margin-bottom:22px}
-  #intro .livestats{order:5;margin:0 0 14px} #intro .toplist{order:6;margin:0 0 22px}
-  #intro .note{order:7} #intro .steps{order:8} #intro .showcase{order:9}
+  #intro .guestbox{order:3}
+  #intro .menu,#intro .signin-hint,#intro .padbar{order:4;margin-bottom:22px}
+  #intro .season{order:5}
+  #intro .livestats{order:6;margin:0 0 14px} #intro .toplist{order:7;margin:0 0 22px}
+  #intro .note{order:8} #intro .steps{order:9} #intro .showcase{order:10}
 }
 /* ---------- wide screens: use the space instead of a phone-shaped column ---------- */
 @media (min-width: 980px){
@@ -461,18 +474,23 @@ body:has(#scan.on) .seafx{display:none} /* keep the rig check quiet */
     </div>
    </div>
    <div class="col-r">
+    <div class="guestbox" id="guestBox" hidden>
+      <button class="mi play" id="guestGo"><span class="ic">▶</span><span><b>Test my skills</b><small id="guestSmall">2 minutes · no sign-up · get your OVR card</small></span></button>
+      <button class="link" id="showSignin" type="button">Already have a card? Sign in</button>
+    </div>
     <div class="season" id="season"></div>
     <div class="padbar" id="padBar"></div>
     <nav class="menu" id="menu" hidden>
       <button class="mi play" id="go"><span class="ic">▶</span><span><b>Play</b><small id="cool">Scan + 4 tests = new card</small></span></button>
-      <button class="mi" id="mCards"><span class="ic">◆</span><span><b>My cards</b><small>your PC, mobile and console cards</small></span></button>
-      <button class="mi" id="mBoard"><span class="ic">#</span><span><b>Leaderboard</b><small>this season and all-time</small></span></button>
-      <button class="mi" id="mMates"><span class="ic">✚</span><span><b>Find teammates</b><small>Discord, Roblox, Epic and more</small></span></button>
       <button class="mi gift" id="mReward"><span class="ic">🎁</span><span><b>Free reward</b><small id="rewardSmall">watch a 15-second break, one time only</small></span></button>
       <button class="mi" id="mTrain"><span class="ic">⚑</span><span><b>Training</b><small id="trainSmall">practice your weakest skills</small></span></button>
       <button class="mi" id="mArcade"><span class="ic">◉</span><span><b>Minigames</b><small>3 quick games, no cooldown</small></span></button>
       <button class="mi" id="mQuests"><span class="ic">✦</span><span><b>Quests</b><small id="questSmall">unlock special card designs</small></span></button>
-      <button class="mi" id="mProfile"><span class="ic">●</span><span><b>Profile</b><small>gamertag, photo, card design</small></span></button>
+      <button class="mi" id="mBoard"><span class="ic">#</span><span><b>Leaderboard</b><small>this season and all-time</small></span></button>
+      <button class="mi more" id="mMore"><span class="ic">⋯</span><span><b>More</b><small>my cards, teammates, profile</small></span></button>
+      <button class="mi sec" id="mCards"><span class="ic">◆</span><span><b>My cards</b><small>your PC, mobile and console cards</small></span></button>
+      <button class="mi sec" id="mMates"><span class="ic">✚</span><span><b>Find teammates</b><small>Discord, Roblox, Epic and more</small></span></button>
+      <button class="mi sec" id="mProfile"><span class="ic">●</span><span><b>Profile</b><small>gamertag, photo, card design</small></span></button>
     </nav>
     <div class="signin-hint" id="signinHint">
       <b>Sign in to unlock all of this</b>
@@ -596,6 +614,7 @@ body:has(#scan.on) .seafx{display:none} /* keep the rig check quiet */
       <div class="kicker" id="rKick">Your card</div>
       <h2 id="rTitle"></h2>
       <p id="rSub"></p>
+      <div class="keep" id="keepBox" hidden></div>
       <div class="socs" id="rSocials"></div>
     </div>
     <div id="stage"></div>
@@ -812,7 +831,7 @@ async function onUser(user) {
   if (!data) data = { name: (user.displayName || user.email || 'PLAYER').split(/[@\s]/)[0].toUpperCase().slice(0, 14) };
   await signIn({ cards: {}, attempts: {}, ...data, id: user.uid });
 }
-const authMsg = t => { const m = $('#authMsg'); if (m) m.textContent = t; };
+const authMsg = t => document.querySelectorAll('.authmsg').forEach(m => { m.textContent = t; });
 const AUTH_ERRORS = {
   'auth/invalid-email': 'That email address doesn’t look right.',
   'auth/missing-password': 'Type a password.',
@@ -989,7 +1008,10 @@ async function saveCard(card) {
 function updateCooldown() {
   const left = cooldownLeft(), c = ME && ME.cards && ME.cards[PLAT];
   $('#menu').hidden = !!FB && !ME; // online mode: sign in first
-  $('#signinHint').hidden = !$('#menu').hidden;
+  $('#signinHint').hidden = true; // guests get the big Test my skills button instead
+  const gl = guestLeft();
+  $('#guestGo').disabled = gl > 0;
+  $('#guestSmall').textContent = gl > 0 ? `free test used · sign in to keep playing (or wait ${fmtLeft(gl)})` : '2 minutes · no sign-up · get your OVR card';
   $('#go').disabled = left > 0 && !skipsLeft();
   $('#cool').textContent = left > 0 ? (skipsLeft() ? `cooldown ${fmtLeft(left)} · tap to use your free skip` : `next ${PLAT_NAME} run in ${fmtLeft(left)}`)
     : c ? `new run replaces your ${c.ovr} OVR ${PLAT_NAME} card` : `scan + 4 tests = your ${PLAT_NAME} card`;
@@ -1311,10 +1333,14 @@ function renderCardList() {
 setInterval(updateCooldown, 30000);
 
 let ME = null;
+let GUEST = null, showAuth = false; // GUEST: a run played before signing in { card, plat, at }
 const avatar = p => `<span class="av" style="${p.photo ? `background-image:url(${p.photo})` : ''}">${p.photo ? '' : esc((p.name || '?')[0])}</span>`;
 function renderProfiles() {
   const el = $('#prof');
   updateCooldown();
+  el.hidden = false;
+  $('#guestBox').hidden = !(FB && !ME);
+  $('#intro .steps').hidden = !!ME; // returning players know how it works
   if (ME) {
     const cards = PLATS.map(p => ME.cards && ME.cards[p] ? `${platLabel(p)} <i>${ME.cards[p].ovr}</i>` : '').filter(Boolean).join(' · ');
     el.innerHTML = `<div class="me">${avatar(ME)}<div><small>Signed in as</small><b>${esc(ME.name)}</b>${cards ? ` · ${cards}` : ''}</div><button class="link" id="signOut">${FB ? 'Sign out' : 'Switch player'}</button></div>`;
@@ -1322,18 +1348,9 @@ function renderProfiles() {
     return;
   }
   if (FB) {
-    el.innerHTML = `<div class="auth">
-      <div class="label"><span>Sign in to play</span><span>one card per account</span></div>
-      <button class="btn ghost full" id="gSign">Continue with Google</button>
-      <div class="or">or use email</div>
-      <input type="email" id="em" placeholder="Email" autocomplete="email">
-      <input type="password" id="pw" placeholder="Password (6+ characters)" autocomplete="current-password">
-      <div class="two"><button class="btn ghost" id="emIn">Sign in</button><button class="btn ghost" id="emUp">Create account</button></div>
-      <p class="note warn" id="authMsg"></p></div>`;
-    const { A, auth } = FB;
-    $('#gSign').onclick = () => authDo(() => A.signInWithPopup(auth, new A.GoogleAuthProvider()));
-    $('#emIn').onclick = () => authDo(() => A.signInWithEmailAndPassword(auth, $('#em').value.trim(), $('#pw').value));
-    $('#emUp').onclick = () => authDo(() => A.createUserWithEmailAndPassword(auth, $('#em').value.trim(), $('#pw').value));
+    // first visit: the big "Test my skills" button comes first; the sign-in form only when asked for
+    authForm(el, 'Sign in', 'free · keeps your cards');
+    el.hidden = !showAuth;
     return;
   }
   const list = loadProfiles();
@@ -1349,12 +1366,95 @@ async function signIn(p) {
   S.design = p.design || 'classic';
   if (p.photo) await setPhoto(p.photo); else clearPhoto();
   renderProfiles();
+  if (GUEST) guestSignedIn();
 }
 function resetForm() { $('#name').value = ''; $('#cnt').textContent = '0/14'; clearPhoto(); }
 function signOut() {
   if (FB) return FB.A.signOut(FB.auth); // onUser clears the form
   ME = null; store.set('gg-current', ''); resetForm(); renderProfiles();
 }
+/* ---------- first visit: play first, sign in to keep the card ---------- */
+function authForm(el, title, side) {
+  el.innerHTML = `<div class="auth">
+    <div class="label"><span>${title}</span><span>${side}</span></div>
+    <button class="btn ghost full" data-a="g" type="button">Continue with Google</button>
+    <div class="or">or use email</div>
+    <input type="email" data-a="em" placeholder="Email" autocomplete="email">
+    <input type="password" data-a="pw" placeholder="Password (6+ characters)" autocomplete="current-password">
+    <div class="two"><button class="btn ghost" data-a="in" type="button">Sign in</button><button class="btn ghost" data-a="up" type="button">Create account</button></div>
+    <p class="note warn authmsg"></p></div>`;
+  const q = k => el.querySelector(`[data-a="${k}"]`), { A, auth } = FB;
+  q('g').onclick = () => authDo(() => A.signInWithPopup(auth, new A.GoogleAuthProvider()));
+  q('in').onclick = () => authDo(() => A.signInWithEmailAndPassword(auth, q('em').value.trim(), q('pw').value));
+  q('up').onclick = () => authDo(() => A.createUserWithEmailAndPassword(auth, q('em').value.trim(), q('pw').value));
+}
+// one free test per browser every 4 hours; signing in keeps the card and unlocks everything else
+const guestLeft = () => FB && !ME ? Math.max(0, (parseInt(store.get('gg-guest-at')) || 0) + COOLDOWN - Date.now()) : 0;
+$('#guestGo').onclick = () => {
+  const env = environmentProblems();
+  if (env.length) return toast(`Can’t play: ${env[0]}.`);
+  if (guestLeft() > 0) return updateCooldown();
+  store.set('gg-guest-at', Date.now());
+  S.name = 'YOU'; GUEST = null;
+  runScan();
+};
+$('#showSignin').onclick = () => { showAuth = true; renderProfiles(); $('#prof').scrollIntoView({ behavior: 'smooth', block: 'center' }); };
+$('#mMore').onclick = () => {
+  const m = $('#menu'), on = m.classList.toggle('showmore');
+  $('#mMore b').textContent = on ? 'Less' : 'More';
+};
+// the "keep this card" box under a guest's result
+function renderKeep(msg = '') {
+  const el = $('#keepBox');
+  if (!GUEST || !FB) { el.hidden = true; return; }
+  el.hidden = false;
+  if (!ME) {
+    el.innerHTML = `<b>Keep this card?</b><p>Sign in to save it, get on the Season ${seasonNow().num} leaderboard, unlock card designs, and come back every 4 hours to beat it.${msg ? ' ' + msg : ''}</p><div class="kauth"></div>`;
+    authForm(el.querySelector('.kauth'), 'Save my card', 'free · takes 10 seconds');
+    return;
+  }
+  const old = ME.cards && ME.cards[GUEST.plat];
+  el.innerHTML = `<b>Save this card to ${esc(ME.name)}?</b><p>${old ? `It replaces your ${old.ovr} OVR ${PLAT_NAMES[GUEST.plat]} card.` : 'It becomes your first card.'}${msg ? ' ' + msg : ''}</p>
+    <div class="row"><button class="btn" id="keepYes" type="button">Save it</button>${old ? '<button class="btn ghost" id="keepNo" type="button">Keep my old card</button>' : ''}</div>`;
+  $('#keepYes').onclick = keepGuestCard;
+  if (old) $('#keepNo').onclick = () => { GUEST = null; renderKeep(); toast('Kept your old card.'); };
+}
+function guestSignedIn() {
+  const old = ME.cards && ME.cards[GUEST.plat];
+  if (old) renderKeep(); else keepGuestCard(); // brand-new players: save straight away
+}
+async function keepGuestCard() {
+  const g = GUEST;
+  if (!g || !ME || !FB) return;
+  if (Date.now() - g.at > 3600e3) { GUEST = null; renderKeep(); return toast('That run is over an hour old, so it can’t be saved. Play again!'); }
+  const plat = g.plat, id = seasonNow().id, old = ME.season && ME.season[plat], same = old && old.id === id;
+  const sea = { id, n: (same ? old.n : 0) + 1, sum: (same ? old.sum : 0) + g.card.ovr };
+  const prev = ME.cards && ME.cards[plat], before = unlockedDesigns(ME), ts = FB.F.serverTimestamp();
+  try {
+    await saveProfile(ME); // a new account gets its profile first
+    // the run's start, the card and the season update go in one write, which is what the rules check
+    await FB.F.updateDoc(playerRef(), { [`attempts.${plat}`]: ts, [`cards.${plat}`]: { ...g.card, at: ts }, [`season.${plat}`]: sea });
+  } catch (e) {
+    const left = cooldownLeft();
+    renderKeep(e.code === 'permission-denied'
+      ? `You already made a ${PLAT_NAMES[plat]} card in the last 4 hours${left ? ` (next one in ${fmtLeft(left)})` : ''}, so this one can’t be saved.`
+      : `Couldn’t save it (${e.code || e.message}).`);
+    return;
+  }
+  ME.attempts = { ...(ME.attempts || {}), [plat]: Date.now() };
+  ME.cards = { ...(ME.cards || {}), [plat]: { ...g.card, at: Date.now() } };
+  ME.season = { ...(ME.season || {}), [plat]: sea };
+  GUEST = null;
+  const extra = {};
+  if (g.card.ovr > (ME.bestOvr || 0)) { ME.bestOvr = g.card.ovr; extra.bestOvr = g.card.ovr; }
+  if (Object.keys(extra).length) await writePlayer(extra).catch(() => {});
+  await showCard(ME.cards[plat], plat, { fresh: true, prev });
+  toast('Card saved to your account! 🎉');
+  uiSound('reveal');
+  announceUnlocks(before);
+  updateCooldown();
+}
+
 initFirebase().then(() => {
   renderHome(true);
   if (FB) { renderProfiles(); $('#photoNote').textContent = 'optional. saved to your account when you sign in.'; return; }
@@ -2782,7 +2882,7 @@ async function reveal() {
   const card = { ovr, rar: rar.name, top, stats: { ...st }, res: { ...S.res },
     rig: { gpu: p.gpu || null, gpuPts: p.gpuPts || null, cores: p.cores || null, cpu1: p.cpu1 || null, cpuN: p.cpuN || null, mem: p.mem || null, hz: p.hz || null, fps: p.fps || null, parts: p.parts || {} } };
   const prev = ME && ME.cards && ME.cards[PLAT];
-  const before = unlockedDesigns(ME);
+  const before = ME ? unlockedDesigns(ME) : [];
   // anti-cheat: a flagged run is shown, but never saved or counted for quests
   const flagged = G.cheat && G.cheat.size ? [...G.cheat] : null;
   if (flagged) {
@@ -2793,6 +2893,7 @@ async function reveal() {
     uiSound('reject');
     return;
   }
+  if (!ME && FB) GUEST = { card, plat: PLAT, at: Date.now() }; // kept only if they sign in
   if (ME) {
     await saveCard(card);
     // quest progress that outlives the card itself
@@ -2806,12 +2907,14 @@ async function reveal() {
   const sea = seasonOf(ME, PLAT);
   if (sea) $('#rSub').textContent += ` Season ${seasonNow().num} overall: ${sea.ovr} after ${sea.n} run${sea.n === 1 ? '' : 's'}.`;
   if (ME) announceUnlocks(before);
+  if (GUEST) { $('#rSub').textContent = 'This card isn’t saved yet. Sign in below to keep it.'; renderKeep(); }
 }
 
 // shows a card: right after a run, or a saved one from "My cards"
 let last = null;
 async function showCard(card, plat, { fresh = false, prev = null, owner = null } = {}) {
   show('result', fresh ? 'New card' : owner ? 'Player card' : 'My cards');
+  $('#keepBox').hidden = true;
   owner = owner || myOwner();
   // early console cards had a button-mash test instead of the parkour run
   const oldConsole = plat === 'console' && card.stats.BTN != null && card.stats.MOV == null;
@@ -2961,6 +3064,7 @@ const padName = p => (p.id || 'Controller').replace(/\(.*?\)/g, '').replace(/STA
 function renderPadBar() {
   const p = pad(), el = $('#padBar');
   el.classList.toggle('on', !!p); el.classList.toggle('console', PLAT === 'console');
+  el.hidden = !p && PLAT !== 'console'; // only when there's a controller to talk about
   if (!p) {
     el.innerHTML = `<i class="dot"></i><span>🎮 No controller found. Plug one in or connect it, then <b>press any button on it</b>.</span>`
       + (PLAT === 'console' ? `<button class="btn ghost" id="padMode">Back to ${MOBILE ? 'Mobile' : 'PC'}</button>` : '');
