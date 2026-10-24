@@ -436,7 +436,9 @@ function saveProfile(p) {
 /* one run per platform every 4 hours; the run is stamped when it starts,
    so quitting a bad run doesn't give you another try */
 const ms = v => !v ? 0 : typeof v === 'number' ? v : v.toMillis ? v.toMillis() : 0;
-const cooldownLeft = () => ME ? Math.max(0, ms((ME.attempts || {})[PLAT]) + COOLDOWN - Date.now()) : 0;
+const OWNER_UID = '9iiHNBoEARZQkX8hDrteTdSD22o1'; // the site owner plays without a cooldown
+const isOwner = () => !!(FB && FB.user && FB.user.uid === OWNER_UID);
+const cooldownLeft = () => ME && !isOwner() ? Math.max(0, ms((ME.attempts || {})[PLAT]) + COOLDOWN - Date.now()) : 0;
 const fmtLeft = t => { const m = Math.ceil(t / 60000); return m >= 60 ? `${Math.floor(m / 60)}h ${m % 60}m` : `${m}m`; };
 async function startAttempt() {
   ME.attempts = { ...(ME.attempts || {}), [PLAT]: Date.now() };
@@ -1779,7 +1781,7 @@ async function showCard(card, plat, { fresh = false, prev = null } = {}) {
   $('#rTitle').textContent = `You're ${/^[aeiou]/i.test(cls) ? 'an' : 'a'} ${cls}.`;
   const when = ms(card.at) ? new Date(ms(card.at)).toLocaleString() : '';
   $('#rSub').textContent = fresh
-    ? rar.sub + (prev ? ` · Your old ${platName} card was ${prev.ovr} OVR.` : '') + ' Next run in 4 hours.'
+    ? rar.sub + (prev ? ` · Your old ${platName} card was ${prev.ovr} OVR.` : '') + (isOwner() ? ' No cooldown for you.' : ' Next run in 4 hours.')
     : `Saved ${when}.`;
   if (fresh && prev && card.ovr > prev.ovr) toast(`Up ${card.ovr - prev.ovr} from your last card!`);
   const rows = [
