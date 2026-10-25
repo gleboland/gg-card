@@ -524,7 +524,7 @@ body:has(#scan.on) .seafx{display:none} /* keep the rig check quiet */
       <button class="mi" id="mArcade"><span class="ic">◉</span><span><b>Minigames</b><small>3 quick games, no cooldown</small></span></button>
       <button class="mi" id="mQuests"><span class="ic">✦</span><span><b>Quests</b><small id="questSmall">unlock special card designs</small></span></button>
       <button class="mi" id="mBoard"><span class="ic">#</span><span><b>Leaderboard</b><small>this season and all-time</small></span></button>
-      <button class="mi" id="mMarket"><span class="ic">⚖</span><span><b>Auction House</b><small>sell and collect cards for GG Coins</small></span></button>
+      <button class="mi" id="mMarket"><span class="ic">⚖</span><span><b>Auction House</b><small>sell your cards for GG Coins, collect others</small></span></button>
       <button class="mi more" id="mMore"><span class="ic">⋯</span><span><b>More</b><small>my cards, teammates, profile</small></span></button>
       <button class="mi sec" id="mCards"><span class="ic">◆</span><span><b>My cards</b><small>your PC, mobile and console cards</small></span></button>
       <button class="mi sec" id="mMates"><span class="ic">✚</span><span><b>Find teammates</b><small>Discord, Roblox, Epic and more</small></span></button>
@@ -622,7 +622,8 @@ body:has(#scan.on) .seafx{display:none} /* keep the rig check quiet */
         <li><b>Quests:</b> goals like "reach Gold" or "beat the parkour without falling". Each one unlocks a special card design.</li></ul></details>
       <details><summary><span>🪙</span>GG Coins and the Auction House</summary>
         <ul><li>Earn coins: <b>100</b> to start, <b>50</b> every day, <b>20</b> for every new card, plus whatever your cards sell for.</li>
-        <li><b>Sell:</b> mint a copy of your card (one copy per card), then set a price in My collection. Your own card stays on the leaderboard.</li>
+        <li><b>Sell:</b> set a price on one of your cards. It leaves your account and the leaderboard straight away. Make a new one any time with Play.</li>
+        <li>If you take a card off sale, it stays in your collection and you can sell it again.</li>
         <li><b>Buy:</b> pick a card on the Market. It goes into your collection, and you can sell it again later.</li>
         <li>Every sale has a <b>10% fee</b>. List for 100 and you get 90.</li></ul></details>
       <details><summary><span>✚</span>Teammates and profile</summary>
@@ -639,7 +640,7 @@ body:has(#scan.on) .seafx{display:none} /* keep the rig check quiet */
   <section class="screen" id="market">
     <div class="kicker">Menu · Auction House</div>
     <h2>Auction House</h2>
-    <p class="lead">Mint a copy of your card and sell it for GG Coins, or collect cards from other players. Your own card stays on the leaderboard. Every sale has a 10% fee.</p>
+    <p class="lead">Sell your cards for GG Coins and collect cards from other players. When you sell a card it leaves your account and the leaderboard, so make a better one with Play. Every sale has a 10% fee.</p>
     <div class="wallet" id="wallet"></div>
     <div class="lbtabs mode" id="mkTabs"><button data-t="buy" class="on" type="button">Market</button><button data-t="sell" type="button">Sell</button><button data-t="mine" type="button">My collection</button></div>
     <div class="mklist" id="mkList"></div>
@@ -3460,7 +3461,7 @@ document.addEventListener('pointerover', e => {
 /* =====================================================================
    GG COINS + AUCTION HOUSE
    Coins: 100 to start, 50 a day, 20 per new card, and whatever your cards sell for.
-   You can mint one copy of each card you make and list it at a fixed price;
+   You sell your real card at a fixed price (it leaves your account) or resell cards you bought;
    the buyer pays the price, you get it minus a 10% fee (those coins are gone).
    The Firestore rules check every step, so trades can't be faked.
    ===================================================================== */
@@ -3518,18 +3519,21 @@ async function renderMarket() {
           <div class="mkmeta"><span>sold by ${esc(l.sellerName)}</span><b>🪙 ${l.price.toLocaleString()}</b></div>
           ${l.seller === me ? '<button class="btn ghost" disabled type="button">Your listing</button>'
             : `<button class="btn" data-buy="${l.id}" type="button" ${(ME.coins || 0) < l.price ? 'disabled' : ''}>${(ME.coins || 0) < l.price ? 'Not enough coins' : 'Buy'}</button>`}</div>`).join('')
-        : '<p class="mkempty">Nothing for sale yet. Be the first: go to Sell, mint a copy of your card and list it.</p>';
+        : '<p class="mkempty">Nothing for sale yet. Be the first: go to Sell and put one of your cards up.</p>';
       el.querySelectorAll('[data-buy]').forEach(b => b.onclick = () => buyListing(rows.find(r => r.id === b.dataset.buy), b));
       el.querySelectorAll('.mkface').forEach((f, i) => f.onclick = () => viewItem(rows[i].card, rows[i].plat, rows[i].originName));
     } else if (mkTab === 'sell') {
       const mine = PLATS.filter(p => ME.cards && ME.cards[p] && ME.cards[p].at);
-      const ids = mine.map(p => `${me}_${p}_${Math.floor(ms(ME.cards[p].at))}`);
-      const exist = await Promise.all(ids.map(id => F.getDoc(F.doc(db, 'items', id)).then(s => s.exists())));
-      el.innerHTML = mine.length ? mine.map((p, i) => `<div class="mkcard">${cardTile(ME.cards[p], p, ME.name)}
-          ${exist[i] ? '<button class="btn ghost" disabled type="button">Copy minted ✓</button><span class="fee">One copy per card. Make a new card to mint again, or sell it from My collection.</span>'
-            : `<button class="btn" data-mint="${p}" type="button">Mint a copy</button><span class="fee">Puts one copy of this card in your collection, ready to sell.</span>`}</div>`).join('')
-        : '<p class="mkempty">You need a card first. Hit Play, then come back to mint a copy.</p>';
-      el.querySelectorAll('[data-mint]').forEach(b => b.onclick = () => mintCard(b.dataset.mint, b));
+      el.innerHTML = mine.length ? mine.map(p => `<div class="mkcard">${cardTile(ME.cards[p], p, ME.name)}
+          <input type="number" min="10" step="10" placeholder="Price in coins (10+)" data-price="${p}">
+          <button class="btn" data-sell="${p}" type="button">Sell this card</button>
+          <span class="fee" data-fee="${p}">It leaves your account and the leaderboard. You get the price minus a 10% fee.</span></div>`).join('')
+        : '<p class="mkempty">No cards to sell. Hit Play to make one, or sell cards you bought from My collection.</p>';
+      el.querySelectorAll('[data-price]').forEach(i => i.oninput = () => {
+        const v = parseInt(i.value) || 0;
+        el.querySelector(`[data-fee="${i.dataset.price}"]`).textContent = v >= 10 ? `Sells for 🪙 ${v} · fee 🪙 ${v - payoutOf(v)} · you get 🪙 ${payoutOf(v)}. The card leaves your account.` : 'Minimum price is 10 coins.';
+      });
+      el.querySelectorAll('[data-sell]').forEach(b => b.onclick = () => sellCard(b.dataset.sell, parseInt(el.querySelector(`[data-price="${b.dataset.sell}"]`).value), b));
     } else {
       const snap = await F.getDocs(F.query(F.collection(db, 'items'), F.where('owner', '==', me)));
       const items = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => b.card.ovr - a.card.ovr);
@@ -3537,7 +3541,7 @@ async function renderMarket() {
           ${it.listed ? `<button class="btn ghost" data-cancel="${it.id}" type="button">Listed · take it off sale</button>`
             : `<input type="number" min="10" step="10" placeholder="Price in coins (10+)" data-price="${it.id}">
                <button class="btn" data-list="${it.id}" type="button">Sell</button><span class="fee" data-fee="${it.id}">You get the price minus a 10% fee.</span>`}</div>`).join('')
-        : '<p class="mkempty">Your collection is empty. Mint a copy of your own card under Sell, or buy one on the Market.</p>';
+        : '<p class="mkempty">Your collection is empty. Cards you buy on the Market land here, and so do your cards that are on sale.</p>';
       el.querySelectorAll('[data-price]').forEach(i => i.oninput = () => {
         const v = parseInt(i.value) || 0;
         el.querySelector(`[data-fee="${i.dataset.price}"]`).textContent = v >= 10 ? `Sells for 🪙 ${v} · fee 🪙 ${v - payoutOf(v)} · you get 🪙 ${payoutOf(v)}` : 'Minimum price is 10 coins.';
@@ -3548,19 +3552,27 @@ async function renderMarket() {
     }
   } catch (e) { el.innerHTML = `<p class="mkempty">Could not load the Auction House (${esc(e.code || e.message)}).</p>`; }
 }
-async function mintCard(plat, btn) {
+// selling your own card: one write moves it off your account, into the Auction House, on sale
+async function sellCard(plat, price, btn) {
+  if (!(price >= 10 && price <= 1e6)) return toast('Set a price from 10 to 1,000,000 coins.');
+  price = Math.floor(price);
+  const c0 = ME.cards[plat];
+  if (!confirm(`Sell your ${c0.ovr} OVR ${PLAT_NAMES[plat]} card for ${price} GG Coins? It leaves your account and the leaderboard right away. Make a new card any time with Play.`)) return;
   const { F, db } = FB;
   btn.disabled = true;
   try {
-    // re-read the saved card so the copy matches it exactly (the rules compare them)
+    // re-read the saved card so the item matches it exactly (the rules compare them)
     const snap = await F.getDoc(playerRef()), saved = snap.data().cards[plat], id = `${FB.user.uid}_${plat}_${Math.floor(ms(saved.at))}`;
-    await F.setDoc(F.doc(db, 'items', id), {
-      owner: FB.user.uid, origin: FB.user.uid, originName: snap.data().name, plat, cardAt: saved.at, listed: null, minted: F.serverTimestamp(),
-      card: { ovr: saved.ovr, rar: saved.rar, top: saved.top, stats: saved.stats, design: ME.design || 'classic', motto: ME.motto || '', gpu: ((saved.rig && saved.rig.gpu) || '').slice(0, 80) },
-    });
-    toast('Copy minted! Find it in My collection.'); uiSound('reveal');
+    const card = { ovr: saved.ovr, rar: saved.rar, top: saved.top, stats: saved.stats, design: ME.design || 'classic', motto: ME.motto || '', gpu: ((saved.rig && saved.rig.gpu) || '').slice(0, 80) };
+    const L = F.doc(F.collection(db, 'listings')), b = F.writeBatch(db);
+    b.set(F.doc(db, 'items', id), { owner: FB.user.uid, origin: FB.user.uid, originName: snap.data().name, plat, cardAt: saved.at, listed: L.id, minted: F.serverTimestamp(), card });
+    b.set(L, { item: id, seller: FB.user.uid, sellerName: ME.name, price, payout: payoutOf(price), created: F.serverTimestamp(), card, plat, originName: snap.data().name });
+    b.update(playerRef(), { [`cards.${plat}`]: F.deleteField() });
+    await b.commit();
+    delete ME.cards[plat];
+    toast(`Your card is on sale for 🪙 ${price}. You'll get 🪙 ${payoutOf(price)} when it sells.`); uiSound('reveal');
     mkTab = 'mine';
-  } catch (e) { toast('Could not mint: ' + (e.code || e.message)); }
+  } catch (e) { toast('Could not sell it: ' + (e.code || e.message)); }
   renderMarket();
 }
 async function listItem(it, price, btn) {
