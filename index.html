@@ -399,6 +399,21 @@ body:has(#scan.on) .seafx{display:none} /* keep the rig check quiet */
 .mkcard input{width:100%;padding:9px 12px;font-size:15px;margin:0}
 .mkcard .fee{font-size:12px;color:var(--muted)}
 .mkempty{grid-column:1/-1;color:var(--muted);line-height:1.6}
+/* How to play */
+.guide{display:grid;gap:10px;margin:8px 0 22px}
+@media (min-width:980px){.guide{grid-template-columns:1fr 1fr;align-items:start}}
+.guide details{background:var(--panel);border:2px solid var(--hard);border-radius:14px;box-shadow:3px 3px 0 var(--hard);padding:4px 16px}
+.guide details[open]{border-color:var(--acc2)}
+.guide summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:12px;padding:12px 0;font:800 19px 'Bricolage Grotesque',sans-serif}
+.guide summary::-webkit-details-marker{display:none}
+.guide summary::after{content:'+';margin-left:auto;color:var(--acc2);font-size:22px}
+.guide details[open] summary::after{content:'–'}
+.guide summary span{width:30px;text-align:center;color:var(--acc2)}
+.guide ol,.guide ul{margin:0 0 14px;padding-left:20px;color:var(--muted);line-height:1.6;font-size:15px}
+.guide li{margin:4px 0}
+.guide b{color:var(--text)}
+.guide kbd{background:#0b0f1a;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font:700 12px 'JetBrains Mono',monospace;color:var(--text)}
+.guestbox .link+.link{margin-top:-8px}
 .topr{display:flex;align-items:center;gap:12px}
 .sndbtn{background:var(--panel);border:2px solid var(--hard);border-radius:999px;color:var(--text);font:700 11px 'JetBrains Mono',monospace;letter-spacing:.08em;padding:5px 11px;cursor:pointer;box-shadow:2px 2px 0 var(--hard)}
 .sndbtn:hover{border-color:var(--acc2)}
@@ -498,6 +513,7 @@ body:has(#scan.on) .seafx{display:none} /* keep the rig check quiet */
     <div class="guestbox" id="guestBox" hidden>
       <button class="mi play" id="guestGo"><span class="ic">▶</span><span><b>Test my skills</b><small id="guestSmall">2 minutes · no sign-up · get your OVR card</small></span></button>
       <button class="link" id="showSignin" type="button">Already have a card? Sign in</button>
+      <button class="link" id="guestGuide" type="button">How does it work?</button>
     </div>
     <div class="season" id="season"></div>
     <div class="padbar" id="padBar"></div>
@@ -513,6 +529,7 @@ body:has(#scan.on) .seafx{display:none} /* keep the rig check quiet */
       <button class="mi sec" id="mCards"><span class="ic">◆</span><span><b>My cards</b><small>your PC, mobile and console cards</small></span></button>
       <button class="mi sec" id="mMates"><span class="ic">✚</span><span><b>Find teammates</b><small>Discord, Roblox, Epic and more</small></span></button>
       <button class="mi sec" id="mProfile"><span class="ic">●</span><span><b>Profile</b><small>gamertag, photo, card design</small></span></button>
+      <button class="mi sec" id="mGuide"><span class="ic">?</span><span><b>How to play</b><small>everything explained</small></span></button>
     </nav>
     <div class="signin-hint" id="signinHint">
       <b>Sign in to unlock all of this</b>
@@ -568,6 +585,57 @@ body:has(#scan.on) .seafx{display:none} /* keep the rig check quiet */
   </section>
 
   <!-- FIND TEAMMATES -->
+  <section class="screen" id="guide">
+    <div class="kicker">Menu · How to play</div>
+    <h2>How to play</h2>
+    <p class="lead">Everything on GG Card in two minutes. Tap a topic to open it.</p>
+    <div class="guide">
+      <details open><summary><span>▶</span>Getting started</summary>
+        <ol><li>Press <b>Test my skills</b>. No account needed for your first run.</li>
+        <li>We scan your device (graphics card, processor, memory, screen), then you take 4 tests.</li>
+        <li>You get a 3D card with your <b>OVR</b> (overall, 1–99), a rarity and 6 stats.</li>
+        <li>Sign in with Google or email to <b>keep the card</b>, get on the leaderboard and unlock everything else.</li></ol></details>
+      <details><summary><span>🎯</span>The tests and controls</summary>
+        <ul><li><b>PC:</b> a 3D arena. Mouse to aim, click to shoot, <kbd>W A S D</kbd> to move, <kbd>Space</kbd> to jump, <kbd>Shift</kbd> to sprint, <kbd>Esc</kbd> to pause.</li>
+        <li><b>Quick draw:</b> wait for green, then react as fast as you can. Too early restarts the round.</li>
+        <li><b>Flick range:</b> 20 targets, one at a time. Speed and accuracy both count.</li>
+        <li><b>Tracking duel:</b> keep your crosshair on the moving bot for 8 seconds.</li>
+        <li><b>Parkour run:</b> run through the rings in order. The floor between raised rings is lava.</li>
+        <li><b>Mobile:</b> 4 touch tests: quick draw, tap targets, finger tracking and tap speed.</li>
+        <li><b>Console:</b> connect a controller, press any button, then <b>Play in Console mode</b>. Right stick aims (with aim assist), RT shoots, left stick moves, A jumps, Start pauses.</li></ul></details>
+      <details><summary><span>◆</span>Your card</summary>
+        <ul><li><b>OVR</b> is the average of your 6 stats: reaction, aim, tracking, movement (or tap speed), rig and FPS.</li>
+        <li>Rarity: <b>Bronze</b> below 60, <b>Silver</b> 60+, <b>Gold</b> 75+, <b>Elite</b> 85+, <b>Legendary</b> 92+.</li>
+        <li>Your best stat gives you a class, like Sniper or Reflex God. The card also shows your weakest stat and a tip.</li>
+        <li>Drag the card to spin it, double-click to flip it, then download or share it. <b>Edit card</b> changes the design, motto and photo.</li>
+        <li>You get one card per platform: PC, Mobile and Console.</li></ul></details>
+      <details><summary><span>⏱</span>The 4-hour wait and the free reward</summary>
+        <ul><li>You can make a new card once every 4 hours on each platform. Your new card replaces the old one.</li>
+        <li><b>🎁 Free reward</b> (one time): watch a short break to unlock the Diamond design and one skip of the wait.</li></ul></details>
+      <details><summary><span>🎃</span>Seasons</summary>
+        <ul><li>A new season starts every month, with its own name, colors and music.</li>
+        <li>Your <b>season overall</b> is the average OVR of every run you make that month. Bad runs count too, so stay consistent.</li>
+        <li>The Leaderboard has a <b>Season</b> tab (season overall) and an <b>All-time</b> tab (best card).</li></ul></details>
+      <details><summary><span>⚑</span>Training, minigames and quests</summary>
+        <ul><li><b>Training:</b> practice any test as often as you like. It never changes your card and shows your weakest skills first.</li>
+        <li><b>Minigames:</b> Target Rush, Simon Says and Dodge. No wait between games.</li>
+        <li><b>Quests:</b> goals like "reach Gold" or "beat the parkour without falling". Each one unlocks a special card design.</li></ul></details>
+      <details><summary><span>🪙</span>GG Coins and the Auction House</summary>
+        <ul><li>Earn coins: <b>100</b> to start, <b>50</b> every day, <b>20</b> for every new card, plus whatever your cards sell for.</li>
+        <li><b>Sell:</b> mint a copy of your card (one copy per card), then set a price in My collection. Your own card stays on the leaderboard.</li>
+        <li><b>Buy:</b> pick a card on the Market. It goes into your collection, and you can sell it again later.</li>
+        <li>Every sale has a <b>10% fee</b>. List for 100 and you get 90.</li></ul></details>
+      <details><summary><span>✚</span>Teammates and profile</summary>
+        <ul><li><b>Profile:</b> your gamertag, photo and card design.</li>
+        <li>Add your Discord, Roblox, Epic, Steam, Xbox, PSN and other accounts, then use <b>Find teammates</b> to find people to play with.</li></ul></details>
+      <details><summary><span>🛡</span>Fair play</summary>
+        <ul><li>Bots, auto-clickers, emulators and scripted input are blocked.</li>
+        <li>Runs with impossible results are shown but never saved. Play it straight.</li>
+        <li>The <b>♪ SOUND</b> button at the top switches between sound on, music off and muted.</li></ul></details>
+    </div>
+    <button class="btn ghost full back" data-back>← Menu</button>
+  </section>
+
   <section class="screen" id="market">
     <div class="kicker">Menu · Auction House</div>
     <h2>Auction House</h2>
@@ -1131,6 +1199,7 @@ $('#adClaim').onclick = async () => {
 };
 $('#mArcade').onclick = () => { renderArcade(); show('arcade', 'Minigames'); };
 $('#mQuests').onclick = () => { renderQuests(); show('quests', 'Quests'); };
+$('#mGuide').onclick = $('#guestGuide').onclick = () => show('guide', 'How to play');
 
 /* ---------- special card designs (unlocked by quests) ---------- */
 const DESIGNS = {
